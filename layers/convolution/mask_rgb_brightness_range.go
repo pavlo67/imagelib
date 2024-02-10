@@ -2,14 +2,15 @@ package convolution
 
 import (
 	"fmt"
-	frame2 "github.com/pavlo67/imagelib/frame"
+	"github.com/pavlo67/imagelib/layers"
 	"image"
 	"strconv"
 
-	"github.com/pavlo67/common/common/imagelib/pix"
-
 	"github.com/pavlo67/common/common"
-	"github.com/pavlo67/common/common/imagelib"
+	"github.com/pavlo67/imagelib/imagelib"
+	"github.com/pavlo67/imagelib/imagelib/pix"
+
+	"github.com/pavlo67/imagelib/frame"
 )
 
 var _ Mask = &brightnessRangeMask{}
@@ -50,13 +51,13 @@ func (mask *brightnessRangeMask) Prepare(onData interface{}) error {
 		mask.imgRGB = &v
 	case *image.RGBA:
 		mask.imgRGB = v
-	case frame2.LayerRGBA:
+	case frame.LayerRGBA:
 		mask.imgRGB = &v.RGBA
-	case *frame2.LayerRGBA:
+	case *frame.LayerRGBA:
 		mask.imgRGB = &v.RGBA
-	case frame2.Frame:
+	case frame.Frame:
 		mask.imgRGB = &v.RGBA
-	case *frame2.Frame:
+	case *frame.Frame:
 		mask.imgRGB = &v.RGBA
 	}
 	if mask.imgRGB == nil {
@@ -82,7 +83,7 @@ func (mask brightnessRangeMask) Info() common.Map {
 func (mask brightnessRangeMask) Stat() interface{} {
 	sizes := mask.imgRGB.Rect.Size()
 	if pixLen := sizes.X * sizes.Y; pixLen > 0 {
-		return &methods.Metrics{
+		return &layers.Metrics{
 			WhRat: float64(mask.cnt) / float64(pixLen),
 		}
 	}

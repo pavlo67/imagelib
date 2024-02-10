@@ -17,7 +17,7 @@ func WriteMP4(resultFilename, sourcePath string, sourceRegexp regexp.Regexp, fps
 		return errors.Wrap(err, onWriteMP4)
 	}
 
-	filenames, err := filelib.List(sourcePath, &sourceRegexp)
+	filenames, err := filelib.List(sourcePath, &sourceRegexp, false, true)
 	if err != nil {
 		return errors.Wrap(err, onWriteMP4)
 	}

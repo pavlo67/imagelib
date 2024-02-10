@@ -6,9 +6,9 @@ import (
 	"image"
 	"strconv"
 
-	"github.com/pavlo67/common/common/imagelib/pix"
+	"github.com/pavlo67/imagelib/imagelib/pix"
 
-	"github.com/pavlo67/common/common/imagelib"
+	"github.com/pavlo67/imagelib/imagelib"
 
 	"github.com/pavlo67/common/common"
 )

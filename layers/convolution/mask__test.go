@@ -5,7 +5,7 @@ import (
 	"image/color"
 	"testing"
 
-	"github.com/pavlo67/common/common/imagelib/pix"
+	"github.com/pavlo67/imagelib/imagelib/pix"
 
 	"github.com/stretchr/testify/require"
 )

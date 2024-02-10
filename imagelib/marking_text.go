@@ -48,7 +48,7 @@ func (mt MarkerText) Mark(drawImg draw.Image, clr color.Color) {
 //	return textGetMask.ColorNamed
 //}
 //
-//func (textGetMask TextGetMask) Mask(clr color.Color) Mask {
+//func (textGetMask TextGetMask) MasksOneColor(clr color.Color) convolution.MasksOneColor {
 //	if textGetMask.FontFile == "" {
 //		return nil
 //	}
@@ -58,7 +58,7 @@ func (mt MarkerText) Mark(drawImg draw.Image, clr color.Color) {
 //		points = append(points, Line(segment, textGetMask.LineWidth)...)
 //	}
 //
-//	return Mask{
+//	return MasksOneColor{
 //		MaskOneColor{
 //			Color:  clr,
 //			Points: points,
@@ -99,7 +99,7 @@ func (segmentsGetMask SegmentsGetMask) Color() *ColorNamed {
 	return segmentsGetMask.ColorNamed
 }
 
-func (segmentsGetMask SegmentsGetMask) Mask(clr color.Color) Mask {
+func (segmentsGetMask SegmentsGetMask) Mask(clr color.Color) MasksOneColor {
 	if segmentsGetMask.FontFile == "" {
 		return nil
 	}
@@ -113,7 +113,7 @@ func (segmentsGetMask SegmentsGetMask) Mask(clr color.Color) Mask {
 
 	points = append(points, FilledRectangle(xMin, xMax, yMin, yMax)...)
 
-	return Mask{
+	return MasksOneColor{
 		MaskOneColor{
 			Color:  clr,
 			Points: points,

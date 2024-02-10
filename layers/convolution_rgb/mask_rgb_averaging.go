@@ -2,15 +2,15 @@ package convolution_rgb
 
 import (
 	"fmt"
-	frame2 "github.com/pavlo67/imagelib/frame"
 	"image"
 	"math"
 	"strconv"
 
-	"github.com/pavlo67/common/common/imagelib/pix"
-
 	"github.com/pavlo67/common/common"
-	"github.com/pavlo67/common/common/imagelib"
+
+	"github.com/pavlo67/imagelib/frame"
+	"github.com/pavlo67/imagelib/imagelib"
+	"github.com/pavlo67/imagelib/imagelib/pix"
 )
 
 var _ Mask = &averagingRGBMask{}
@@ -34,13 +34,13 @@ func (mask *averagingRGBMask) Prepare(onData interface{}) error {
 		mask.imgRGB = &v
 	case *image.RGBA:
 		mask.imgRGB = v
-	case frame2.LayerRGBA:
+	case frame.LayerRGBA:
 		mask.imgRGB = &v.RGBA
-	case *frame2.LayerRGBA:
+	case *frame.LayerRGBA:
 		mask.imgRGB = &v.RGBA
-	case frame2.Frame:
+	case frame.Frame:
 		mask.imgRGB = &v.RGBA
-	case *frame2.Frame:
+	case *frame.Frame:
 		mask.imgRGB = &v.RGBA
 	}
 	if mask.imgRGB == nil {
@@ -64,10 +64,10 @@ func (mask averagingRGBMask) Info() common.Map {
 	}
 }
 
-func (mask averagingRGBMask) Calculate(x, y int) frame2.ValueRGBA {
+func (mask averagingRGBMask) Calculate(x, y int) frame.ValueRGBA {
 	imgRGB := mask.imgRGB
 	if imgRGB == nil {
-		return frame2.ValueRGBA{}
+		return frame.ValueRGBA{}
 	}
 
 	xMin, xMax, yMin, yMax := x-mask.radius, x+mask.radius+1, y-mask.radius, y+mask.radius+1
@@ -100,10 +100,10 @@ func (mask averagingRGBMask) Calculate(x, y int) frame2.ValueRGBA {
 	}
 
 	if cnt <= 0 {
-		return frame2.ValueRGBA{}
+		return frame.ValueRGBA{}
 	}
 
-	return frame2.ValueRGBA{
+	return frame.ValueRGBA{
 		pix.Value(math.Round(float64(sumR) / float64(cnt))),
 		pix.Value(math.Round(float64(sumG) / float64(cnt))),
 		pix.Value(math.Round(float64(sumB) / float64(cnt))),

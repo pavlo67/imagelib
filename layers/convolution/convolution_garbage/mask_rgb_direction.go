@@ -6,13 +6,13 @@ package convolution
 //	"sort"
 //
 //	"github.com/pavlo67/common/common"
-//	"github.com/pavlo67/common/common/imagelib"
+//	"github.com/pavlo67/imagelib/imagelib"
 //	"github.com/pavlo67/maps/mapping/imager/layer"
 //)
 //
 //// this algo doesn't work effectively :-(((
 //
-//var _ Mask = &directionMask{}
+//var _ convolution.Mask = &directionMask{}
 //
 //type directionMask struct {
 //	imgRGB            *image.RGBA

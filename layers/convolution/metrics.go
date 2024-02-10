@@ -1,10 +1,11 @@
 package convolution
 
 import (
+	"github.com/pavlo67/imagelib/layers"
 	"math"
 )
 
-func SeparationRatio(lyr *methods.Layer, blackMax, whiteMin int) (blackRatio, whiteRatio float64) {
+func SeparationRatio(lyr *layers.Layer, blackMax, whiteMin int) (blackRatio, whiteRatio float64) {
 	if lyr == nil {
 		return math.NaN(), math.NaN()
 	}

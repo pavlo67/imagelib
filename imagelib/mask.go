@@ -11,7 +11,7 @@ import (
 
 type GetMask interface {
 	Color() *ColorNamed
-	Mask(color.Color) Mask
+	Mask(color.Color) MasksOneColor
 	Info(colorNamed ColorNamed) string
 }
 
@@ -21,20 +21,20 @@ type MaskOneColor struct {
 	Marker
 }
 
-type Mask []MaskOneColor
+type MasksOneColor []MaskOneColor
 
-func (mask Mask) ShowOnRGBA(rgb image.RGBA) {
-	for _, maskOneColor := range mask {
+func (moc MasksOneColor) ShowOnRGBA(rgb image.RGBA) {
+	for _, maskOneColor := range moc {
 		for _, p := range maskOneColor.Points {
 			rgb.Set(p.X, p.Y, maskOneColor.Color)
 		}
 	}
 }
 
-func (mask Mask) ShowOn(img image.Image) {
+func (moc MasksOneColor) ShowOn(img image.Image) {
 	drawImg, _ := img.(draw.Image)
 	if drawImg != nil {
-		for _, maskOneColor := range mask {
+		for _, maskOneColor := range moc {
 			for _, p := range maskOneColor.Points {
 				drawImg.Set(p.X, p.Y, maskOneColor.Color)
 			}
@@ -67,8 +67,8 @@ func (pointsGetMask PointsGetMask) Color() *ColorNamed {
 	return nil
 }
 
-func (pointsGetMask PointsGetMask) Mask(clr color.Color) Mask {
-	return Mask{{Color: clr, Points: pointsGetMask.Points}}
+func (pointsGetMask PointsGetMask) Mask(clr color.Color) MasksOneColor {
+	return MasksOneColor{{Color: clr, Points: pointsGetMask.Points}}
 }
 
 func (pointsGetMask PointsGetMask) Info(colorNamed ColorNamed) string {

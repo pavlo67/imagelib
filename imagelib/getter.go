@@ -62,7 +62,7 @@ func (op *GetImage) Image() (image.Image, string, error) {
 	}
 
 	var info string
-	var mask Mask
+	var mask MasksOneColor
 	for i, maskI := range op.ImageMasks {
 		colorNamed := maskI.Color()
 		if colorNamed == nil || colorNamed.Color == nil {

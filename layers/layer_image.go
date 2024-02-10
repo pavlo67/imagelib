@@ -6,11 +6,14 @@ import (
 	"math"
 
 	"github.com/pavlo67/common/common/errors"
-	"github.com/pavlo67/common/common/imagelib"
-	"github.com/pavlo67/common/common/imagelib/pix"
+	"github.com/pavlo67/common/common/logger"
+	"github.com/pavlo67/common/common/pnglib"
+
+	"github.com/pavlo67/imagelib/imagelib"
+	"github.com/pavlo67/imagelib/imagelib/pix"
 )
 
-var _ imagelib.Imager = &Layer{}
+var _ logger.GetImage = &Layer{}
 var _ imagelib.Bounded = &Layer{}
 
 func (lyr *Layer) Image() (image.Image, string, error) {
@@ -75,7 +78,7 @@ func (lyr Layer) SavePNG(filename string) error {
 		return fmt.Errorf("gray == nil / " + onSavePNG)
 	}
 
-	if err = imagelib.SavePNG(gray, filename); err != nil {
+	if err = pnglib.Save(gray, filename); err != nil {
 		return errors.Wrap(err, onSavePNG)
 	}
 

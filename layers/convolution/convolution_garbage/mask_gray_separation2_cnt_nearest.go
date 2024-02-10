@@ -2,18 +2,20 @@ package convolution
 
 import (
 	"fmt"
-	"github.com/pavlo67/common/common/imagelib/pix"
+	"github.com/pavlo67/imagelib/imagelib/pix"
+	"github.com/pavlo67/imagelib/layers"
+	"github.com/pavlo67/imagelib/layers/convolution"
 
 	"github.com/pavlo67/common/common"
 )
 
-var _ Mask = &separation2CntNearestMask{}
+var _ convolution.Mask = &separation2CntNearestMask{}
 
 type separation2CntNearestMask struct {
-	lyr *methods.Layer
+	lyr *layers.Layer
 }
 
-func Separation2CntNearest() Mask {
+func Separation2CntNearest() convolution.Mask {
 	return &separation2CntNearestMask{}
 }
 
@@ -21,9 +23,9 @@ const onSeparationCntNearestPrepare = "on Separation2CntNearest.Prepare()"
 
 func (mask *separation2CntNearestMask) Prepare(onData interface{}) error {
 	switch v := onData.(type) {
-	case methods.Layer:
+	case layers.Layer:
 		mask.lyr = &v
-	case *methods.Layer:
+	case *layers.Layer:
 		mask.lyr = v
 	}
 	if mask.lyr == nil {

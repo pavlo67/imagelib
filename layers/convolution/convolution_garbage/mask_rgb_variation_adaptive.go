@@ -3,18 +3,19 @@ package convolution
 import (
 	"fmt"
 	frame2 "github.com/pavlo67/imagelib/frame"
+	"github.com/pavlo67/imagelib/layers/convolution"
 	"image"
 	"math"
 	"strconv"
 
-	"github.com/pavlo67/common/common/imagelib/pix"
+	"github.com/pavlo67/imagelib/imagelib/pix"
 
-	"github.com/pavlo67/common/common/imagelib"
+	"github.com/pavlo67/imagelib/imagelib"
 
 	"github.com/pavlo67/common/common"
 )
 
-var _ Mask = &variationAdaptiveMask{}
+var _ convolution.Mask = &variationAdaptiveMask{}
 
 type variationAdaptiveMask struct {
 	imgRGB *image.RGBA
@@ -30,7 +31,7 @@ type variationAdaptiveMask struct {
 
 const onVariationAdaptive = "on RGBVariationAdaptiveCentered()"
 
-func RGBVariationAdaptiveCentered(radius, ctxRadius int, inverseBy pix.Value) (Mask, error) {
+func RGBVariationAdaptiveCentered(radius, ctxRadius int, inverseBy pix.Value) (convolution.Mask, error) {
 	if radius < 1 {
 		return nil, fmt.Errorf("wrong side: %d / "+onVariationAdaptive, radius)
 	} else if ctxRadius < 1 {

@@ -2,23 +2,25 @@ package convolution
 
 import (
 	"fmt"
+	"github.com/pavlo67/imagelib/layers"
+	"github.com/pavlo67/imagelib/layers/convolution"
 	"strconv"
 
-	"github.com/pavlo67/common/common/imagelib/pix"
+	"github.com/pavlo67/imagelib/imagelib/pix"
 
 	"github.com/pavlo67/common/common"
 )
 
-var _ Mask = &comparisonMask{}
+var _ convolution.Mask = &comparisonMask{}
 
 type comparisonMask struct {
-	lyr      *methods.Layer
-	lyrBase  methods.Layer
+	lyr      *layers.Layer
+	lyrBase  layers.Layer
 	valueMax pix.Value
 	scale    pix.Value
 }
 
-func Comparison(lyrBase methods.Layer, valueMax pix.Value) Mask {
+func Comparison(lyrBase layers.Layer, valueMax pix.Value) convolution.Mask {
 	var scale pix.Value
 	if valueMax > 0 {
 		scale = pix.Value(3 * pix.ValueSum(pix.ValueMax) / pix.ValueSum(4*valueMax))
@@ -35,9 +37,9 @@ const onComparisonPrepare = "on Comparison.Prepare()"
 
 func (mask *comparisonMask) Prepare(onData interface{}) error {
 	switch v := onData.(type) {
-	case methods.Layer:
+	case layers.Layer:
 		mask.lyr = &v
-	case *methods.Layer:
+	case *layers.Layer:
 		mask.lyr = v
 	}
 	if mask.lyr == nil {

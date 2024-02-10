@@ -2,20 +2,22 @@ package convolution
 
 import (
 	"fmt"
-	"github.com/pavlo67/common/common/imagelib/pix"
+	"github.com/pavlo67/imagelib/imagelib/pix"
+	"github.com/pavlo67/imagelib/layers"
+	"github.com/pavlo67/imagelib/layers/convolution"
 
 	"github.com/pavlo67/common/common"
 )
 
-var _ Mask = &distancesMask{}
+var _ convolution.Mask = &distancesMask{}
 
 type distancesMask struct {
-	lyr      *methods.Layer
+	lyr      *layers.Layer
 	thrClose pix.Value
 	thrFar   pix.Value
 }
 
-func Distances(thrClose, thrFar pix.Value) Mask {
+func Distances(thrClose, thrFar pix.Value) convolution.Mask {
 	return &distancesMask{
 		thrClose: thrClose,
 		thrFar:   thrFar,
@@ -26,9 +28,9 @@ const onDistancesPrepare = "on Distances.Prepare()"
 
 func (mask *distancesMask) Prepare(onData interface{}) error {
 	switch v := onData.(type) {
-	case methods.Layer:
+	case layers.Layer:
 		mask.lyr = &v
-	case *methods.Layer:
+	case *layers.Layer:
 		mask.lyr = v
 	}
 	if mask.lyr == nil {

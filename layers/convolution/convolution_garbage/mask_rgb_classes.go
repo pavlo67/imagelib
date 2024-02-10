@@ -5,11 +5,11 @@ package convolution
 //	"image"
 //
 //	"github.com/pavlo67/common/common"
-//	"github.com/pavlo67/common/common/imagelib"
+//	"github.com/pavlo67/imagelib/imagelib"
 //	"github.com/pavlo67/maps/mapping/imager/layer"
 //)
 //
-//var _ Mask = &classesMask{}
+//var _ convolution.Mask = &classesMask{}
 //
 //type classesMask struct {
 //	imgRGB    *image.RGBA

@@ -2,12 +2,13 @@ package convolution
 
 import (
 	"fmt"
+	"github.com/pavlo67/imagelib/layers"
 	"image"
 
 	"github.com/pavlo67/common/common"
 	"github.com/pavlo67/common/common/errors"
-	"github.com/pavlo67/common/common/imagelib"
-	"github.com/pavlo67/common/common/imagelib/pix"
+	"github.com/pavlo67/imagelib/imagelib"
+	"github.com/pavlo67/imagelib/imagelib/pix"
 )
 
 type Mask interface {
@@ -19,7 +20,7 @@ type Mask interface {
 
 const onLayer = "on convolution.Layer()"
 
-func Layer(data imagelib.Described, mask Mask, scale int, addRest bool) (*methods.Layer, error) {
+func Layer(data imagelib.Described, mask Mask, scale int, addRest bool) (*layers.Layer, error) {
 
 	rect := data.Bounds()
 	xWidth0, yHeight0 := rect.Max.X-rect.Min.X, rect.Max.Y-rect.Min.Y
@@ -45,7 +46,7 @@ func Layer(data imagelib.Described, mask Mask, scale int, addRest bool) (*method
 	settings := data.Description()
 	settings.DPM = settings.DPM / float64(scale)
 
-	lyrConvolved := methods.Layer{
+	lyrConvolved := layers.Layer{
 		Gray: image.Gray{
 			Pix:    make([]pix.Value, xWidth*yHeight),
 			Stride: xWidth,
@@ -94,7 +95,7 @@ func Layer(data imagelib.Described, mask Mask, scale int, addRest bool) (*method
 	return &lyrConvolved, nil
 }
 
-func Metrics(data imagelib.Described, mask Mask, scale int, addRest bool) (*methods.Metrics, error) {
+func Metrics(data imagelib.Described, mask Mask, scale int, addRest bool) (*layers.Metrics, error) {
 	rect := data.Bounds()
 	xWidth0, yHeight0 := rect.Max.X-rect.Min.X, rect.Max.Y-rect.Min.Y
 
@@ -140,7 +141,7 @@ func Metrics(data imagelib.Described, mask Mask, scale int, addRest bool) (*meth
 		offset += xWidth
 	}
 
-	metrics := methods.Metrics{}
+	metrics := layers.Metrics{}
 	metrics.Min, metrics.Max = minValue, maxValue
 	if cnt := xWidth * yHeight; cnt > 0 {
 		metrics.WhRat, metrics.BlRat = float64(whiteCnt)/float64(cnt), float64(blackCnt)/float64(cnt)

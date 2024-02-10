@@ -2,6 +2,9 @@ package frame
 
 import (
 	"math"
+
+	"github.com/pavlo67/common/common/mathlib"
+	"github.com/pavlo67/common/common/mathlib/plane"
 )
 
 type Frame struct {

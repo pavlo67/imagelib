@@ -7,7 +7,7 @@ package convolution
 //
 //	"github.com/stretchr/testify/require"
 //
-//	"github.com/pavlo67/common/common/imagelib"
+//	"github.com/pavlo67/imagelib/imagelib"
 //	"github.com/pavlo67/maps/mapping/imager/layer"
 //)
 //

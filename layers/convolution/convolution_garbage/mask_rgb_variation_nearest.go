@@ -7,16 +7,16 @@ package convolution
 //	"math"
 //	"sort"
 //
-//	"github.com/pavlo67/common/common/imagelib/color_filter"
+//	"github.com/pavlo67/imagelib/imagelib/color_filter"
 //
-//	"github.com/pavlo67/common/common/imagelib"
+//	"github.com/pavlo67/imagelib/imagelib"
 //
 //	"github.com/pavlo67/common/common"
 //
 //	"github.com/pavlo67/maps/mapping/imager/layer"
 //)
 //
-//var _ Mask = &variationNearestMask{}
+//var _ convolution.Mask = &variationNearestMask{}
 //
 //type variationNearestMask struct {
 //	imgRGB      *image.RGBA
@@ -30,7 +30,7 @@ package convolution
 //
 //const onVariationNearest = "on VariationNearest()"
 //
-//func VariationNearest(colorFilter color_filter.Operator, shadyValue, inversedBy layer.Value) Mask {
+//func VariationNearest(colorFilter color_filter.Operator, shadyValue, inversedBy layer.Value) convolution.Mask {
 //	return &variationNearestMask{
 //		colorFilter: colorFilter,
 //		shadyValue:  shadyValue,

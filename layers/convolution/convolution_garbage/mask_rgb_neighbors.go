@@ -10,7 +10,7 @@ package convolution
 //	"github.com/pavlo67/maps/mapping/imager/layer"
 //)
 //
-//var _ Mask = &neighborsMask{}
+//var _ convolution.Mask = &neighborsMask{}
 //
 //type neighborsMask struct {
 //	imgRGB       *layer.Layer

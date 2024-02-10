@@ -2,21 +2,23 @@ package convolution
 
 import (
 	"fmt"
+	"github.com/pavlo67/imagelib/layers"
+	"github.com/pavlo67/imagelib/layers/convolution"
 	"strconv"
 
-	"github.com/pavlo67/common/common/imagelib/pix"
+	"github.com/pavlo67/imagelib/imagelib/pix"
 
 	"github.com/pavlo67/common/common"
 )
 
-var _ Mask = &dilationMask{}
+var _ convolution.Mask = &dilationMask{}
 
 type dilationMask struct {
-	lyr    *methods.Layer
+	lyr    *layers.Layer
 	radius int
 }
 
-func Dilation(radius int) Mask {
+func Dilation(radius int) convolution.Mask {
 	if radius < 1 {
 		radius = 1
 	}
@@ -30,9 +32,9 @@ const onDilationPrepare = "on Dilation.Prepare()"
 
 func (mask *dilationMask) Prepare(onData interface{}) error {
 	switch v := onData.(type) {
-	case methods.Layer:
+	case layers.Layer:
 		mask.lyr = &v
-	case *methods.Layer:
+	case *layers.Layer:
 		mask.lyr = v
 	}
 	if mask.lyr == nil {

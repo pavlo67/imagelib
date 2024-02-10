@@ -7,7 +7,7 @@ import (
 
 	"github.com/pavlo67/common/common/mathlib/sets"
 
-	"github.com/pavlo67/common/common/imagelib/pix"
+	"github.com/pavlo67/imagelib/imagelib/pix"
 )
 
 type ColorRange struct {

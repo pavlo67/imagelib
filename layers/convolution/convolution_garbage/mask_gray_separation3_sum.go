@@ -2,25 +2,27 @@ package convolution
 
 import (
 	"fmt"
-	"github.com/pavlo67/common/common/imagelib/pix"
+	"github.com/pavlo67/imagelib/imagelib/pix"
+	"github.com/pavlo67/imagelib/layers"
+	"github.com/pavlo67/imagelib/layers/convolution"
 
 	"github.com/pavlo67/common/common"
 )
 
-var _ Mask = &separation3SumLeftTopMask{}
+var _ convolution.Mask = &separation3SumLeftTopMask{}
 
 type separation3SumLeftTopMask struct {
-	lyr      *methods.Layer
+	lyr      *layers.Layer
 	side     int
 	thrBlack float64
 	thrWhite float64
-	lyrTop   *methods.Layer
+	lyrTop   *layers.Layer
 	sideTop  int
 }
 
 const onSeparationBySum = "on convolution.Separation3SumLeftTop()"
 
-func Separation3SumLeftTop(side int, thrBlack, thrWhite float64, lyrTop *methods.Layer, sideTop int) (Mask, error) {
+func Separation3SumLeftTop(side int, thrBlack, thrWhite float64, lyrTop *layers.Layer, sideTop int) (convolution.Mask, error) {
 	if side < 1 {
 		return nil, fmt.Errorf("side (%d) < 1 / "+onSeparationBySum, side)
 	} else if thrBlack >= thrWhite {
@@ -44,9 +46,9 @@ const onSeparationBySumPrepare = "on Separation3SumLeftTop.GetNext()"
 
 func (mask *separation3SumLeftTopMask) Prepare(onData interface{}) error {
 	switch v := onData.(type) {
-	case methods.Layer:
+	case layers.Layer:
 		mask.lyr = &v
-	case *methods.Layer:
+	case *layers.Layer:
 		mask.lyr = v
 	}
 

@@ -5,9 +5,9 @@ import (
 	"math"
 	"testing"
 
-	"github.com/pavlo67/common/common/imagelib"
 	"github.com/pavlo67/common/common/mathlib"
 	"github.com/pavlo67/common/common/mathlib/plane"
+	"github.com/pavlo67/imagelib/imagelib"
 )
 
 func TestFrame_PolyChainToOuter(t *testing.T) {

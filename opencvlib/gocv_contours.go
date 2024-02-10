@@ -4,12 +4,12 @@ import (
 	"image"
 	"math"
 
-	"github.com/pavlo67/common/common/imagelib"
-
 	"gocv.io/x/gocv"
 	"golang.org/x/image/colornames"
 
 	"github.com/pavlo67/common/common/errors"
+	"github.com/pavlo67/common/common/logger"
+	"github.com/pavlo67/common/common/pnglib"
 )
 
 const onContourToGrayscale = "on ContourToGrayscale()"
@@ -19,7 +19,7 @@ type ContourImage struct {
 	image.Rectangle
 }
 
-var _ imagelib.Imager = &ContourImage{}
+var _ logger.GetImage = &ContourImage{}
 
 func (imageOp *ContourImage) Bounds() image.Rectangle {
 	if imageOp == nil {
@@ -61,7 +61,7 @@ func ContourToGrayscalePng(contour gocv.PointVector, rect image.Rectangle, path 
 		return err
 	}
 
-	return imagelib.SavePNG(img, path)
+	return pnglib.Save(img, path)
 }
 
 func ContourAreaPix(contour gocv.PointVector) (float64, float64) {

@@ -8,8 +8,8 @@ import (
 	"gocv.io/x/gocv"
 
 	"github.com/pavlo67/common/common/errors"
-	"github.com/pavlo67/common/common/imagelib"
 	"github.com/pavlo67/common/common/mathlib/plane"
+	"github.com/pavlo67/imagelib/imagelib"
 )
 
 const onResizeToRange = "on ResizeToRange()"

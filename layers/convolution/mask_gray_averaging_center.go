@@ -2,10 +2,11 @@ package convolution
 
 import (
 	"fmt"
+	"github.com/pavlo67/imagelib/layers"
 	"math"
 	"strconv"
 
-	"github.com/pavlo67/common/common/imagelib/pix"
+	"github.com/pavlo67/imagelib/imagelib/pix"
 
 	"github.com/pavlo67/common/common"
 )
@@ -13,7 +14,7 @@ import (
 var _ Mask = &averagingCenterMask{}
 
 type averagingCenterMask struct {
-	lyr               *methods.Layer
+	lyr               *layers.Layer
 	side, left, right int
 }
 
@@ -34,9 +35,9 @@ const onAveragingCenterPrepare = "on averagingCenter.Prepare()"
 
 func (mask *averagingCenterMask) Prepare(onData interface{}) error {
 	switch v := onData.(type) {
-	case methods.Layer:
+	case layers.Layer:
 		mask.lyr = &v
-	case *methods.Layer:
+	case *layers.Layer:
 		mask.lyr = v
 	}
 	if mask.lyr == nil {

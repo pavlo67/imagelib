@@ -7,8 +7,8 @@ import (
 
 	"github.com/pavlo67/common/common"
 	"github.com/pavlo67/common/common/errors"
-	"github.com/pavlo67/common/common/imagelib"
-	"github.com/pavlo67/common/common/imagelib/pix"
+	"github.com/pavlo67/imagelib/imagelib"
+	"github.com/pavlo67/imagelib/imagelib/pix"
 )
 
 type Mask interface {

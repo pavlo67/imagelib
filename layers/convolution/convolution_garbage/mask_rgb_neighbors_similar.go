@@ -4,14 +4,14 @@ package convolution
 //	"fmt"
 //	"image"
 //
-//	"github.com/pavlo67/common/common/imagelib"
+//	"github.com/pavlo67/imagelib/imagelib"
 //
 //	"github.com/pavlo67/common/common"
 //
 //	"github.com/pavlo67/maps/mapping/imager/layer"
 //)
 //
-//var _ Mask = &neighborsSimilarMask{}
+//var _ convolution.Mask = &neighborsSimilarMask{}
 //
 //type neighborsSimilarMask struct {
 //	imgRGB      *image.RGBA

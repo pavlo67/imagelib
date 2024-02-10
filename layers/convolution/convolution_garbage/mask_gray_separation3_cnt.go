@@ -2,21 +2,23 @@ package convolution
 
 import (
 	"fmt"
-	"github.com/pavlo67/common/common/imagelib/pix"
+	"github.com/pavlo67/imagelib/imagelib/pix"
+	"github.com/pavlo67/imagelib/layers"
+	"github.com/pavlo67/imagelib/layers/convolution"
 
 	"github.com/pavlo67/common/common"
 )
 
-var _ Mask = &separation3CntMask{}
+var _ convolution.Mask = &separation3CntMask{}
 
 type separation3CntMask struct {
-	lyr       *methods.Layer
+	lyr       *layers.Layer
 	threshold pix.Value
 	blackMax  int
 	whiteMin  int
 }
 
-func Separation3Cnt(threshold pix.Value, blackMax, whiteMin int) Mask {
+func Separation3Cnt(threshold pix.Value, blackMax, whiteMin int) convolution.Mask {
 	return &separation3CntMask{
 		threshold: threshold,
 		blackMax:  blackMax,
@@ -28,9 +30,9 @@ const onSeparationByCntPrepare = "on Separation3Cnt.Prepare()"
 
 func (mask *separation3CntMask) Prepare(onData interface{}) error {
 	switch v := onData.(type) {
-	case methods.Layer:
+	case layers.Layer:
 		mask.lyr = &v
-	case *methods.Layer:
+	case *layers.Layer:
 		mask.lyr = v
 	}
 	if mask.lyr == nil {
@@ -49,7 +51,7 @@ func (mask separation3CntMask) Stat() interface{} {
 
 func (mask separation3CntMask) Info() common.Map {
 	return common.Map{
-		"name":     fmt.Sprintf("sep_%.2f_%d_%d", mask.threshold, mask.blackMax, mask.whiteMin),
+		"name":     fmt.Sprintf("sep_%d_%d_%d", mask.threshold, mask.blackMax, mask.whiteMin),
 		"blackMax": mask.blackMax,
 		"whiteMin": mask.whiteMin,
 		"thrClose": mask.threshold,

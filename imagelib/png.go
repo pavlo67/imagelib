@@ -2,41 +2,13 @@ package imagelib
 
 import (
 	"fmt"
+	"github.com/pavlo67/common/common/errors"
+	"github.com/pavlo67/common/common/pnglib"
 	"image"
 	"image/color"
 	_ "image/jpeg"
-	"image/png"
 	"os"
-	"path/filepath"
-
-	"github.com/pavlo67/common/common/errors"
-	"github.com/pavlo67/common/common/filelib"
 )
-
-const onSavePNG = "on SavePNG()"
-
-func SavePNG(img image.Image, filename string) error {
-	if img == nil {
-		return errors.New("img == nil / " + onSavePNG)
-	}
-
-	if path := filepath.Dir(filename); path != "" && path != "." && path != ".." {
-		if _, err := filelib.Dir(path); err != nil {
-			return errors.Wrapf(err, "can't create dir '%s' / "+onSavePNG, path)
-		}
-	}
-
-	resFile, err := os.Create(filename)
-	if err != nil {
-		return errors.Wrap(err, onSavePNG)
-	}
-	defer resFile.Close()
-
-	if err = png.Encode(resFile, img); err != nil {
-		return errors.Wrap(err, onSavePNG)
-	}
-	return nil
-}
 
 type PointsImage struct {
 	Points []image.Point
@@ -81,7 +53,7 @@ func PointsToGrayscale(points []image.Point, rect image.Rectangle) image.Image {
 
 func PointsToGrayscalePng(points []image.Point, rect image.Rectangle, path string) error {
 	img := PointsToGrayscale(points, rect)
-	return SavePNG(img, path)
+	return pnglib.Save(img, path)
 }
 
 const onImageGray = "on ImageGray()"
@@ -110,7 +82,7 @@ func ImageGray(srcFilename, resFilename string, rect *image.Rectangle) (imgArea 
 		imgArea := img.SubImage(*rect).(*image.Gray)
 
 		if resFilename != "" {
-			if err = SavePNG(imgArea, resFilename); err != nil {
+			if err = pnglib.Save(imgArea, resFilename); err != nil {
 				fmt.Fprint(os.Stderr, err)
 			}
 		}

@@ -2,7 +2,8 @@ package convolution
 
 import (
 	"fmt"
-	"github.com/pavlo67/common/common/imagelib/pix"
+	"github.com/pavlo67/imagelib/imagelib/pix"
+	"github.com/pavlo67/imagelib/layers"
 
 	"github.com/pavlo67/common/common"
 )
@@ -10,11 +11,11 @@ import (
 var _ Mask = &bitwiceAndMask{}
 
 type bitwiceAndMask struct {
-	lyr  *methods.Layer
-	lyr1 methods.Layer
+	lyr  *layers.Layer
+	lyr1 layers.Layer
 }
 
-func BitwiceAnd(lyr1 methods.Layer) Mask {
+func BitwiceAnd(lyr1 layers.Layer) Mask {
 	return &bitwiceAndMask{lyr1: lyr1}
 }
 
@@ -22,9 +23,9 @@ const onBitwiceAndPrepare = "on BitwiceAnd.Prepare()"
 
 func (mask *bitwiceAndMask) Prepare(onData interface{}) error {
 	switch v := onData.(type) {
-	case methods.Layer:
+	case layers.Layer:
 		mask.lyr = &v
-	case *methods.Layer:
+	case *layers.Layer:
 		mask.lyr = v
 	}
 	if mask.lyr == nil {
