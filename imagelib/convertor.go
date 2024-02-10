@@ -3,6 +3,7 @@ package imagelib
 import (
 	"fmt"
 	"image"
+	_ "image/png"
 	"os"
 
 	"github.com/pavlo67/common/common/errors"
