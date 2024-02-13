@@ -54,7 +54,8 @@ func (imageRef ImageRef) Parse() (*geolib.Point, int, error) {
 }
 
 type Description struct {
-	ImageRef  `                json:",inline"`
+	N         int
+	ImageRef  `               json:",inline"`
 	GeoPoint  *geolib.Point  `json:",omitempty"`
 	Bearing   geolib.Bearing `json:",omitempty"`
 	DPM       float64
