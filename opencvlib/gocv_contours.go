@@ -2,76 +2,43 @@ package opencvlib
 
 import (
 	"image"
-	"math"
 
 	"gocv.io/x/gocv"
 	"golang.org/x/image/colornames"
 
 	"github.com/pavlo67/common/common/errors"
-	"github.com/pavlo67/common/common/logger"
-	"github.com/pavlo67/common/common/pnglib"
 )
 
-const onContourToGrayscale = "on ContourToGrayscale()"
+func ConvexHull(points []image.Point) []image.Point {
+	matHull := gocv.NewMat()
+	defer matHull.Close()
 
-type ContourImage struct {
-	Contour gocv.PointVector
-	image.Rectangle
-}
+	gocv.ConvexHull(gocv.NewPointVectorFromPoints(points), &matHull, false, false)
 
-var _ logger.GetImage = &ContourImage{}
+	// TODO: be careful!!!
+	// if !returnPoints: matHull.T() == CV32S   (== []int == list of contour indices, required for gocv.ConvexityDefects())
+	// if  returnPoints: matHull.T() == CV32SC2 (== []image.Point???)
 
-func (imageOp *ContourImage) Bounds() image.Rectangle {
-	if imageOp == nil {
-		return image.Rectangle{}
+	hullLength := matHull.Size()[0]
+	convexHullIndices, convexHullPoints := make([]int, hullLength), make([]image.Point, hullLength)
+
+	for i := 0; i < hullLength; i++ {
+		convexHullIndices[i] = int(matHull.GetIntAt(i, 0))
+		convexHullPoints[i] = points[convexHullIndices[i]]
+
+		if i > 0 && convexHullIndices[i] < convexHullIndices[i-1] {
+			// The convex hull indices are not monotonous, which can be in the case when the input contour contains self-intersections
+		}
 	}
 
-	return imageOp.Rectangle
-}
+	// pr.ConvexHullArea = gocv.ContourArea(gocv.NewPointVectorFromPoints(pr.ConvexHullPoints)) / (ls.DPM * ls.DPM)
 
-func (imageOp *ContourImage) Image() (image.Image, string, error) {
-	if imageOp == nil {
-		return nil, "", errors.New("*ContourImage = nil")
-	}
-
-	return ContourToGrayscale(imageOp.Contour, imageOp.Rectangle)
-}
-
-func ContourToGrayscale(contour gocv.PointVector, rect image.Rectangle) (image.Image, string, error) {
-	mat := gocv.NewMatWithSize(rect.Max.Y-rect.Min.Y, rect.Max.X-rect.Min.X, gocv.MatTypeCV8UC1)
-	defer mat.Close()
-
-	contours := gocv.NewPointsVector()
-	defer contours.Close()
-
-	contours.Append(contour)
-	gocv.DrawContours(&mat, contours, 0, colornames.White, 1)
-
-	img, err := mat.ToImage()
-	if err != nil {
-		return nil, "", errors.Wrap(err, onContourToGrayscale)
-	}
-
-	return img, "", nil
-}
-
-func ContourToGrayscalePng(contour gocv.PointVector, rect image.Rectangle, path string) error {
-	img, _, err := ContourToGrayscale(contour, rect)
-	if err != nil {
-		return err
-	}
-
-	return pnglib.Save(img, path)
-}
-
-func ContourAreaPix(contour gocv.PointVector) (float64, float64) {
-	contourArea := gocv.ContourArea(contour)
-	return contourArea, math.Sqrt(4 * contourArea / math.Pi)
+	return convexHullPoints
 }
 
 const onFillOutsideContours = "on imagelib.GrayOutsideContours()"
 
-func GrayWhitedOutsideContours(imgGray image.Gray, psv gocv.PointsVector) (*image.Gray, error) {
+func WhiteOutsideContours(imgGray image.Gray, psv gocv.PointsVector) (*image.Gray, error) {
 
 	matImg, err := gocv.ImageGrayToMatGray(&imgGray)
 	if err != nil {
@@ -100,7 +67,7 @@ func GrayWhitedOutsideContours(imgGray image.Gray, psv gocv.PointsVector) (*imag
 	return imgGrayWhitedOutside, nil
 }
 
-func GrayBlackOutsideContours(imgGray image.Gray, psv gocv.PointsVector) (*image.Gray, error) {
+func BlackOutsideContours(imgGray image.Gray, psv gocv.PointsVector) (*image.Gray, error) {
 
 	matImg, err := gocv.ImageGrayToMatGray(&imgGray)
 	if err != nil {

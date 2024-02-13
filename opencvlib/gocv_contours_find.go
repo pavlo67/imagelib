@@ -93,33 +93,6 @@ func FindContours(lyr *layers.Layer) ([][]image.Point, error) {
 //	return cntrs, nil
 //}
 
-//func ConvexHull(cntr contours.Contour) []image.Point {
-//	matHull := gocv.NewMat()
-//	defer matHull.Close()
-//
-//	gocv.ConvexHull(gocv.NewPointVectorFromPoints(cntr.Points), &matHull, false, false)
-//
-//	// TODO: be careful!!!
-//	// if !returnPoints: matHull.T() == CV32S   (== []int == list of contour indices, required for gocv.ConvexityDefects())
-//	// if  returnPoints: matHull.T() == CV32SC2 (== []image.Point???)
-//
-//	hullLength := matHull.Size()[0]
-//	convexHullIndices, convexHullPoints := make([]int, hullLength), make([]image.Point, hullLength)
-//
-//	for i := 0; i < hullLength; i++ {
-//		convexHullIndices[i] = int(matHull.GetIntAt(i, 0))
-//		convexHullPoints[i] = cntr.Points[convexHullIndices[i]]
-//
-//		if i > 0 && convexHullIndices[i] < convexHullIndices[i-1] {
-//			// The convex hull indices are not monotonous, which can be in the case when the input contour contains self-intersections
-//		}
-//	}
-//
-//	// pr.ConvexHullArea = gocv.ContourArea(gocv.NewPointVectorFromPoints(pr.ConvexHullPoints)) / (ls.DPM * ls.DPM)
-//
-//	return convexHullPoints
-//}
-
 //const onFindClosing = "on areas.FindClosing()"
 //
 //func FindClosing(lyr *layers.Layer, inverseColors bool, scale, closeMaskSizePix int) ([]contours.Contour, image.Image, error) {

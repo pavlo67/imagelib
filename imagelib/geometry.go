@@ -61,6 +61,13 @@ func RectangleAround(marginPix int, pts ...image.Point) image.Rectangle {
 	}
 }
 
+func RectangleExpanded(rect image.Rectangle, margin int) image.Rectangle {
+	return image.Rectangle{
+		image.Point{rect.Min.X - margin, rect.Min.Y - margin},
+		image.Point{rect.Min.X + margin, rect.Min.Y + margin},
+	}
+}
+
 // ...plane.Point2 ---------------------------------------------------------
 
 func PointsFromPolyChain(points0 ...plane.Point2) []image.Point {
