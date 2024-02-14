@@ -16,8 +16,8 @@ import (
 type Key string
 
 type ImageRef struct {
-	ImagePath string
-	SourceKey Key
+	ImagePath string `json:",omitempty"`
+	SourceKey Key    `json:",omitempty"`
 }
 
 func WrappedGeoPoint(geoPoint geolib.Point, sourcesPath string, sourceKey Key) ImageRef {
@@ -54,11 +54,11 @@ func (imageRef ImageRef) Parse() (*geolib.Point, int, error) {
 }
 
 type Description struct {
-	N         int
-	ImageRef  `               json:",inline"`
-	GeoPoint  *geolib.Point  `json:",omitempty"`
-	Bearing   geolib.Bearing `json:",omitempty"`
-	DPM       float64
-	PointsRaw []frame.PointRawGeo
-	convolution.ClassesMetrics
+	N                          int
+	ImageRef                   `               json:",inline"`
+	GeoPoint                   *geolib.Point  `json:",omitempty"`
+	Bearing                    geolib.Bearing `json:",omitempty"`
+	DPM                        float64
+	PointsRaw                  []frame.PointRawGeo `json:",omitempty"`
+	convolution.ClassesMetrics `json:",omitempty"`
 }

@@ -21,7 +21,7 @@ func TestFrame_PolyChainToOuter(t *testing.T) {
 	}{
 		{
 			name:             "",
-			Position:         plane.Position{Point2: plane.Point2{1, 1}, Rotation: math.Pi},
+			Position:         plane.Position{Point2: plane.Point2{1, 1}, LeftAngleFromOx: math.Pi},
 			DPM:              1,
 			RectInner:        image.Rectangle{Max: image.Point{5, 5}},
 			pChInner:         plane.PolyChain{{0, 0}},
@@ -29,7 +29,7 @@ func TestFrame_PolyChainToOuter(t *testing.T) {
 		},
 		{
 			name:             "",
-			Position:         plane.Position{Point2: plane.Point2{1, 1}, Rotation: math.Pi},
+			Position:         plane.Position{Point2: plane.Point2{1, 1}, LeftAngleFromOx: math.Pi},
 			DPM:              2,
 			RectInner:        image.Rectangle{Max: image.Point{5, 5}},
 			pChInner:         plane.PolyChain{{0, 0}},
@@ -37,7 +37,7 @@ func TestFrame_PolyChainToOuter(t *testing.T) {
 		},
 		{
 			name:             "",
-			Position:         plane.Position{Point2: plane.Point2{1, 1}, Rotation: math.Pi},
+			Position:         plane.Position{Point2: plane.Point2{1, 1}, LeftAngleFromOx: math.Pi},
 			DPM:              2,
 			RectInner:        image.Rectangle{Max: image.Point{5, 5}},
 			pChInner:         plane.PolyChain{{2, 2}},
@@ -45,7 +45,7 @@ func TestFrame_PolyChainToOuter(t *testing.T) {
 		},
 		{
 			name:             "",
-			Position:         plane.Position{Point2: plane.Point2{1, 1}, Rotation: math.Pi},
+			Position:         plane.Position{Point2: plane.Point2{1, 1}, LeftAngleFromOx: math.Pi},
 			DPM:              2,
 			RectInner:        image.Rectangle{Max: image.Point{5, 3}},
 			pChInner:         plane.PolyChain{{0, 0}},
@@ -53,7 +53,7 @@ func TestFrame_PolyChainToOuter(t *testing.T) {
 		},
 		{
 			name:             "",
-			Position:         plane.Position{Point2: plane.Point2{1, 1}, Rotation: math.Pi / 2},
+			Position:         plane.Position{Point2: plane.Point2{1, 1}, LeftAngleFromOx: math.Pi / 2},
 			DPM:              2,
 			RectInner:        image.Rectangle{Max: image.Point{5, 3}},
 			pChInner:         plane.PolyChain{{0, 0}},
