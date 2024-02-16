@@ -38,7 +38,7 @@ func (frame Frame) PointsToOuter(pChInner ...plane.Point2) plane.PolyChain {
 
 		} else {
 			angleInner := plane.Point2{p.X - center.X, p.Y - center.Y}.LeftAngleFromOx()
-			angleOuter := frame.LeftAngleFromOx - angleInner
+			angleOuter := frame.LeftAngle - angleInner
 			pChOuter[i] = plane.Point2{frame.Point2.X + radiusOuter*math.Cos(float64(angleOuter)), frame.Point2.Y + radiusOuter*math.Sin(float64(angleOuter))}
 		}
 
@@ -54,11 +54,11 @@ func (frame Frame) PointsToOuter(pChInner ...plane.Point2) plane.PolyChain {
 
 func (frame Frame) PointToInner(p2 plane.Point2) plane.Point2 {
 	radius := math.Sqrt((p2.X-frame.X)*(p2.X-frame.X)+(p2.Y-frame.Y)*(p2.Y-frame.Y)) * frame.DPM
-	var angle plane.LeftAngleFromOx
+	var angle plane.LeftAngle
 	if radius > mathlib.Eps {
 		angle = plane.Point2{p2.X - frame.X, p2.Y - frame.Y}.LeftAngleFromOx()
 	}
-	angleInternal := frame.LeftAngleFromOx - angle
+	angleInternal := frame.LeftAngle - angle
 	rect := frame.RGBA.Rect
 	center := plane.Point2{0.5 * float64(rect.Min.X+rect.Max.X-1), 0.5 * float64(rect.Min.Y+rect.Max.Y-1)}
 
@@ -67,11 +67,11 @@ func (frame Frame) PointToInner(p2 plane.Point2) plane.Point2 {
 
 func (frame Frame) MotionToInner(p2 plane.Point2) plane.Point2 {
 	radius := math.Sqrt((p2.X-frame.X)*(p2.X-frame.X)+(p2.Y-frame.Y)*(p2.Y-frame.Y)) * frame.DPM
-	var angle plane.LeftAngleFromOx
+	var angle plane.LeftAngle
 	if radius > mathlib.Eps {
 		angle = plane.Point2{p2.X - frame.X, p2.Y - frame.Y}.LeftAngleFromOx()
 	}
-	angleInternal := frame.LeftAngleFromOx - angle
+	angleInternal := frame.LeftAngle - angle
 
 	return plane.Point2{radius * math.Cos(float64(angleInternal)), radius * math.Sin(float64(angleInternal))}
 }
