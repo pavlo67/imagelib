@@ -7,6 +7,12 @@ import (
 	"github.com/pavlo67/common/common/mathlib/plane"
 )
 
+func Normalize(rect image.Rectangle) image.Rectangle {
+	rect = rect.Canon()
+
+	return image.Rectangle{Max: image.Point{rect.Max.X - rect.Min.X, rect.Max.Y - rect.Min.Y}}
+}
+
 // ...image.Point ----------------------------------------------------------
 
 func Distance(el1, el2 image.Point) float64 {

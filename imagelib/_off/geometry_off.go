@@ -1,4 +1,4 @@
-package imagelib
+package _off
 
 //func Direction(el1, el2 image.Point) float64 {
 //	dx := float64(el2.X) - float64(el1.X)

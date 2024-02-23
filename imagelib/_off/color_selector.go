@@ -1,4 +1,6 @@
-package imagelib
+package _off
+
+import "github.com/pavlo67/imagelib/imagelib"
 
 type ColorSelector struct {
 	NumColors   int
@@ -7,7 +9,7 @@ type ColorSelector struct {
 }
 
 var ColorSelectorFullRGB = ColorSelector{
-	NumColors:   NumColorsRGBA,
+	NumColors:   imagelib.NumColorsRGBA,
 	Selected:    0,
-	SelectedMax: NumColorsRGB,
+	SelectedMax: imagelib.NumColorsRGB,
 }

@@ -1,7 +1,8 @@
-package imagelib
+package _off
 
 import (
 	"fmt"
+	"github.com/pavlo67/imagelib/imagelib"
 	"image"
 	"sort"
 	"strconv"
@@ -20,7 +21,7 @@ func RGBAToTab(imgRGB image.RGBA) (red, green, blue string) {
 			red += strconv.Itoa(int(clr[0])) + "\t"
 			green += strconv.Itoa(int(clr[1])) + "\t"
 			blue += strconv.Itoa(int(clr[2])) + "\t"
-			offset += NumColorsRGBA
+			offset += imagelib.NumColorsRGBA
 		}
 
 		red += "\n"
@@ -54,7 +55,7 @@ func RGBAStat(imgRGB image.RGBA, colorDelta int32) []ColorStat {
 		for x := rect.Min.X; x < rect.Max.X; x++ {
 			clr := imgRGB.Pix[offset : offset+3]
 			colorCounts[((int32(clr[0])/colorDelta)<<16+(int32(clr[1])/colorDelta)<<8+(int32(clr[2])/colorDelta))]++
-			offset += NumColorsRGBA
+			offset += imagelib.NumColorsRGBA
 		}
 	}
 

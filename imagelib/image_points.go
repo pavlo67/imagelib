@@ -1,14 +1,15 @@
 package imagelib
 
 import (
-	"image"
-	"math"
-
 	"github.com/pavlo67/common/common/mathlib/plane"
 	"golang.org/x/image/colornames"
-)
+	"image"
+	"image/color"
+	"math"
 
-// ----------------------------------------------------------------
+	"github.com/pavlo67/common/common/errors"
+	"github.com/pavlo67/common/common/pnglib"
+)
 
 func GrayFromPoints(points []image.Point, rect *image.Rectangle) image.Gray {
 	if len(points) < 1 {
@@ -85,4 +86,50 @@ func GrayFromPoints2(points2 []plane.Point2, rect *image.Rectangle) image.Gray {
 	}
 
 	return gray
+}
+
+type PointsImage struct {
+	Points []image.Point
+	image.Rectangle
+}
+
+var _ Imager = &PointsImage{}
+
+func (imageOp *PointsImage) Bounds() image.Rectangle {
+	if imageOp == nil {
+		return image.Rectangle{}
+	}
+
+	return imageOp.Rectangle
+}
+
+func (imageOp *PointsImage) Image() (image.Image, string, error) {
+	if imageOp == nil {
+		return nil, "", errors.New("*PointsImage = nil")
+	}
+
+	return PointsToGrayscale(imageOp.Points, imageOp.Rectangle), "", nil
+}
+
+// PointsToGrayscale returns Gray_ structure instead of image.Gray because the structure implements Imager interface required for show.Demo()
+func PointsToGrayscale(points []image.Point, rect image.Rectangle) image.Image {
+	xWidth := rect.Max.X - rect.Min.X
+	yHeight := rect.Max.Y - rect.Min.Y
+
+	gray := image.Gray{
+		Pix:    make([]uint8, xWidth*yHeight),
+		Stride: xWidth,
+		Rect:   rect,
+	}
+
+	for _, p := range points {
+		gray.Set(p.X, p.Y, color.White)
+	}
+
+	return &gray
+}
+
+func PointsToGrayscalePng(points []image.Point, rect image.Rectangle, path string) error {
+	img := PointsToGrayscale(points, rect)
+	return pnglib.Save(img, path)
 }

@@ -1,7 +1,8 @@
-package imagelib
+package _off
 
 import (
 	"fmt"
+	"github.com/pavlo67/imagelib/imagelib"
 	"image/color"
 
 	"github.com/pavlo67/common/common/mathlib/plane"
@@ -16,8 +17,8 @@ type GridMarking struct {
 }
 
 func CrossMark(img draw.Image, x, y, size int, clr color.Color) {
-	AddVLine(img, x, y-size, y+size, clr)
-	AddHLine(img, x-size, y, x+size, clr)
+	imagelib.AddVLine(img, x, y-size, y+size, clr)
+	imagelib.AddHLine(img, x-size, y, x+size, clr)
 }
 
 const onAddGrid = "on imagelib.MarkGrid()"
@@ -38,10 +39,10 @@ func MarkGrid(img draw.Image, gridMarking GridMarking, clrGrid, clrPoints color.
 	}
 
 	for x := rect.Min.X; x < rect.Max.X; x += dx {
-		AddVLine(img, x, rect.Min.Y, rect.Max.Y-1, clrGrid)
+		imagelib.AddVLine(img, x, rect.Min.Y, rect.Max.Y-1, clrGrid)
 	}
 	for y := rect.Min.Y; y < rect.Max.Y; y += dy {
-		AddHLine(img, rect.Min.X, y, rect.Max.X-1, clrGrid)
+		imagelib.AddHLine(img, rect.Min.X, y, rect.Max.X-1, clrGrid)
 	}
 
 	for _, gp := range gridMarking.GridPoints {

@@ -5,55 +5,25 @@ import (
 	"github.com/pavlo67/common/common/errors"
 	"github.com/pavlo67/common/common/pnglib"
 	"image"
-	"image/color"
 	_ "image/jpeg"
 	"os"
 )
 
-type PointsImage struct {
-	Points []image.Point
-	image.Rectangle
-}
+const onReadImage = "on ReadImage()"
 
-var _ Imager = &PointsImage{}
+func ReadImage(srcFilename string) (image.Image, error) {
+	srcFile, err := os.Open(srcFilename)
+	if err != nil {
+		return nil, errors.Wrap(err, onReadImage)
+	}
+	defer srcFile.Close()
 
-func (imageOp *PointsImage) Bounds() image.Rectangle {
-	if imageOp == nil {
-		return image.Rectangle{}
+	img, _, err := image.Decode(srcFile)
+	if err != nil {
+		return nil, errors.Wrapf(err, "on decoding %s / "+onReadImage, srcFilename)
 	}
 
-	return imageOp.Rectangle
-}
-
-func (imageOp *PointsImage) Image() (image.Image, string, error) {
-	if imageOp == nil {
-		return nil, "", errors.New("*PointsImage = nil")
-	}
-
-	return PointsToGrayscale(imageOp.Points, imageOp.Rectangle), "", nil
-}
-
-// PointsToGrayscale returns Gray_ structure instead of image.Gray because the structure implements Imager interface required for show.Demo()
-func PointsToGrayscale(points []image.Point, rect image.Rectangle) image.Image {
-	xWidth := rect.Max.X - rect.Min.X
-	yHeight := rect.Max.Y - rect.Min.Y
-
-	gray := image.Gray{
-		Pix:    make([]uint8, xWidth*yHeight),
-		Stride: xWidth,
-		Rect:   rect,
-	}
-
-	for _, p := range points {
-		gray.Set(p.X, p.Y, color.White)
-	}
-
-	return &gray
-}
-
-func PointsToGrayscalePng(points []image.Point, rect image.Rectangle, path string) error {
-	img := PointsToGrayscale(points, rect)
-	return pnglib.Save(img, path)
+	return img, nil
 }
 
 const onImageGray = "on ImageGray()"
@@ -159,5 +129,4 @@ func ImageRGBA(filename string, rect *image.Rectangle) (imgRGBA *image.RGBA, ori
 	//}
 
 	return imgRGBA, &imgRGBA.Rect, nil
-
 }

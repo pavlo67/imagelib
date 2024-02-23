@@ -12,26 +12,6 @@ import (
 	"github.com/pavlo67/imagelib/imagelib"
 )
 
-const onResizeToRange = "on ResizeToRange()"
-
-func ResizeToRange(imgRGB image.RGBA, dpm float64, dpmRange [2]float64) (*image.RGBA, float64, error) {
-	if !(dpm > 0 && !math.IsInf(dpm, 1)) {
-		return nil, 0, fmt.Errorf("wrong dpm: %f / "+onResizeToRange, dpm)
-	}
-	if dpm >= dpmRange[0] && dpm <= dpmRange[1] {
-		return &imgRGB, dpm, nil
-	}
-
-	imgRGBResized, resizeRatio, err := Resize(imgRGB, 0.5*(dpmRange[0]+dpmRange[1])/dpm)
-	if err != nil {
-		return nil, 0, errors.Wrap(err, onResizeToRange)
-	} else if imgRGBResized == nil {
-		return nil, 0, errors.New("resized img == nil / " + onResizeToRange)
-	}
-
-	return imgRGBResized, dpm * resizeRatio, nil
-}
-
 const onResize = "on Resize()"
 
 func Resize(imgRGB image.RGBA, ratio float64) (*image.RGBA, float64, error) {
@@ -63,6 +43,39 @@ func Resize(imgRGB image.RGBA, ratio float64) (*image.RGBA, float64, error) {
 	}
 
 	return rgbaResized, ratio, nil
+}
+
+const onResizeGray = "on opencvlib.ResizeGray()"
+
+func ResizeGray(imgGray image.Gray, ratio float64) (*image.Gray, float64, error) {
+	if ratio == 1 || ratio == 0 {
+		return &imgGray, 1, nil
+	} else if ratio < 0 || math.IsNaN(ratio) || math.IsInf(ratio, 0) {
+		return nil, 0, fmt.Errorf("wrong resize ratio (%f) / "+onResizeGray, ratio)
+	}
+
+	mat, err := gocv.ImageGrayToMatGray(&imgGray)
+	if err != nil {
+		return nil, 0, errors.Wrap(err, onResizeGray)
+	}
+	defer mat.Close()
+
+	matForResize := gocv.NewMat()
+	defer matForResize.Close()
+
+	gocv.Resize(mat, &matForResize, image.Point{}, ratio, ratio, gocv.InterpolationDefault)
+
+	imgResized, err := matForResize.ToImage()
+	if err != nil {
+		return nil, 0, errors.Wrap(err, onResizeGray)
+	}
+
+	grayResized, ok := imgResized.(*image.Gray)
+	if !ok {
+		return nil, 0, fmt.Errorf("resized image has wrong type: %T / "+onResizeGray, grayResized)
+	}
+
+	return grayResized, ratio, nil
 }
 
 const onRotateResized = "on RotateResized()"
@@ -248,3 +261,23 @@ func MorphEx(imgGray image.Gray, morphType gocv.MorphType, size int) (*image.Gra
 
 	return imgGrayTransformed, nil
 }
+
+//const onResizeToRange = "on ResizeToRange()"
+//
+//func ResizeToRange(imgRGB image.RGBA, dpm float64, dpmRange [2]float64) (*image.RGBA, float64, error) {
+//	if !(dpm > 0 && !math.IsInf(dpm, 1)) {
+//		return nil, 0, fmt.Errorf("wrong dpm: %f / "+onResizeToRange, dpm)
+//	}
+//	if dpm >= dpmRange[0] && dpm <= dpmRange[1] {
+//		return &imgRGB, dpm, nil
+//	}
+//
+//	imgRGBResized, resizeRatio, err := Resize(imgRGB, 0.5*(dpmRange[0]+dpmRange[1])/dpm)
+//	if err != nil {
+//		return nil, 0, errors.Wrap(err, onResizeToRange)
+//	} else if imgRGBResized == nil {
+//		return nil, 0, errors.New("resized img == nil / " + onResizeToRange)
+//	}
+//
+//	return imgRGBResized, dpm * resizeRatio, nil
+//}

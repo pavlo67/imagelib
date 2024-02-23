@@ -122,3 +122,27 @@ func RGBAvg(img *image.RGBA, x, y int, canalHalfSide int, differenceMax uint8) [
 //		uint8(math.Round(float64(sum[2]) / cnt)),
 //	}
 //}
+
+//func GrayValueAvg(img *image.RGBA, x, y float64, csSelected int) float64 {
+//	dx, dy := x-float64(int(x)), y-float64(int(y))
+//	if dx > 0 {
+//		if dy > 0 {
+//			return float64(img.Pix[int(y)*img.Stride+int(x)*NumColorsRGBA+csSelected])*(1-dx)*(1-dy) +
+//				float64(img.Pix[(int(y)+1)*img.Stride+int(x)*NumColorsRGBA+csSelected])*(1-dx)*dy +
+//				float64(img.Pix[(int(y)+1)*img.Stride+(int(x)+1)*NumColorsRGBA+csSelected])*dx*dy +
+//				float64(img.Pix[int(y)*img.Stride+(int(x)+1)*NumColorsRGBA+csSelected])*dx*(1-dy)
+//		}
+//		return float64(img.Pix[int(y)*img.Stride+int(x)*NumColorsRGBA+csSelected])*(1-dx) +
+//			float64(img.Pix[int(y)*img.Stride+(int(x)+1)*NumColorsRGBA+csSelected])*dx
+//	} else {
+//		if dy > 0 {
+//			return float64(img.Pix[int(y)*img.Stride+int(x)*NumColorsRGBA+csSelected])*(1-dy) +
+//				float64(img.Pix[(int(y)+1)*img.Stride+int(x)*NumColorsRGBA+csSelected])*dy
+//		}
+//		return float64(img.Pix[int(y)*img.Stride+int(x)*NumColorsRGBA+csSelected])
+//	}
+//}
+//
+//func GrayValue(img *image.RGBA, x, y, csSelected int) float64 {
+//	return float64(img.Pix[y*img.Stride+x*NumColorsRGBA+csSelected])
+//}

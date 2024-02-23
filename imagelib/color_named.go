@@ -6,9 +6,9 @@ import (
 	"golang.org/x/image/colornames"
 )
 
-func Brightness(clr color.RGBA) uint32 {
-	return uint32(clr.R) * uint32(clr.G) * uint32(clr.B)
-}
+//func Brightness(clr color.RGBA) uint32 {
+//	return uint32(clr.R) * uint32(clr.G) * uint32(clr.B)
+//}
 
 type ColorNamed struct {
 	color.Color

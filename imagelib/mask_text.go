@@ -28,59 +28,6 @@ func (mt MarkerText) Mark(drawImg draw.Image, clr color.Color) {
 	}
 }
 
-// ----------------------------------------------------------------------------------------
-
-//var _ GetMask = &TextGetMask{}
-//var _ GetMask = TextGetMask{}
-//
-//type TextGetMask struct {
-//	*ColorNamed
-//	Point     image.Point
-//	Segments  []plane.Segment
-//	LineWidth int
-//	FontFile  string
-//	Label     string
-//	Title     string
-//	Text      string
-//}
-//
-//func (textGetMask TextGetMask) Color() *ColorNamed {
-//	return textGetMask.ColorNamed
-//}
-//
-//func (textGetMask TextGetMask) MasksOneColor(clr color.Color) convolution.MasksOneColor {
-//	if textGetMask.FontFile == "" {
-//		return nil
-//	}
-//
-//	var points []image.Point
-//	for _, segment := range textGetMask.Segments {
-//		points = append(points, Line(segment, textGetMask.LineWidth)...)
-//	}
-//
-//	return MasksOneColor{
-//		MaskOneColor{
-//			Color:  clr,
-//			Points: points,
-//			Marker: &MarkerText{
-//				FontFile: textGetMask.FontFile,
-//				Text:     []string{textGetMask.Label},
-//				Point:    textGetMask.Point,
-//			},
-//		},
-//	}
-//}
-//
-//func (textGetMask TextGetMask) Info(colorNamed ColorNamed) string {
-//
-//	var title string
-//	if textGetMask.Title != "" {
-//		title = "\n" + textGetMask.Title + "\n"
-//	}
-//
-//	return title + textGetMask.Text
-//}
-
 var _ GetMask = &SegmentsGetMask{}
 var _ GetMask = SegmentsGetMask{}
 
@@ -147,3 +94,56 @@ func FilledRectangle(xMin, xMax, yMin, yMax int) []image.Point {
 
 	return points
 }
+
+// ----------------------------------------------------------------------------------------
+
+//var _ GetMask = &TextGetMask{}
+//var _ GetMask = TextGetMask{}
+//
+//type TextGetMask struct {
+//	*ColorNamed
+//	Point     image.Point
+//	Segments  []plane.Segment
+//	LineWidth int
+//	FontFile  string
+//	Label     string
+//	Title     string
+//	Text      string
+//}
+//
+//func (textGetMask TextGetMask) Color() *ColorNamed {
+//	return textGetMask.ColorNamed
+//}
+//
+//func (textGetMask TextGetMask) MasksOneColor(clr color.Color) convolution.MasksOneColor {
+//	if textGetMask.FontFile == "" {
+//		return nil
+//	}
+//
+//	var points []image.Point
+//	for _, segment := range textGetMask.Segments {
+//		points = append(points, Line(segment, textGetMask.LineWidth)...)
+//	}
+//
+//	return MasksOneColor{
+//		MaskOneColor{
+//			Color:  clr,
+//			Points: points,
+//			Marker: &MarkerText{
+//				FontFile: textGetMask.FontFile,
+//				Text:     []string{textGetMask.Label},
+//				Point:    textGetMask.Point,
+//			},
+//		},
+//	}
+//}
+//
+//func (textGetMask TextGetMask) Info(colorNamed ColorNamed) string {
+//
+//	var title string
+//	if textGetMask.Title != "" {
+//		title = "\n" + textGetMask.Title + "\n"
+//	}
+//
+//	return title + textGetMask.Text
+//}
