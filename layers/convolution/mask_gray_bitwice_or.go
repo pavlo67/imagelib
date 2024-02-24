@@ -44,7 +44,7 @@ func (mask *bitwiceOrMask) Prepare(onData interface{}) error {
 	return nil
 }
 
-func (mask bitwiceOrMask) Stat() interface{} {
+func (mask bitwiceOrMask) Classes() layers.Classes {
 	return nil
 }
 

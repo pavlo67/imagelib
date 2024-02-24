@@ -32,5 +32,21 @@ type Metrics struct {
 	Min, Max, Avg pix.Value
 	BlRat, WhRat  float64
 	Criterion     float64 // TODO!!! keep it for shifting
-	Specific      interface{}
+	Classes       Classes
+}
+
+type Classes []int32
+
+func (classes Classes) Range() pix.Value {
+	if len(classes) <= 0 {
+		return 0
+
+	}
+
+	r := pix.Value(256 / len(classes))
+	if pix.Value(256%len(classes)) >= r {
+		return 0
+	}
+
+	return r
 }

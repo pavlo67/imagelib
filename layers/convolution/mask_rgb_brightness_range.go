@@ -80,13 +80,7 @@ func (mask brightnessRangeMask) Info() common.Map {
 	}
 }
 
-func (mask brightnessRangeMask) Stat() interface{} {
-	sizes := mask.imgRGB.Rect.Size()
-	if pixLen := sizes.X * sizes.Y; pixLen > 0 {
-		return &layers.Metrics{
-			WhRat: float64(mask.cnt) / float64(pixLen),
-		}
-	}
+func (mask brightnessRangeMask) Classes() layers.Classes {
 
 	return nil
 }

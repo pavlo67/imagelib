@@ -43,7 +43,7 @@ func (mask *bitwiceAndShiftedMask) Prepare(onData interface{}) error {
 	return nil
 }
 
-func (mask bitwiceAndShiftedMask) Stat() interface{} {
+func (mask bitwiceAndShiftedMask) Classes() layers.Classes {
 	return nil
 }
 

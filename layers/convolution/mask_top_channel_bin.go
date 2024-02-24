@@ -3,6 +3,7 @@ package convolution
 import (
 	"fmt"
 	frame2 "github.com/pavlo67/imagelib/frame"
+	"github.com/pavlo67/imagelib/layers"
 	"image"
 	"strconv"
 
@@ -71,7 +72,7 @@ func (mask topChannelBinaryMask) Info() common.Map {
 	}
 }
 
-func (mask topChannelBinaryMask) Stat() interface{} {
+func (mask topChannelBinaryMask) Classes() layers.Classes {
 	return nil
 }
 

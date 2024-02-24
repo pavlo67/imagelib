@@ -3,6 +3,7 @@ package convolution
 import (
 	"fmt"
 	frame2 "github.com/pavlo67/imagelib/frame"
+	"github.com/pavlo67/imagelib/layers"
 	"image"
 	"math"
 	"strconv"
@@ -59,7 +60,7 @@ func (mask variationMask) Info() common.Map {
 	}
 }
 
-func (mask variationMask) Stat() interface{} {
+func (mask variationMask) Classes() layers.Classes {
 	return nil
 }
 

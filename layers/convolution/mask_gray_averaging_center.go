@@ -50,7 +50,7 @@ func (mask *averagingCenterMask) Prepare(onData interface{}) error {
 	return nil
 }
 
-func (mask averagingCenterMask) Stat() interface{} {
+func (mask averagingCenterMask) Classes() layers.Classes {
 	return nil
 }
 

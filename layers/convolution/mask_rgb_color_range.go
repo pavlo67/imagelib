@@ -3,6 +3,7 @@ package convolution
 import (
 	"fmt"
 	frame2 "github.com/pavlo67/imagelib/frame"
+	"github.com/pavlo67/imagelib/layers"
 	"image"
 
 	"github.com/pavlo67/imagelib/imagelib/pix"
@@ -65,14 +66,7 @@ func (mask colorRangeMask) Info() common.Map {
 	}
 }
 
-func (mask colorRangeMask) Stat() interface{} {
-	//sizes := mask.imgRGB.Rect.Size()
-	//if pixLen := sizes.X * sizes.Y; pixLen > 0 {
-	//	return &imager.Metrics{
-	//		WhRat: float64(mask.cnt) / float64(pixLen),
-	//	}
-	//}
-
+func (mask colorRangeMask) Classes() layers.Classes {
 	return nil
 }
 

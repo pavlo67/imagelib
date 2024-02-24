@@ -47,7 +47,7 @@ func (mask *averagingLeftTopMask) Prepare(onData interface{}) error {
 	return nil
 }
 
-func (mask averagingLeftTopMask) Stat() interface{} {
+func (mask averagingLeftTopMask) Classes() layers.Classes {
 	return nil
 }
 

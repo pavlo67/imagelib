@@ -126,7 +126,7 @@ package convolution
 //		return v
 //
 //	} else if v < mask.inversedBy {
-//		//// TODO: uncomment it if mask.Stat() is needed
+//		//// TODO: uncomment it if mask.Classes() is needed
 //		//if mask.pixDeltaMax > 0 {
 //		//	mask.colorCounts[((int32(clr[0])/mask.pixDeltaMax)<<16+(int32(clr[1])/mask.pixDeltaMax)<<8+(int32(clr[2])/mask.pixDeltaMax))]++
 //		//}
@@ -150,7 +150,7 @@ package convolution
 //	return nil
 //}
 //
-//func (mask *variationNearestMask) Stat() interface{} {
+//func (mask *variationNearestMask) Classes() interface{} {
 //	if mask == nil {
 //		return nil
 //	}

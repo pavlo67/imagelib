@@ -143,7 +143,7 @@ package convolution
 //	return nil
 //}
 //
-//func (mask *neighborsSimilarMask) Stat() interface{} {
+//func (mask *neighborsSimilarMask) Classes() interface{} {
 //	if mask == nil {
 //		return nil
 //	}

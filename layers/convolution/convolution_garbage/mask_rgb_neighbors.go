@@ -103,7 +103,7 @@ package convolution
 //	return nil
 //}
 //
-//func (mask *neighborsMask) Stat() *imager.PreparationSettings {
+//func (mask *neighborsMask) Classes() *imager.PreparationSettings {
 //	if mask == nil {
 //		return nil
 //	}

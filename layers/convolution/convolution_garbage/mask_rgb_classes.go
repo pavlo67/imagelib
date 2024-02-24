@@ -68,7 +68,7 @@ package convolution
 //	return nil
 //}
 //
-//func (mask classesMask) Stat() interface{} {
+//func (mask classesMask) Classes() interface{} {
 //	return nil
 //}
 //

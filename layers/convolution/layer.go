@@ -15,7 +15,7 @@ type Mask interface {
 	Prepare(onData interface{}) error
 	Calculate(x, y int) pix.Value // (x, y) corresponds to the left-top (not center!) of calculation area
 	Info() common.Map
-	Stat() interface{}
+	Classes() layers.Classes
 }
 
 const onLayer = "on convolution.Layer()"
@@ -90,7 +90,7 @@ func Layer(data imagelib.Described, mask Mask, scale int, addRest bool) (*layers
 	if cnt := xWidth * yHeight; cnt > 0 {
 		lyrConvolved.WhRat, lyrConvolved.BlRat = float64(whiteCnt)/float64(cnt), float64(blackCnt)/float64(cnt)
 	}
-	lyrConvolved.Specific = mask.Stat()
+	lyrConvolved.Classes = mask.Classes()
 
 	return &lyrConvolved, nil
 }

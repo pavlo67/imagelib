@@ -53,7 +53,7 @@ func (mask *averagingRGBMask) Prepare(onData interface{}) error {
 	return nil
 }
 
-//func (mask averagingRGBMask) Stat() *imager.Metrics {
+//func (mask averagingRGBMask) Classes() *imager.Metrics {
 //	return nil
 //}
 

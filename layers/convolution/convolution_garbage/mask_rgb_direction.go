@@ -91,7 +91,7 @@ package convolution
 //}
 //
 //
-//func (mask directionMask) Stat() interface{} {
+//func (mask directionMask) Classes() interface{} {
 //sizes := mask.imgRGB.Rect.Size()
 //if pixLen := sizes.X * sizes.Y; pixLen > 0 {
 //return &imager.Metrics{

@@ -2,6 +2,7 @@ package convolution
 
 import (
 	"fmt"
+	"github.com/pavlo67/imagelib/layers"
 	"image"
 	"strconv"
 
@@ -15,14 +16,9 @@ import (
 var _ Mask = &RGBBrightnessClassesMask{}
 
 type RGBBrightnessClassesMask struct {
-	imgRGB *image.RGBA
-	stat   ClassesMetrics
-}
-
-type ClassesMetrics struct {
-	ClassesNum int
-	ClassRange pix.Value
-	Cnt        []int32
+	imgRGB     *image.RGBA
+	classRange pix.Value
+	classes    layers.Classes
 }
 
 const onRGBBrightnessClasses = "on RGBBrightnessClasses()"
@@ -37,11 +33,8 @@ func RGBBrightnessClasses(classRange pix.Value) (Mask, error) {
 	}
 
 	return &RGBBrightnessClassesMask{
-		stat: ClassesMetrics{
-			ClassRange: classRange,
-			ClassesNum: classesNum,
-			Cnt:        make([]int32, classesNum),
-		},
+		classRange: classRange,
+		classes:    make([]int32, classesNum),
 	}, nil
 }
 
@@ -49,7 +42,7 @@ func (mask *RGBBrightnessClassesMask) Side() int {
 	return 1
 }
 
-const onBrightnessPrepare = "on RGBBrightnessClasses.GetNext()"
+const onRGBBrightnessPrepare = "on RGBBrightnessClasses.GetNext()"
 
 func (mask *RGBBrightnessClassesMask) Prepare(onData interface{}) error {
 	switch v := onData.(type) {
@@ -68,25 +61,25 @@ func (mask *RGBBrightnessClassesMask) Prepare(onData interface{}) error {
 	}
 	if mask.imgRGB == nil {
 		if onData == nil {
-			return fmt.Errorf("onData == nil (%#v) / "+onBrightnessPrepare, onData)
+			return fmt.Errorf("onData == nil (%#v) / "+onRGBBrightnessPrepare, onData)
 		}
-		return fmt.Errorf("wrong data (%T) / "+onBrightnessPrepare, onData)
+		return fmt.Errorf("wrong data (%T) / "+onRGBBrightnessPrepare, onData)
 	}
 
-	mask.stat.Cnt = make([]int32, mask.stat.ClassesNum)
+	mask.classes = make([]int32, len(mask.classes))
 
 	return nil
 }
 
 func (mask RGBBrightnessClassesMask) Info() common.Map {
 	return common.Map{
-		"name":       "br_classes_" + strconv.Itoa(int(mask.stat.ClassRange)),
-		"classRange": mask.stat.ClassRange,
+		"name":       "br_classes_" + strconv.Itoa(int(mask.classRange)),
+		"classRange": mask.classRange,
 	}
 }
 
-func (mask RGBBrightnessClassesMask) Stat() interface{} {
-	return mask.stat
+func (mask RGBBrightnessClassesMask) Classes() layers.Classes {
+	return mask.classes
 }
 
 func (mask *RGBBrightnessClassesMask) Calculate(x, y int) pix.Value {
@@ -94,8 +87,8 @@ func (mask *RGBBrightnessClassesMask) Calculate(x, y int) pix.Value {
 
 	brightness := pix.ValueSum(mask.imgRGB.Pix[offset]) + pix.ValueSum(mask.imgRGB.Pix[offset+1]) + pix.ValueSum(mask.imgRGB.Pix[offset+2])
 
-	classNum := pix.Value(brightness / (3 * pix.ValueSum(mask.stat.ClassRange)))
-	mask.stat.Cnt[classNum]++
+	classNum := pix.Value(brightness / (3 * pix.ValueSum(mask.classRange)))
+	mask.classes[classNum]++
 
-	return mask.stat.ClassRange * classNum
+	return mask.classRange * classNum
 }
