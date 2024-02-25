@@ -79,7 +79,7 @@ func (op *videoFiles) NextFrame(scale float64, delayMax time.Duration) (*video.P
 	}
 
 	imgPath := op.nFiles[op.nFilesI].Path
-	imgOriginal, err := imagelib.ReadImage(imgPath)
+	imgOriginal, err := imagelib.Read(imgPath)
 	if err != nil {
 		return nil, errors.Wrap(err, onNextFrane)
 	} else if imgOriginal == nil {

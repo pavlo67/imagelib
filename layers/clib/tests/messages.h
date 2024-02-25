@@ -5,4 +5,4 @@ typedef struct {
     int16_t len;
 } Message;
 
-msg_write(Message* msg, const char* str);
+void  msg_write(Message* msg, const char* str);

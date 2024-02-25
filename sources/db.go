@@ -42,7 +42,7 @@ func GetSaved(path string) (imgRGB *image.RGBA, descr *Description, err error) {
 		return nil, nil, errors.New("descr == nil / " + onGetSaved)
 	}
 
-	img, err := imagelib.ReadImage(path)
+	img, err := imagelib.Read(path)
 
 	if err != nil {
 		return nil, nil, errors.Wrap(err, onGetSaved)

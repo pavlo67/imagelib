@@ -2,80 +2,70 @@ package imagelib
 
 import (
 	"fmt"
-	"github.com/pavlo67/common/common/errors"
-	"github.com/pavlo67/common/common/pnglib"
+	pnm "github.com/jbuchbinder/gopnm"
 	"image"
+	_ "image/gif"
 	_ "image/jpeg"
+	_ "image/png"
 	"os"
+	"path/filepath"
+
+	"github.com/pavlo67/common/common/errors"
+	"github.com/pavlo67/common/common/filelib"
 )
 
-const onReadImage = "on ReadImage()"
+const onRead = "on Read()"
 
-func ReadImage(srcFilename string) (image.Image, error) {
-	srcFile, err := os.Open(srcFilename)
+func Read(filename string) (image.Image, error) {
+
+	srcFile, err := os.Open(filename)
 	if err != nil {
-		return nil, errors.Wrap(err, onReadImage)
+		return nil, errors.Wrap(err, onRead)
 	}
 	defer srcFile.Close()
 
 	img, _, err := image.Decode(srcFile)
 	if err != nil {
-		return nil, errors.Wrapf(err, "on decoding %s / "+onReadImage, srcFilename)
+		return nil, errors.Wrapf(err, "on decoding %s / "+onRead, filename)
 	}
 
 	return img, nil
 }
 
-const onImageGray = "on ImageGray()"
+const onReadGray = "on imagelib.ReadGray()"
 
-func ImageGray(srcFilename, resFilename string, rect *image.Rectangle) (imgArea *image.Gray, original *image.Rectangle, err error) {
+func ReadGray(srcFilename string) (*image.Gray, error) {
 	srcFile, err := os.Open(srcFilename)
 	if err != nil {
-		// return nil, nil, errors.Wrapf(err, "on opening %s / "+onImageGray, srcFilename)
-		return nil, nil, errors.Wrap(err, onImageGray)
+		return nil, errors.Wrap(err, onReadGray)
 	}
 	defer srcFile.Close()
 
 	src, _, err := image.Decode(srcFile)
 	if err != nil {
-		return nil, nil, errors.Wrapf(err, "on decoding %s / "+onImageGray, srcFilename)
+		return nil, errors.Wrapf(err, "on decoding %s / "+onReadGray, srcFilename)
 	}
 
-	switch img := src.(type) {
-	//case *img.Gray16:
-	//	t.Logf("%T", img)
-	case *image.Gray:
-		if rect == nil {
-			return img, &img.Rect, nil
-		}
-
-		imgArea := img.SubImage(*rect).(*image.Gray)
-
-		if resFilename != "" {
-			if err = pnglib.Save(imgArea, resFilename); err != nil {
-				fmt.Fprint(os.Stderr, err)
-			}
-		}
-
-		return imgArea, &img.Rect, nil
+	imgGray, err := ImageToGray(src)
+	if err != nil {
+		return nil, errors.Wrap(err, onReadGray)
 	}
 
-	return nil, nil, fmt.Errorf("wrong format (%T) of %s / "+onImageGray, src, srcFilename)
+	return imgGray, nil
 }
 
-const onImageRGBA = "on ImageRGBA()"
+const onReadRGBA = "on imagelib.ReadRGBA()"
 
-func ImageRGBA(filename string, rect *image.Rectangle) (imgRGBA *image.RGBA, original *image.Rectangle, err error) {
+func ReadRGBA(filename string) (imgRGBA *image.RGBA, _ error) {
 	srcFile, err := os.Open(filename)
 	if err != nil {
-		// return nil, nil, errors.Wrapf(err, "on opening %s / "+onImageRGBA, filename)
-		return nil, nil, errors.Wrap(err, onImageRGBA)
+		return nil, errors.Wrap(err, onReadRGBA)
 	}
 	defer srcFile.Close()
 
 	src, _, err := image.Decode(srcFile)
 	if err != nil {
-		return nil, nil, errors.Wrapf(err, "on decoding %s / "+onImageRGBA, filename)
+		return nil, errors.Wrapf(err, "on decoding %s / "+onReadRGBA, filename)
 	}
 
 	switch img := src.(type) {
@@ -114,19 +104,32 @@ func ImageRGBA(filename string, rect *image.Rectangle) (imgRGBA *image.RGBA, ori
 		}
 
 	default:
-		return nil, nil, fmt.Errorf("wrong format (%T) of %s / "+onImageRGBA, src, filename)
+		return nil, fmt.Errorf("wrong format (%T) of %s / "+onReadRGBA, src, filename)
 
 	}
 
-	if rect != nil {
-		imgRGBA = imgRGBA.SubImage(*rect).(*image.RGBA)
+	return imgRGBA, nil
+}
+
+const onSavePGM = "on imagelib.SavePGM()"
+
+func SavePGM(img image.Image, filename string) error {
+	if img == nil {
+		return errors.New("img == nil / " + onSavePGM)
+	} else if path := filepath.Dir(filename); path != "" && path != "." && path != ".." {
+		if _, err := filelib.Dir(path); err != nil {
+			return errors.Wrapf(err, "can't create dir '%s' / "+onSavePGM, path)
+		}
 	}
 
-	//if resFilename != "" {
-	//	if err = SavePNG(imgRGBA, resFilename); err != nil {
-	//		fmt.Fprint(os.Stderr, err)
-	//	}
-	//}
+	resFile, err := os.Create(filename)
+	if err != nil {
+		return errors.Wrap(err, onSavePGM)
+	}
+	defer resFile.Close()
 
-	return imgRGBA, &imgRGBA.Rect, nil
+	if err = pnm.Encode(resFile, img, pnm.PGM); err != nil {
+		return errors.Wrap(err, onSavePGM)
+	}
+	return nil
 }

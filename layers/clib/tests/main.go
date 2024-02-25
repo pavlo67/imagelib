@@ -45,7 +45,7 @@ func main() {
 		log.Fatal("lyrBrClasses == nil")
 	}
 
-	C.BrClasses(toCImageGray(*imgGray))
+	C.img_br_classes(toCImageGray(*imgGray), nil)
 }
 
 func toCImageGray(imgGray image.Gray) C.ImageGray {

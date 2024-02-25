@@ -10,7 +10,6 @@ import (
 	"github.com/pavlo67/common/common/geolib"
 
 	"github.com/pavlo67/imagelib/frame"
-	"github.com/pavlo67/imagelib/layers/convolution"
 )
 
 type Key string
@@ -54,11 +53,11 @@ func (imageRef ImageRef) Parse() (*geolib.Point, int, error) {
 }
 
 type Description struct {
-	N                          int
-	ImageRef                   `               json:",inline"`
-	GeoPoint                   *geolib.Point  `json:",omitempty"`
-	Bearing                    geolib.Bearing `json:",omitempty"`
-	DPM                        float64
-	PointsRaw                  []frame.PointRawGeo `json:",omitempty"`
-	convolution.ClassesMetrics `json:",omitempty"`
+	N         int
+	ImageRef  `               json:",inline"`
+	GeoPoint  *geolib.Point  `json:",omitempty"`
+	Bearing   geolib.Bearing `json:",omitempty"`
+	DPM       float64
+	PointsRaw []frame.PointRawGeo `json:",omitempty"`
+	// convolution.ClassesMetrics `json:",omitempty"`
 }

@@ -17,4 +17,4 @@ typedef struct {
 } Layer;
 
 ImageGray img_check_connect (ImageGray);
-          img_br_classes    (ImageGray src, Layer* dst);
+void          img_br_classes    (ImageGray src, Layer* dst);
