@@ -80,7 +80,7 @@ func ResizeGray(imgGray image.Gray, ratio float64) (*image.Gray, float64, error)
 
 const onRotateResized = "on RotateResized()"
 
-func RotateResized(imgRGB image.RGBA, angle plane.LeftAngle, targetSide int) (*image.RGBA, float64, error) {
+func RotateResized(imgRGB image.RGBA, angle plane.XToYAngle, targetSide int) (*image.RGBA, float64, error) {
 
 	if math.IsNaN(float64(angle)) || math.IsInf(float64(angle), 0) {
 		return nil, 0, fmt.Errorf("wrong rotation angle (%f) / "+onRotateResized, angle)

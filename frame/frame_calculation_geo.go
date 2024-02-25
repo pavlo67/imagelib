@@ -20,7 +20,7 @@ type PointRawGeo struct {
 const onCalculateWithGeoPoints = "on frame.CalculateWithGeoPoints()"
 
 // DEPRECATED: use CalculateWithPoints() instead
-func CalculateWithGeoPoints(xWidth, yHeight int, ptsRaw [3]PointRawGeo, unitX, unitY float64) (*geolib.Point, plane.LeftAngle, float64, error) {
+func CalculateWithGeoPoints(xWidth, yHeight int, ptsRaw [3]PointRawGeo, unitX, unitY float64) (*geolib.Point, plane.XToYAngle, float64, error) {
 
 	rect := image.Rectangle{Max: image.Point{xWidth, yHeight}}
 	imgPoint0 := plane.Point2{ptsRaw[0].Grid.X * unitX, ptsRaw[0].Grid.Y * unitY}
@@ -50,7 +50,7 @@ func CalculateWithGeoPoints(xWidth, yHeight int, ptsRaw [3]PointRawGeo, unitX, u
 
 	innerTriCenter := plane.Center(transformations[0].To, transformations[1].To, transformations[2].To)
 	triCenterRadius := innerTriCenter.Radius() / scale
-	triCenterRotation := innerTriCenter.LeftAngleFromOx() + rotation
+	triCenterRotation := innerTriCenter.XToYAngleFromOx() + rotation
 	triCenterX, triCenterY := triCenterRadius*math.Cos(float64(triCenterRotation)), triCenterRadius*math.Sin(float64(triCenterRotation))
 
 	geoPoint := geoTriCenter.MovedAt(plane.Point2{-triCenterX, -triCenterY})

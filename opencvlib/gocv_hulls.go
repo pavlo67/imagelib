@@ -20,7 +20,7 @@ func RectangleMin(points []image.Point) plane.Rectangle {
 	return plane.Rectangle{
 		Position: plane.Position{
 			Point2:    imagelib.PolyChain([]image.Point{rotatedRect.Center})[0],
-			LeftAngle: plane.LeftAngle(rotatedRect.Angle),
+			XToYAngle: plane.XToYAngle(rotatedRect.Angle),
 		},
 		HalfSideX: float64(rotatedRect.Width) * 0.5,
 		HalfSideY: float64(rotatedRect.Height) * 0.5,

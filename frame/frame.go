@@ -37,41 +37,44 @@ func (frame Frame) PointsToOuter(pChInner ...plane.Point2) plane.PolyChain {
 			pChOuter[i] = frame.Point2
 
 		} else {
-			angleInner := plane.Point2{p.X - center.X, p.Y - center.Y}.LeftAngleFromOx()
-			angleOuter := frame.LeftAngle - angleInner
+			angleInner := plane.Point2{p.X - center.X, p.Y - center.Y}.XToYAngleFromOx()
+			angleOuter := frame.XToYAngle - angleInner
 			pChOuter[i] = plane.Point2{frame.Point2.X + radiusOuter*math.Cos(float64(angleOuter)), frame.Point2.Y + radiusOuter*math.Sin(float64(angleOuter))}
 		}
-
-		// log.Printf("center: %v", center)
-		// log.Printf("radiusOuter: %f", radiusOuter)
-		// log.Printf("angleInner: %f (%f degrees)", angleInner, angleInner*180/math.Pi)
-		// log.Printf("angleOuter: %f (%f degrees)", angleOuter, angleOuter*180/math.Pi)
-		// log.Printf("p (%v) --> pChOuter[i]: %v", p, pChOuter[i])
 	}
 
 	return pChOuter
 }
 
-func (frame Frame) PointToInner(p2 plane.Point2) plane.Point2 {
-	radius := math.Sqrt((p2.X-frame.X)*(p2.X-frame.X)+(p2.Y-frame.Y)*(p2.Y-frame.Y)) * frame.DPM
-	var angle plane.LeftAngle
-	if radius > mathlib.Eps {
-		angle = plane.Point2{p2.X - frame.X, p2.Y - frame.Y}.LeftAngleFromOx()
+func (frame Frame) PointToInner(p2Outer plane.Point2) plane.Point2 {
+	radiusInner := math.Sqrt((p2Outer.X-frame.X)*(p2Outer.X-frame.X)+(p2Outer.Y-frame.Y)*(p2Outer.Y-frame.Y)) * frame.DPM
+	var angleOuter plane.XToYAngle
+	if radiusInner > mathlib.Eps {
+		angleOuter = plane.Point2{p2Outer.X - frame.X, p2Outer.Y - frame.Y}.XToYAngleFromOx()
 	}
-	angleInternal := frame.LeftAngle - angle
+	angleInner := frame.XToYAngle - angleOuter
 	rect := frame.RGBA.Rect
 	center := plane.Point2{0.5 * float64(rect.Min.X+rect.Max.X-1), 0.5 * float64(rect.Min.Y+rect.Max.Y-1)}
 
-	return plane.Point2{center.X + radius*math.Cos(float64(angleInternal)), center.Y + radius*math.Sin(float64(angleInternal))}
+	return plane.Point2{center.X + radiusInner*math.Cos(float64(angleInner)), center.Y + radiusInner*math.Sin(float64(angleInner))}
 }
 
-func (frame Frame) MotionToInner(p2 plane.Point2) plane.Point2 {
-	radius := math.Sqrt((p2.X-frame.X)*(p2.X-frame.X)+(p2.Y-frame.Y)*(p2.Y-frame.Y)) * frame.DPM
-	var angle plane.LeftAngle
-	if radius > mathlib.Eps {
-		angle = plane.Point2{p2.X - frame.X, p2.Y - frame.Y}.LeftAngleFromOx()
-	}
-	angleInternal := frame.LeftAngle - angle
+// MovingToInner calculates the frame moving over fixed image (inner --> outer)
+func (frame Frame) MovingToInner(movingOuter plane.Point2) plane.Point2 {
+	movingRadiusInner := math.Sqrt(movingOuter.X*movingOuter.X+movingOuter.Y*movingOuter.Y) * frame.DPM
+	movingAngleInner := frame.XToYAngle - movingOuter.XToYAngleFromOx()
 
-	return plane.Point2{radius * math.Cos(float64(angleInternal)), radius * math.Sin(float64(angleInternal))}
+	return plane.Point2{movingRadiusInner * math.Cos(float64(movingAngleInner)), movingRadiusInner * math.Sin(float64(movingAngleInner))}
+}
+
+// MovingToOuter calculates the frame moving over fixed image (outer --> inner)
+func (frame Frame) MovingToOuter(movingInner plane.Point2) plane.Point2 {
+	if !(frame.DPM > 0) {
+		return plane.Point2{math.NaN(), math.NaN()}
+	}
+
+	movingRadiusOuter := math.Sqrt(movingInner.X*movingInner.X+movingInner.Y*movingInner.Y) / frame.DPM
+	movingAngleOuter := frame.XToYAngle - movingInner.XToYAngleFromOx()
+
+	return plane.Point2{movingRadiusOuter * math.Cos(float64(movingAngleOuter)), movingRadiusOuter * math.Sin(float64(movingAngleOuter))}
 }
