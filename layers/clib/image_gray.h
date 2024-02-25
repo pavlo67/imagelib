@@ -1,4 +1,6 @@
 #include <inttypes.h>
+#include "messages.h"
+
 
 typedef struct {
     int32_t x_width, y_height;
@@ -11,7 +13,8 @@ typedef struct {
     ImageGray image_gray;
     int32_t*  classes;
     int8_t    classesNum;
+    Message   message;
 } Layer;
 
-ImageGray CheckConnect (ImageGray);
-Layer     BrClasses    (Layer);
+ImageGray img_check_connect (ImageGray);
+          img_br_classes    (ImageGray src, Layer* dst);
