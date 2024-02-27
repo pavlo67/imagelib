@@ -65,7 +65,6 @@ func (frame Frame) PointsToOuter(pChInner ...plane.Point2) plane.PolyChain {
 				pChOuter[i] = plane.Point2{frame.Point2.X + radiusOuter*math.Cos(float64(angleOuter)), frame.Point2.Y + radiusOuter*math.Sin(float64(angleOuter))}
 			}
 		}
-
 	}
 
 	return pChOuter
@@ -86,20 +85,31 @@ func (frame Frame) PointToInner(p2Outer plane.Point2) plane.Point2 {
 
 // MovingToInner calculates the frame moving over fixed image (inner --> outer)
 func (frame Frame) MovingToInner(movingOuter plane.Point2) plane.Point2 {
+	if !(frame.DPM > 0) || math.IsInf(frame.DPM, 1) {
+		return plane.Point2{math.NaN(), math.NaN()}
+	}
+
 	movingRadiusInner := math.Sqrt(movingOuter.X*movingOuter.X+movingOuter.Y*movingOuter.Y) * frame.DPM
-	movingAngleInner := frame.XToYAngle - movingOuter.XToYAngleFromOx()
+	movingAngleInner := frame.XToYAngle
+
+	if movingRadiusInner > mathlib.Eps {
+		movingAngleInner -= movingOuter.XToYAngleFromOx()
+	}
 
 	return plane.Point2{movingRadiusInner * math.Cos(float64(movingAngleInner)), movingRadiusInner * math.Sin(float64(movingAngleInner))}
 }
 
 // MovingToOuter calculates the frame moving over fixed image (outer --> inner)
 func (frame Frame) MovingToOuter(movingInner plane.Point2) plane.Point2 {
-	if !(frame.DPM > 0) {
+	if !(frame.DPM > 0) || math.IsInf(frame.DPM, 1) {
 		return plane.Point2{math.NaN(), math.NaN()}
 	}
 
 	movingRadiusOuter := math.Sqrt(movingInner.X*movingInner.X+movingInner.Y*movingInner.Y) / frame.DPM
-	movingAngleOuter := frame.XToYAngle - movingInner.XToYAngleFromOx()
+	movingAngleOuter := frame.XToYAngle
+	if movingRadiusOuter > mathlib.Eps {
+		movingAngleOuter -= movingInner.XToYAngleFromOx()
+	}
 
 	return plane.Point2{movingRadiusOuter * math.Cos(float64(movingAngleOuter)), movingRadiusOuter * math.Sin(float64(movingAngleOuter))}
 }

@@ -1,6 +1,7 @@
 package frame
 
 import (
+	"github.com/stretchr/testify/require"
 	"image"
 	"math"
 	"testing"
@@ -141,6 +142,18 @@ func TestFrame_MovingToOuter(t *testing.T) {
 			movingInner:         plane.Point2{2, 2},
 			movingOuterExpected: plane.Point2{-1, -1},
 		},
+		{
+			name: "5",
+			layerRGBA: LayerRGBA{
+				RGBA: image.RGBA{
+					Rect: image.Rectangle{Max: image.Point{100, 100}},
+				},
+				Settings: imagelib.Settings{DPM: 2},
+			},
+			position:            plane.Position{Point2: plane.Point2{10, -10}, XToYAngle: math.Pi * 3 / 2},
+			movingInner:         plane.Point2{0, 0},
+			movingOuterExpected: plane.Point2{0, 0},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -163,4 +176,20 @@ func TestFrame_MovingToOuter(t *testing.T) {
 
 		})
 	}
+}
+
+func TestFrame_ZeroMoving(t *testing.T) {
+	frame := Frame{
+		LayerRGBA: LayerRGBA{Settings: imagelib.Settings{DPM: 4.815940238327553}},
+		Position:  plane.Position{XToYAngle: 2.8448274196093593},
+	}
+
+	movingOuter := plane.Point2{}
+	movingInner := frame.MovingToInner(movingOuter)
+	require.Truef(t, movingInner.Radius() < mathlib.Eps, "movingInner: %+v", movingInner)
+
+	movingInner = plane.Point2{}
+	movingOuter = frame.MovingToOuter(movingInner)
+	require.Truef(t, movingOuter.Radius() < mathlib.Eps, "movingOuter: %+v", movingOuter)
+
 }
