@@ -1,11 +1,27 @@
 package frame
 
 import (
+	"github.com/pavlo67/imagelib/imagelib"
+	"github.com/pavlo67/imagelib/imagelib/pix"
+	"image"
 	"math"
 
 	"github.com/pavlo67/common/common/mathlib"
 	"github.com/pavlo67/common/common/mathlib/plane"
 )
+
+type ValueRGBA [imagelib.NumColorsRGBA]pix.Value
+
+var _ imagelib.Described = &LayerRGBA{}
+
+type LayerRGBA struct {
+	image.RGBA
+	imagelib.Settings
+}
+
+func (lyrRGB LayerRGBA) Description() imagelib.Settings {
+	return lyrRGB.Settings
+}
 
 type Frame struct {
 	LayerRGBA
@@ -34,7 +50,7 @@ func (frame Frame) PointsToOuter(pChInner ...plane.Point2) plane.PolyChain {
 
 	if !(frame.DPM > 0) || math.IsInf(frame.DPM, 1) {
 		for i := range pChInner {
-			pChOuter[i].X, pChOuter[i].Y = math.NaN(),  math.NaN()
+			pChOuter[i].X, pChOuter[i].Y = math.NaN(), math.NaN()
 		}
 
 	} else {
