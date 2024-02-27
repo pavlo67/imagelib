@@ -18,9 +18,12 @@ var _ video.Operator = &videoOpenCV{}
 
 const onNew = "on videoOpenCV.New()"
 
-func New(capture *gocv.VideoCapture, info video.Info, colorConversionCode gocv.ColorConversionCode) (video.Operator, error) {
-	if capture == nil {
-		return nil, errors.New("capture == nil / " + onNew)
+func New(info video.Info, colorConversionCode gocv.ColorConversionCode) (video.Operator, error) {
+	capture, err := gocv.OpenVideoCapture(info.Device)
+	if err != nil {
+		return nil, errors.Wrapf(err, "can't open device: %#v", info.Device)
+	} else if capture == nil {
+		return nil, fmt.Errorf("capture == nil (from device: %#v) / "+onNew, info.Device)
 	}
 
 	//capture.Set(gocv.VideoCaptureFOURCC, capture.ToCodec("MJPG"))

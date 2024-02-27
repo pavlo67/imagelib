@@ -31,16 +31,25 @@ func (frame Frame) PointsToOuter(pChInner ...plane.Point2) plane.PolyChain {
 	rect := frame.RGBA.Rect
 	center := plane.Point2{0.5 * float64(rect.Min.X+rect.Max.X-1), 0.5 * float64(rect.Min.Y+rect.Max.Y-1)}
 	pChOuter := make(plane.PolyChain, len(pChInner))
-	for i, p := range pChInner {
-		radiusOuter := math.Sqrt((p.X-center.X)*(p.X-center.X)+(p.Y-center.Y)*(p.Y-center.Y)) / frame.DPM
-		if radiusOuter <= mathlib.Eps {
-			pChOuter[i] = frame.Point2
 
-		} else {
-			angleInner := plane.Point2{p.X - center.X, p.Y - center.Y}.XToYAngleFromOx()
-			angleOuter := frame.XToYAngle - angleInner
-			pChOuter[i] = plane.Point2{frame.Point2.X + radiusOuter*math.Cos(float64(angleOuter)), frame.Point2.Y + radiusOuter*math.Sin(float64(angleOuter))}
+	if !(frame.DPM > 0) || math.IsInf(frame.DPM, 1) {
+		for i := range pChInner {
+			pChOuter[i].X, pChOuter[i].Y = math.NaN(),  math.NaN()
 		}
+
+	} else {
+		for i, p := range pChInner {
+			radiusOuter := math.Sqrt((p.X-center.X)*(p.X-center.X)+(p.Y-center.Y)*(p.Y-center.Y)) / frame.DPM
+			if radiusOuter <= mathlib.Eps {
+				pChOuter[i] = frame.Point2
+
+			} else {
+				angleInner := plane.Point2{p.X - center.X, p.Y - center.Y}.XToYAngleFromOx()
+				angleOuter := frame.XToYAngle - angleInner
+				pChOuter[i] = plane.Point2{frame.Point2.X + radiusOuter*math.Cos(float64(angleOuter)), frame.Point2.Y + radiusOuter*math.Sin(float64(angleOuter))}
+			}
+		}
+
 	}
 
 	return pChOuter

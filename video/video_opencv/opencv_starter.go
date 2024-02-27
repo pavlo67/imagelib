@@ -1,8 +1,6 @@
 package video_opencv
 
 import (
-	"time"
-
 	"github.com/pkg/errors"
 	"gocv.io/x/gocv"
 
@@ -41,12 +39,7 @@ func (cs *videoOpenCVStarter) Run(envs *config.Envs, options common.Map, joinerO
 		return errors.New("device == nil")
 	}
 
-	capture, err := gocv.OpenVideoCapture(device)
-	if err != nil {
-		return err
-	}
-
-	videoOp, err := New(capture, video.Info{Device: device, StartedAt: time.Now()}, colorConversionCode)
+	videoOp, err := New(video.Info{Device: device}, colorConversionCode)
 	if err != nil {
 		return err
 	}

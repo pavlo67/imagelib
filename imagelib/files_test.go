@@ -26,7 +26,7 @@ func TestSavePGM(t *testing.T) {
 
 	headerSize := fi.Size() - int64(xWidth*yHeigth)
 
-	require.True(t, headerSize < 100)
+	require.Equal(t, int64(15), headerSize)
 
 	imgGrayReaded, err := ReadGray(filename)
 	require.NoError(t, err)

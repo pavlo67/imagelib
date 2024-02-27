@@ -52,6 +52,7 @@ coverage
 *.CSV
 *.7z
 *.7Z
+*.pgm
 
 # Log files & reports
 *.xls*

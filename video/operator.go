@@ -26,13 +26,6 @@ type Processing struct {
 	image.Image `json:",omitempty"`
 }
 
-type Info struct {
-	StartedAt time.Time
-	Device    interface{}
-	FPS       float64
-	Rectangle image.Rectangle
-}
-
 //type DescriptionVideo struct {
 //	Description `json:",inline"`
 //	FPS         int

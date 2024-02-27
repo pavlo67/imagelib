@@ -2,16 +2,13 @@ package imagelib
 
 import (
 	"fmt"
-	pnm "github.com/jbuchbinder/gopnm"
+	"github.com/pavlo67/common/common/errors"
+	// pnm "github.com/jbuchbinder/gopnm"
 	"image"
 	_ "image/gif"
 	_ "image/jpeg"
 	_ "image/png"
 	"os"
-	"path/filepath"
-
-	"github.com/pavlo67/common/common/errors"
-	"github.com/pavlo67/common/common/filelib"
 )
 
 const onRead = "on Read()"
@@ -109,27 +106,4 @@ func ReadRGBA(filename string) (imgRGBA *image.RGBA, _ error) {
 	}
 
 	return imgRGBA, nil
-}
-
-const onSavePGM = "on imagelib.SavePGM()"
-
-func SavePGM(img image.Image, filename string) error {
-	if img == nil {
-		return errors.New("img == nil / " + onSavePGM)
-	} else if path := filepath.Dir(filename); path != "" && path != "." && path != ".." {
-		if _, err := filelib.Dir(path); err != nil {
-			return errors.Wrapf(err, "can't create dir '%s' / "+onSavePGM, path)
-		}
-	}
-
-	resFile, err := os.Create(filename)
-	if err != nil {
-		return errors.Wrap(err, onSavePGM)
-	}
-	defer resFile.Close()
-
-	if err = pnm.Encode(resFile, img, pnm.PGM); err != nil {
-		return errors.Wrap(err, onSavePGM)
-	}
-	return nil
 }
