@@ -2,6 +2,8 @@ package preparation
 
 import (
 	"fmt"
+	"github.com/pavlo67/imagelib/sources"
+	"image"
 	"os"
 	"path/filepath"
 	"testing"
@@ -19,14 +21,18 @@ func TestImages(t *testing.T) {
 		t.Skip()
 	}
 
-	imagesPath := "/home/pavlo/0/partner/navigation_tests/_data/at_10_15/"
+	imagesPath, err := filelib.GetDir("/home/pavlo/0/partner/_tests/arcgis_0/")
+	require.NoError(t, err)
 
-	numberedFiles, err := filelib.NumberedFilesSequence(imagesPath, RePGNStr, false)
+	resultPath, err := filelib.GetDir("/home/pavlo/0/partner/_/odometry_data/2/")
+	require.NoError(t, err)
+
+	numberedFiles, err := filelib.NumberedFilesSequence(imagesPath, sources.RePGNStr, false)
 	require.NoError(t, err)
 
 	for i, nf := range numberedFiles {
 
-		if i%10 == 0 {
+		if i%50 == 0 {
 			fmt.Println(i, " / ", len(numberedFiles))
 		}
 
@@ -37,6 +43,13 @@ func TestImages(t *testing.T) {
 		img, err := imagelib.ReadPGMSpecial(filename)
 		require.NoError(t, err)
 		require.NotNil(t, img)
+
+		require.Truef(t, img.Rect.Max.X >= 998 && img.Rect.Max.Y >= 798, "%d: %+v", nf.I, img.Rect)
+
+		imgCutted := img.SubImage(image.Rectangle{Max: image.Point{998, 798}})
+
+		err = imagelib.SavePGM(imgCutted, filepath.Join(resultPath, fmt.Sprintf("%04d.pgm", nf.I)))
+		require.NoError(t, err)
 
 	}
 

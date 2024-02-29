@@ -2,14 +2,13 @@ package sources
 
 import (
 	"fmt"
+	"github.com/pavlo67/imagelib/frame"
 	"path/filepath"
 	"strconv"
 	"strings"
 
 	"github.com/pavlo67/common/common/errors"
 	"github.com/pavlo67/common/common/geolib"
-
-	"github.com/pavlo67/imagelib/frame"
 )
 
 type Key string
@@ -17,6 +16,15 @@ type Key string
 type ImageRef struct {
 	ImagePath string `json:",omitempty"`
 	SourceKey Key    `json:",omitempty"`
+}
+
+type Description struct {
+	N         int
+	ImageRef  `               json:",inline"`
+	GeoPoint  *geolib.Point  `json:",omitempty"`
+	Bearing   geolib.Bearing `json:",omitempty"`
+	DPM       float64
+	PointsRaw []frame.PointRawGeo `json:",omitempty"`
 }
 
 func WrappedGeoPoint(geoPoint geolib.Point, sourcesPath string, sourceKey Key) ImageRef {
@@ -50,14 +58,4 @@ func (imageRef ImageRef) Parse() (*geolib.Point, int, error) {
 
 	return &geolib.Point{geolib.Degrees(latFloat), geolib.Degrees(lonFloat)}, zoom, nil
 
-}
-
-type Description struct {
-	N         int
-	ImageRef  `               json:",inline"`
-	GeoPoint  *geolib.Point  `json:",omitempty"`
-	Bearing   geolib.Bearing `json:",omitempty"`
-	DPM       float64
-	PointsRaw []frame.PointRawGeo `json:",omitempty"`
-	// convolution.ClassesMetrics `json:",omitempty"`
 }

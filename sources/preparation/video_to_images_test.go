@@ -2,6 +2,7 @@ package preparation
 
 import (
 	"fmt"
+	"github.com/pavlo67/imagelib/sources"
 	"image"
 	"math"
 	"os"
@@ -24,8 +25,8 @@ func TestVideoToImages(t *testing.T) {
 		t.Skip()
 	}
 
-	device := "/home/pavlo/0/partner/!/trim.mp4"
-	imagesPath := filepath.Dir(device)
+	device := "/home/pavlo/0/_apacer/_data/landmarks/at/trim.mp4"
+	imagesPath := "/home/pavlo/0/partner/_/"
 
 	momentMin := time.Minute*10 + time.Second*15
 	momentMax := time.Minute*11 + time.Second*52
@@ -53,8 +54,10 @@ func TestVideoToImages(t *testing.T) {
 		FPS:        fps,
 		FPSDivider: &fpsDivider,
 		Rectangle:  image.Rectangle{Max: image.Point{xWidth, yHeight}},
-	}, serialization.MarshalerJSON, filepath.Join(imagesPath, VideoInfoFilename))
+	}, serialization.MarshalerJSON, filepath.Join(imagesPath, sources.VideoInfoFilename))
 	require.NoError(t, err)
+
+	fmt.Println(nMin, nMax)
 
 	n := nMin
 	for n > 0 {
@@ -92,4 +95,5 @@ func TestVideoToImages(t *testing.T) {
 
 		i++
 	}
+
 }

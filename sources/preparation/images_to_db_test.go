@@ -2,7 +2,6 @@ package preparation
 
 import (
 	"fmt"
-	"image"
 	"math"
 	"os"
 	"path/filepath"
@@ -15,9 +14,7 @@ import (
 	"github.com/pavlo67/common/common/serialization"
 
 	"github.com/pavlo67/imagelib/imagelib"
-	"github.com/pavlo67/imagelib/opencvlib"
 	"github.com/pavlo67/imagelib/sources"
-	"github.com/pavlo67/imagelib/video"
 )
 
 func TestImagesToTestDB(t *testing.T) {
@@ -27,23 +24,23 @@ func TestImagesToTestDB(t *testing.T) {
 	}
 
 	imagesPath := "/home/pavlo/0/partner/_/"
-	dpmConverted := 2.
+	dpmRequired := 2.
 
 	processingPath, err := filelib.Dir(filepath.Join(imagesPath, time.Now().Format(time.RFC3339)[:19]))
 
-	numberedFiles, err := filelib.NumberedFilesSequence(imagesPath, RePGNPNGStr, false)
+	numberedFiles, err := filelib.NumberedFilesSequence(imagesPath, sources.RePGNPNGStr, false)
 	require.NoError(t, err)
 
 	var descrs []sources.Description
-	err = serialization.ReadAllPartsJSON(filepath.Join(imagesPath, FramesDescriptionsFilename), &descrs)
+	err = serialization.ReadAllPartsJSON(filepath.Join(imagesPath, sources.FramesDescriptionsFilename), &descrs)
 	require.NoError(t, err)
 
 	if len(numberedFiles) < 1 {
-		t.Fatalf("no files found in %s (%s)", imagesPath, RePGNPNGStr)
+		t.Fatalf("no files found in %s (%s)", imagesPath, sources.RePGNPNGStr)
 	}
 
 	if len(descrs) < 1 {
-		t.Fatalf("no descriptions found in %s (%s)", imagesPath, FramesDescriptionsFilename)
+		t.Fatalf("no descriptions found in %s (%s)", imagesPath, sources.FramesDescriptionsFilename)
 	}
 
 	require.Equal(t, numberedFiles[0].I, descrs[0].N)
@@ -56,7 +53,7 @@ func TestImagesToTestDB(t *testing.T) {
 		descrNext := descrs[i+1]
 		require.Truef(t, descrNext.N > descr.N, "non-sequental numeration: descrs[%d].N = %d, descrs[%d].N = %d", i, descr.N, i+1, descrNext.N)
 		require.NotNilf(t, descrNext.GeoPoint, "N = %d, descr.GeoPoint == nil", descrNext.N)
-		descrsAll = append(descrsAll, InterpolatedDescriptions(descr, descrNext)...)
+		descrsAll = append(descrsAll, sources.InterpolatedDescriptions(descr, descrNext)...)
 		descrsAll = append(descrsAll, descrs[i+1])
 	}
 
@@ -71,19 +68,20 @@ func TestImagesToTestDB(t *testing.T) {
 
 	}
 
-	for i, descr := range descrsAll {
+	series := sources.Series{
+		Path:        processingPath,
+		DPMRequired: &dpmRequired,
+	}
+	err = serialization.Read(filepath.Join(imagesPath, sources.VideoInfoFilename), serialization.MarshalerJSON, &series.Info)
+	require.NoError(t, err)
 
+	for i, descr := range descrsAll {
 		if i%10 == 0 {
 			fmt.Println(i, " / ", len(descrsAll))
 		}
 
-		//imgGray, err := imagelib.ReadGray(filepath.Join(imagesPath, fmt.Sprintf("%04d.pgm", descr.N)))
-
-		isPGM := true
 		filename := filepath.Join(imagesPath, fmt.Sprintf("%04d.pgm", descr.N))
-
 		if ok, _ := filelib.FileExists(filename, false); !ok {
-			isPGM = false
 			filename = filepath.Join(imagesPath, fmt.Sprintf("%04d.png", descr.N))
 		}
 
@@ -91,34 +89,10 @@ func TestImagesToTestDB(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, img)
 
-		var imgGray *image.Gray
-		if isPGM {
-			imgGray, _ = img.(*image.Gray)
-			require.NotNil(t, imgGray)
-		} else {
-			imgGray, err = imagelib.ImageToGray(img)
-			require.NoError(t, err)
-			require.NotNil(t, imgGray)
-		}
-
-		imgGrayResized, _, err := opencvlib.ResizeGray(*imgGray, dpmConverted/descr.DPM)
+		err = series.Add(img, descr)
 		require.NoError(t, err)
-		require.NotNil(t, imgGrayResized)
-
-		imagelib.SavePGM(imgGrayResized, filepath.Join(processingPath, fmt.Sprintf("%04d.pgm", descr.N)))
 	}
 
-	jlistAllPath := filepath.Join(processingPath, FramesAllDescriptionsFilename)
-
-	err = serialization.SaveAllPartsJSON(descrsAll, jlistAllPath)
+	err = series.Save()
 	require.NoError(t, err)
-
-	var info video.Info
-	err = serialization.Read(filepath.Join(imagesPath, VideoInfoFilename), serialization.MarshalerJSON, &info)
-	require.NoError(t, err)
-
-	info.DPMConverted = &dpmConverted
-	err = serialization.Save(info, serialization.MarshalerJSON, filepath.Join(processingPath, VideoInfoFilename))
-	require.NoError(t, err)
-
 }

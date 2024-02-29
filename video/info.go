@@ -12,6 +12,7 @@ type Info struct {
 	Device       interface{} `json:",omitempty"`
 	StartedAt    *time.Time  `json:",omitempty"`
 	NFrom        int         `json:",omitempty"`
+	Grayscaled   bool        `json:",omitempty"`
 	FPSDivider   *int        `json:",omitempty"`
 	DPMConverted *float64    `json:",omitempty"`
 }

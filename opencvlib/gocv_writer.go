@@ -25,8 +25,13 @@ func WriteMP4(resultFilename, sourcePath string, sourceRegexp regexp.Regexp, fps
 		return errors.Wrap(err, onWriteMP4)
 	}
 
+	colorFlag := gocv.IMReadGrayScale
+	if isColor {
+		colorFlag = gocv.IMReadAnyColor
+	}
+
 	for i, filename := range filenames {
-		img := gocv.IMRead(filename, gocv.IMReadAnyColor)
+		img := gocv.IMRead(filename, colorFlag)
 		fmt.Printf("#%d: %s --> %+v\n", i, filename, img.Size())
 
 		if !fourcc.IsOpened() {

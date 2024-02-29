@@ -1,7 +1,7 @@
 package preparation
 
 import (
-	"image"
+	"github.com/pavlo67/common/common/serialization"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -21,13 +21,9 @@ func TestImagesToVideo(t *testing.T) {
 		t.Skip()
 	}
 
-	// this logFile parameter determines a file for complete logger output duplication
-	//envs, _ := config.PrepareTests(t, "../_env/", "")
-	//require.NotNil(t, envs)
-
 	// data ---------------------------------------------------------------------
 
-	dataPath, err := filelib.GetDir("../../shifter/shifter_tests/_data/odometry/arcgis_0/")
+	dataPath, err := filelib.GetDir("/home/pavlo/0/partner/_/odometry_data/2/")
 	require.NoError(t, err)
 
 	//jlistAllPath := filepath.Join(dataPath, shifter.FramesDescriptionFile)
@@ -36,16 +32,28 @@ func TestImagesToVideo(t *testing.T) {
 	//require.NoError(t, err)
 	//require.Truef(t, len(descrs) > 0, "descrs = []")
 
-	cfg := &video.Info{
-		Rectangle: image.Rectangle{Max: image.Point{X: 1300, Y: 1040}},
-		FPS:       3,
+	var info video.Info
+	err = serialization.Read(filepath.Join(dataPath, video.InfoFilename), serialization.MarshalerJSON, &info)
+	require.NoError(t, err)
+
+	divider := 1.
+	if info.FPSDivider != nil {
+		divider = float64(max(*info.FPSDivider, 1))
 	}
 
-	re, err := regexp.Compile(`^\d{4}\.png$`)
+	isColor := false
+
+	var re *regexp.Regexp
+	if isColor {
+		re, err = regexp.Compile(`^\d{4}\.png$`)
+	} else {
+		re, err = regexp.Compile(`^\d{4}\.pgm$`)
+	}
+
 	require.NoError(t, err)
 	require.NotNil(t, re)
 
-	err = opencvlib.WriteMP4(filepath.Join(dataPath, filepath.Base(dataPath)+".mp4"), dataPath, *re, cfg.FPS, cfg.Rectangle.Max.X, cfg.Rectangle.Max.Y, true)
+	err = opencvlib.WriteMP4(filepath.Join(dataPath, filepath.Base(dataPath)+".mp4"), dataPath, *re, info.FPS/divider, info.Rectangle.Max.X, info.Rectangle.Max.Y, isColor)
 	require.NoError(t, err)
 
 }

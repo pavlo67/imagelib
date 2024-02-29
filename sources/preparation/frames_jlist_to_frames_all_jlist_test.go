@@ -28,7 +28,7 @@ func TestFramesJListToFramesAllJList(t *testing.T) {
 	dataPath, err := filelib.GetDir("_data/odometry/at_10_15")
 	require.NoError(t, err)
 
-	jlistPath := filepath.Join(dataPath, FramesDescriptionsFilename)
+	jlistPath := filepath.Join(dataPath, sources.FramesDescriptionsFilename)
 
 	var descrs []sources.Description
 	err = serialization.ReadAllPartsJSON(jlistPath, &descrs)
@@ -45,11 +45,11 @@ func TestFramesJListToFramesAllJList(t *testing.T) {
 		require.Truef(t, descrNext.N > descr.N, "non-sequental numeration: descr.N = %d, descrNext.N = %d", descr.N, descrNext.N)
 		require.NotNilf(t, descrNext.GeoPoint, "%d: descr.GeoPoint == nil", descrNext.N)
 
-		descrsAll = append(descrsAll, InterpolatedDescriptions(descr, descrNext)...)
+		descrsAll = append(descrsAll, sources.InterpolatedDescriptions(descr, descrNext)...)
 		descrsAll = append(descrsAll, descrs[i+1])
 	}
 
-	jlistAllPath := filepath.Join(dataPath, FramesAllDescriptionsFilename)
+	jlistAllPath := filepath.Join(dataPath, sources.FramesAllDescriptionsFilename)
 
 	err = serialization.SaveAllPartsJSON(descrsAll, jlistAllPath)
 	require.NoError(t, err)

@@ -31,7 +31,7 @@ const onGetSaved = "on GetSaved()"
 
 func GetSaved(path string) (imgRGB *image.RGBA, descr *Description, err error) {
 	//if old {
-	//	descr, err = GetDescriptionByKey(path, key)
+	//	descr, err = GetDescriptionByKey(Path, key)
 
 	descr = &Description{}
 	err = serialization.Read(path+".json", serialization.MarshalerJSON, descr)
