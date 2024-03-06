@@ -2,7 +2,6 @@ package preparation
 
 import (
 	"fmt"
-	"github.com/pavlo67/imagelib/sources"
 	"image"
 	"math"
 	"os"
@@ -16,6 +15,7 @@ import (
 	"github.com/pavlo67/common/common/serialization"
 
 	"github.com/pavlo67/imagelib/imagelib"
+	"github.com/pavlo67/imagelib/sources"
 	"github.com/pavlo67/imagelib/video"
 )
 

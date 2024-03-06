@@ -2,15 +2,14 @@ package convolution
 
 import (
 	"fmt"
-	"github.com/pavlo67/imagelib/layers"
 	"image"
 	"strconv"
 
 	"github.com/pavlo67/common/common"
+	"github.com/pavlo67/imagelib/frame"
 	"github.com/pavlo67/imagelib/imagelib"
 	"github.com/pavlo67/imagelib/imagelib/pix"
-
-	"github.com/pavlo67/imagelib/frame"
+	"github.com/pavlo67/imagelib/layers"
 )
 
 var _ Mask = &RGBBrightnessClassesMask{}
@@ -27,8 +26,10 @@ func RGBBrightnessClasses(classRange pix.Value) (Mask, error) {
 	if classRange == 0 {
 		return nil, fmt.Errorf("classRange == 0 / " + onRGBBrightnessClasses)
 	}
-	classesNum := (int(pix.ValueMax) + 1) / int(classRange)
-	if pix.ValueMax%classRange > 0 {
+
+	lenTotal := int(pix.ValueMax) + 1
+	classesNum := lenTotal / int(classRange)
+	if lenTotal%int(classRange) > 0 {
 		classesNum++
 	}
 
