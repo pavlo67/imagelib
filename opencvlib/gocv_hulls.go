@@ -2,6 +2,7 @@ package opencvlib
 
 import (
 	"image"
+	"math"
 
 	"gocv.io/x/gocv"
 
@@ -13,17 +14,18 @@ import (
 func RectangleMin(points []image.Point) plane.Rectangle {
 	rotatedRect := gocv.MinAreaRect(gocv.NewPointVectorFromPoints(points))
 
-	//if len(rotatedRect.Points) != 4 {
-	//	return plane.Rectangle{}
-	//}
+	width, height, angle := rotatedRect.Width, rotatedRect.Height, plane.XToYAngle(math.Pi*rotatedRect.Angle/180)
+	if width < height {
+		width, height, angle = height, width, angle+math.Pi*0.5
+	}
 
 	return plane.Rectangle{
 		Position: plane.Position{
 			Point2:    imagelib.PolyChain([]image.Point{rotatedRect.Center})[0],
-			XToYAngle: plane.XToYAngle(rotatedRect.Angle),
+			XToYAngle: angle.Canon(),
 		},
-		HalfSideX: float64(rotatedRect.Width) * 0.5,
-		HalfSideY: float64(rotatedRect.Height) * 0.5,
+		HalfSideX: float64(width) * 0.5,
+		HalfSideY: float64(height) * 0.5,
 	}
 }
 
