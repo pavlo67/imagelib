@@ -1,6 +1,7 @@
 package imagelib
 
 import (
+	"github.com/pavlo67/common/common"
 	"image"
 	"image/color"
 	"log"
@@ -46,7 +47,7 @@ func (segmentsGetMask SegmentsGetMask) Color() *ColorNamed {
 	return segmentsGetMask.ColorNamed
 }
 
-func (segmentsGetMask SegmentsGetMask) Mask(clr color.Color) MasksOneColor {
+func (segmentsGetMask SegmentsGetMask) Mask(clr color.Color, opts common.Map) MasksOneColor {
 	if segmentsGetMask.FontFile == "" {
 		return nil
 	}

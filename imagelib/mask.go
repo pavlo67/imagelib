@@ -1,6 +1,7 @@
 package imagelib
 
 import (
+	"github.com/pavlo67/common/common"
 	"image"
 	"image/color"
 
@@ -11,7 +12,7 @@ import (
 
 type GetMask interface {
 	Color() *ColorNamed
-	Mask(color.Color) MasksOneColor
+	Mask(color.Color, common.Map) MasksOneColor
 	Info(colorNamed ColorNamed) string
 }
 
@@ -67,7 +68,7 @@ func (pointsGetMask PointsGetMask) Color() *ColorNamed {
 	return nil
 }
 
-func (pointsGetMask PointsGetMask) Mask(clr color.Color) MasksOneColor {
+func (pointsGetMask PointsGetMask) Mask(clr color.Color, opts common.Map) MasksOneColor {
 	return MasksOneColor{{Color: clr, Points: pointsGetMask.Points}}
 }
 

@@ -1,4 +1,4 @@
-package opencvlib
+package contours
 
 import (
 	"image"

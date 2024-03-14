@@ -10,7 +10,7 @@ import (
 	"github.com/pavlo67/common/common/filelib"
 )
 
-const onWriteMP4 = "on videolib.WriteMP4()"
+const onWriteMP4 = "on opencvlib.WriteMP4()"
 
 func WriteMP4(resultFilename, sourcePath string, sourceRegexp regexp.Regexp, fps float64, xWidth, yHeight int, isColor bool) error {
 	fourcc, err := gocv.VideoWriterFile(resultFilename, "mp4v", fps, xWidth, yHeight, isColor)

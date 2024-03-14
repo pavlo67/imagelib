@@ -68,7 +68,7 @@ func (op *GetImage) Image() (image.Image, string, error) {
 		if colorNamed == nil || colorNamed.Color == nil {
 			colorNamed = &RoundAbout[i%len(RoundAbout)]
 		}
-		mask = append(mask, maskI.Mask(colorNamed.Color)...)
+		mask = append(mask, maskI.Mask(colorNamed.Color, nil)...)
 		info += maskI.Info(*colorNamed)
 	}
 

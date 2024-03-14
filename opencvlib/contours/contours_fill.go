@@ -1,4 +1,4 @@
-package opencvlib
+package contours
 
 import (
 	"image"
@@ -9,13 +9,13 @@ import (
 	"github.com/pavlo67/common/common/errors"
 )
 
-const onFillOutsideContours = "on imagelib.GrayOutsideContours()"
+const onWhiteOutside = "on imagelib.WhileOutside()"
 
-func WhiteOutsideContours(imgGray image.Gray, psv gocv.PointsVector) (*image.Gray, error) {
+func WhiteOutside(imgGray image.Gray, psv gocv.PointsVector) (*image.Gray, error) {
 
 	matImg, err := gocv.ImageGrayToMatGray(&imgGray)
 	if err != nil {
-		return nil, errors.Wrap(err, onFillOutsideContours)
+		return nil, errors.Wrap(err, onWhiteOutside)
 	}
 
 	matMaskCntrs := gocv.NewMatWithSize(imgGray.Rect.Dy(), imgGray.Rect.Dx(), gocv.MatTypeCV8U)
@@ -29,22 +29,24 @@ func WhiteOutsideContours(imgGray image.Gray, psv gocv.PointsVector) (*image.Gra
 
 	imgWhitedOutside, err := matWhitedOutside.ToImage()
 	if err != nil {
-		return nil, errors.Wrap(err, onFillOutsideContours)
+		return nil, errors.Wrap(err, onWhiteOutside)
 	}
 
 	imgGrayWhitedOutside, _ := imgWhitedOutside.(*image.Gray)
 	if imgGrayWhitedOutside == nil {
-		return nil, errors.New("imgGrayWhitedOutside == nil / " + onFillOutsideContours)
+		return nil, errors.New("imgGrayWhitedOutside == nil / " + onWhiteOutside)
 	}
 
 	return imgGrayWhitedOutside, nil
 }
 
-func BlackOutsideContours(imgGray image.Gray, psv gocv.PointsVector) (*image.Gray, error) {
+const onBlackOutside = "on imagelib.BlackOutside()"
+
+func BlackOutside(imgGray image.Gray, psv gocv.PointsVector) (*image.Gray, error) {
 
 	matImg, err := gocv.ImageGrayToMatGray(&imgGray)
 	if err != nil {
-		return nil, errors.Wrap(err, onFillOutsideContours)
+		return nil, errors.Wrap(err, onBlackOutside)
 	}
 
 	matMaskCntrs := gocv.NewMatWithSize(imgGray.Rect.Dy(), imgGray.Rect.Dx(), gocv.MatTypeCV8U)
@@ -55,12 +57,12 @@ func BlackOutsideContours(imgGray image.Gray, psv gocv.PointsVector) (*image.Gra
 
 	imgBlackedOutside, err := matImgMasked.ToImage()
 	if err != nil {
-		return nil, errors.Wrap(err, onFillOutsideContours)
+		return nil, errors.Wrap(err, onBlackOutside)
 	}
 
 	imgGrayBlackedOutside, _ := imgBlackedOutside.(*image.Gray)
 	if imgGrayBlackedOutside == nil {
-		return nil, errors.New("imgGrayBlackedOutside == nil / " + onFillOutsideContours)
+		return nil, errors.New("imgGrayBlackedOutside == nil / " + onBlackOutside)
 	}
 
 	return imgGrayBlackedOutside, nil

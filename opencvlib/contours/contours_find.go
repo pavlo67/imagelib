@@ -1,4 +1,4 @@
-package opencvlib
+package contours
 
 import (
 	"image"
@@ -10,16 +10,16 @@ import (
 	"github.com/pavlo67/imagelib/layers"
 )
 
-const onContours = "on opencvlib.contoursPV()"
+const onContoursPV = "on opencvlib.contoursPV()"
 
 func contoursPV(imgGray *image.Gray) (gocv.PointsVector, error) {
 	if imgGray == nil {
-		return gocv.PointsVector{}, errors.New("imgGray == nil /" + onContours)
+		return gocv.PointsVector{}, errors.New("imgGray == nil /" + onContoursPV)
 	}
 
 	mat, err := gocv.ImageGrayToMatGray(imgGray)
 	if err != nil {
-		return gocv.PointsVector{}, errors.Wrap(err, onContours)
+		return gocv.PointsVector{}, errors.Wrap(err, onContoursPV)
 	}
 	defer mat.Close()
 
@@ -28,9 +28,9 @@ func contoursPV(imgGray *image.Gray) (gocv.PointsVector, error) {
 
 }
 
-const onFind = "on areas.FindContours()"
+const onFind = "on opencvlib.FindContours()"
 
-func FindContours(lyr *layers.Layer) ([][]image.Point, error) {
+func Find(lyr *layers.Layer) (Contours, error) {
 	if lyr == nil {
 		return nil, errors.New("lyr == nil /" + onFind)
 	}
@@ -40,10 +40,65 @@ func FindContours(lyr *layers.Layer) ([][]image.Point, error) {
 		return nil, errors.Wrap(err, onFind)
 	}
 
-	var cntrs [][]image.Point
+	var cntrs []Contour
 
 	for i := 0; i < pv.Size(); i++ {
-		cntrs = append(cntrs, imagelib.ConvertImagePoints(pv.At(i).ToPoints(), false, lyr.Rect.Min, 1))
+		points := imagelib.ConvertImagePoints(pv.At(i).ToPoints(), false, lyr.Rect.Min, 1)
+
+		// TODO!!! be careful: opencvlib returns contour points in the counter-clockwise order
+		pointsConverted := make([]image.Point, len(points))
+		for i, p := range imagelib.ConvertImagePoints(points, false, lyr.Rect.Min, 1) {
+			pointsConverted[len(pointsConverted)-i-1] = p
+		}
+
+		cntrs = append(cntrs, Contour{
+			Rect:   imagelib.RectangleAround(0, pointsConverted...),
+			Points: pointsConverted,
+		})
+	}
+
+	return cntrs, nil
+}
+
+const onFindContaining = "on areas.FindContaining()"
+
+func FindContaining(lyr *layers.Layer, containingAll bool, pts ...image.Point) ([]Contour, error) {
+	if lyr == nil {
+		return nil, errors.New("lyr == nil /" + onFindContaining)
+	}
+
+	pv, err := contoursPV(&lyr.Gray)
+	if err != nil {
+		return nil, errors.Wrap(err, onFindContaining)
+	}
+
+	var cntrs []Contour
+
+CONTOURS:
+	for i := 0; i < pv.Size(); i++ {
+		pv := pv.At(i)
+		approved := containingAll
+		for _, p := range pts {
+			inContour := gocv.PointPolygonTest(pv, p.Sub(lyr.Rect.Min), false)
+			if containingAll {
+				// contour rejected
+				if inContour < 0 {
+					continue CONTOURS
+				}
+			} else {
+				// contour approved
+				if inContour >= 0 {
+					approved = true
+					break
+				}
+			}
+		}
+		if approved {
+			cntrs = append(cntrs, Contour{
+				// Value:  pix.ValueMax,
+				Points: imagelib.ConvertImagePoints(pv.ToPoints(), false, lyr.Rect.Min, 1),
+			})
+		}
 	}
 
 	return cntrs, nil
