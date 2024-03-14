@@ -2,13 +2,17 @@ package imagelib
 
 import (
 	"fmt"
+	"github.com/pavlo67/common/common"
+	"github.com/pavlo67/common/common/logger"
 	"image"
 )
 
-type Imager interface {
-	Image() (image.Image, string, error)
-	Bounds() image.Rectangle
-}
+type Imager = logger.GetImage
+
+//type Imager interface {
+//	Image() (image.Image, string, error)
+//	Bounds() image.Rectangle
+//}
 
 type SubImage interface {
 	SubImage(image.Rectangle) image.Image
@@ -44,9 +48,9 @@ func (op *GetImage) Bounds() image.Rectangle {
 	return op.Images[0].Bounds()
 }
 
-const onImage = "on Imager.Imager()"
+const onImage = "on Imager.Image()"
 
-func (op *GetImage) Image() (image.Image, string, error) {
+func (op *GetImage) Image(opts common.Map) (image.Image, string, error) {
 	if op == nil || len(op.Images) < 1 {
 		return nil, "", fmt.Errorf(onImage + ": op == nil || len(op.Images) == 0")
 	}
@@ -68,7 +72,7 @@ func (op *GetImage) Image() (image.Image, string, error) {
 		if colorNamed == nil || colorNamed.Color == nil {
 			colorNamed = &RoundAbout[i%len(RoundAbout)]
 		}
-		mask = append(mask, maskI.Mask(colorNamed.Color, nil)...)
+		mask = append(mask, maskI.Mask(colorNamed.Color, opts)...)
 		info += maskI.Info(*colorNamed)
 	}
 

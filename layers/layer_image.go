@@ -2,6 +2,7 @@ package layers
 
 import (
 	"fmt"
+	"github.com/pavlo67/common/common"
 	"image"
 	"math"
 
@@ -16,7 +17,7 @@ import (
 var _ logger.GetImage = &Layer{}
 var _ imagelib.Bounded = &Layer{}
 
-func (lyr *Layer) Image() (image.Image, string, error) {
+func (lyr *Layer) Image(opts common.Map) (image.Image, string, error) {
 	gray, err := lyr.GrayWide()
 	return gray, "", err
 }

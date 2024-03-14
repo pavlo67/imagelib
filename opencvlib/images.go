@@ -247,9 +247,9 @@ func PositionImage(imgRGBA0 image.RGBA, scale0 float64, rotation plane.XToYAngle
 	}
 
 	if l != nil {
-		l.Image("original.png", imagelib.GetImage1(&imgRGBA0))
-		l.Image("resized.png", imagelib.GetImage1(imgRGBA))
-		l.Image("rotated.png", imagelib.GetImage1(imgRGBRotated))
+		l.Image("original.png", imagelib.GetImage1(&imgRGBA0), nil)
+		l.Image("resized.png", imagelib.GetImage1(imgRGBA), nil)
+		l.Image("rotated.png", imagelib.GetImage1(imgRGBRotated), nil)
 	}
 
 	imgRect := image.Rectangle{Max: imgRGBRotated.Rect.Canon().Size()}

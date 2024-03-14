@@ -11,6 +11,7 @@ const ZoomDefault = 18
 
 type TestInfo struct {
 	NFrom, NTo int
+	NDivider   int
 }
 
 const TestInfoFilename = "test_info.json"

@@ -1,6 +1,7 @@
 package imagelib
 
 import (
+	"github.com/pavlo67/common/common"
 	"github.com/pavlo67/common/common/mathlib/plane"
 	"golang.org/x/image/colornames"
 	"image"
@@ -103,7 +104,7 @@ func (imageOp *PointsImage) Bounds() image.Rectangle {
 	return imageOp.Rectangle
 }
 
-func (imageOp *PointsImage) Image() (image.Image, string, error) {
+func (imageOp *PointsImage) Image(opts common.Map) (image.Image, string, error) {
 	if imageOp == nil {
 		return nil, "", errors.New("*PointsImage = nil")
 	}

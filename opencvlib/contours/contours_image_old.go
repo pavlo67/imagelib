@@ -1,6 +1,7 @@
 package contours
 
 import (
+	"github.com/pavlo67/common/common"
 	"image"
 	"math"
 
@@ -27,7 +28,7 @@ func (imageOp *ContourImage) Bounds() image.Rectangle {
 	return imageOp.Rectangle
 }
 
-func (imageOp *ContourImage) Image() (image.Image, string, error) {
+func (imageOp *ContourImage) Image(opts common.Map) (image.Image, string, error) {
 	if imageOp == nil {
 		return nil, "", errors.New("*ContourImage = nil")
 	}
