@@ -5,10 +5,6 @@ import (
 	"github.com/pavlo67/common/common/mathlib/plane"
 )
 
-const SideXGeo = 700
-const SideYGeo = 700
-const ZoomDefault = 18
-
 type TestInfo struct {
 	NFrom, NTo int
 	NDivider   int

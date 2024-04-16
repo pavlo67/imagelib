@@ -15,14 +15,16 @@ import (
 
 const onResize = "on Resize()"
 
-func Resize(imgRGB image.RGBA, ratio float64) (*image.RGBA, float64, error) {
-	if ratio == 1 || ratio == 0 {
-		return &imgRGB, 1, nil
+func Resize(imgRGB *image.RGBA, ratio float64) (*image.RGBA, float64, error) {
+	if imgRGB == nil {
+		return nil, 0, errors.New("imgRGB == nil / " + onResize)
+	} else if ratio == 1 || ratio == 0 {
+		return imgRGB, 1, nil
 	} else if ratio < 0 || math.IsNaN(ratio) || math.IsInf(ratio, 0) {
 		return nil, 0, fmt.Errorf("wrong resize ratio (%f) / "+onResize, ratio)
 	}
 
-	mat, err := gocv.ImageToMatRGB(&imgRGB)
+	mat, err := gocv.ImageToMatRGB(imgRGB)
 	if err != nil {
 		return nil, 0, errors.Wrap(err, onResize)
 	}
@@ -48,14 +50,16 @@ func Resize(imgRGB image.RGBA, ratio float64) (*image.RGBA, float64, error) {
 
 const onResizeGray = "on opencvlib.ResizeGray()"
 
-func ResizeGray(imgGray image.Gray, ratio float64) (*image.Gray, float64, error) {
-	if ratio == 1 || ratio == 0 {
-		return &imgGray, 1, nil
+func ResizeGray(imgGray *image.Gray, ratio float64) (*image.Gray, float64, error) {
+	if imgGray == nil {
+		return nil, 0, errors.New("imgGray == nil / " + onResizeGray)
+	} else if ratio == 1 || ratio == 0 {
+		return imgGray, 1, nil
 	} else if ratio < 0 || math.IsNaN(ratio) || math.IsInf(ratio, 0) {
 		return nil, 0, fmt.Errorf("wrong resize ratio (%f) / "+onResizeGray, ratio)
 	}
 
-	mat, err := gocv.ImageGrayToMatGray(&imgGray)
+	mat, err := gocv.ImageGrayToMatGray(imgGray)
 	if err != nil {
 		return nil, 0, errors.Wrap(err, onResizeGray)
 	}
@@ -81,15 +85,17 @@ func ResizeGray(imgGray image.Gray, ratio float64) (*image.Gray, float64, error)
 
 const onRotate = "on Rotate()"
 
-func Rotate(imgRGB image.RGBA, angle float64) (*image.RGBA, error) {
+func Rotate(imgRGB *image.RGBA, angle float64) (*image.RGBA, error) {
 
-	if math.IsNaN(angle) || math.IsInf(angle, 0) {
+	if imgRGB == nil {
+		return nil, errors.New("imgRGB == nil / " + onRotate)
+	} else if math.IsNaN(angle) || math.IsInf(angle, 0) {
 		return nil, fmt.Errorf("wrong rotation angle (%f) / "+onRotate, angle)
 	}
 
 	dx, dy := imgRGB.Rect.Max.X-imgRGB.Rect.Min.X, imgRGB.Rect.Max.Y-imgRGB.Rect.Min.Y
 
-	mat, err := gocv.ImageToMatRGB(&imgRGB)
+	mat, err := gocv.ImageToMatRGB(imgRGB)
 	if err != nil {
 		return nil, errors.Wrap(err, onRotate)
 	}
@@ -119,9 +125,11 @@ func Rotate(imgRGB image.RGBA, angle float64) (*image.RGBA, error) {
 
 const onTranspose = "on Transpose()"
 
-func Transpose(rgb image.RGBA) (*image.RGBA, error) {
-
-	mat, err := gocv.ImageToMatRGB(&rgb)
+func Transpose(imgRGB *image.RGBA) (*image.RGBA, error) {
+	if imgRGB == nil {
+		return nil, errors.New("imgRGB == nil / " + onTranspose)
+	}
+	mat, err := gocv.ImageToMatRGB(imgRGB)
 	if err != nil {
 		return nil, errors.Wrap(err, onTranspose)
 	}
@@ -145,13 +153,17 @@ func Transpose(rgb image.RGBA) (*image.RGBA, error) {
 	return rgbaTransposed, nil
 }
 
-const onMorphClose = "on MorphClose()"
+const onMorphExGray = "on MorphExGray()"
 
-func MorphEx(imgGray image.Gray, morphType gocv.MorphType, size int) (*image.Gray, error) {
+func MorphExGray(imgGray *image.Gray, morphType gocv.MorphType, size int) (*image.Gray, error) {
 
-	mat, err := gocv.ImageGrayToMatGray(&imgGray)
+	if imgGray == nil {
+		return nil, errors.New("imgGray == nil / " + onMorphExGray)
+	}
+
+	mat, err := gocv.ImageGrayToMatGray(imgGray)
 	if err != nil {
-		return nil, errors.Wrap(err, onMorphClose)
+		return nil, errors.Wrap(err, onMorphExGray)
 	}
 	defer mat.Close()
 
@@ -163,12 +175,12 @@ func MorphEx(imgGray image.Gray, morphType gocv.MorphType, size int) (*image.Gra
 
 	imgTransformed, err := matForTransform.ToImage()
 	if err != nil {
-		return nil, errors.Wrap(err, onMorphClose)
+		return nil, errors.Wrap(err, onMorphExGray)
 	}
 
 	imgGrayTransformed, ok := imgTransformed.(*image.Gray)
 	if !ok {
-		return nil, fmt.Errorf("transposed image has wrong type: %T / "+onMorphClose, imgGray)
+		return nil, fmt.Errorf("transposed image has wrong type: %T / "+onMorphExGray, imgGray)
 	}
 
 	return imgGrayTransformed, nil
@@ -216,7 +228,7 @@ func Prepare(mat gocv.Mat, colorConversionCode gocv.ColorConversionCode, scale f
 
 const onPositionImage = "on PositionImage()"
 
-func PositionImage(imgRGBA0 image.RGBA, scale0 float64, rotation plane.XToYAngle, imgSideX, imgSideY int, l logger.Operator) (*image.RGBA, error) {
+func PositionImage(imgRGBA0 *image.RGBA, scale0 float64, rotation plane.XToYAngle, imgSideX, imgSideY int, l logger.Operator) (*image.RGBA, error) {
 
 	// TODO!!! don't convert gocv.Mat to imgRGBA
 
@@ -237,7 +249,7 @@ func PositionImage(imgRGBA0 image.RGBA, scale0 float64, rotation plane.XToYAngle
 		// TODO!!! why it doesn't work properly???
 		// imgRGBRotated, err = Rotate(*imgRGBCentered, -rotation)
 
-		imgRGBRotated, err = Rotate(*imagelib.ImageToRGBACopied(imgRGBA), float64(-rotation))
+		imgRGBRotated, err = Rotate(imagelib.ImageToRGBACopied(imgRGBA), float64(-rotation))
 		if err != nil {
 			return nil, errors.Wrap(err, onPositionImage)
 		} else if imgRGBRotated == nil {
@@ -247,7 +259,7 @@ func PositionImage(imgRGBA0 image.RGBA, scale0 float64, rotation plane.XToYAngle
 	}
 
 	if l != nil {
-		l.Image("original.png", imagelib.GetImage1(&imgRGBA0), nil)
+		l.Image("original.png", imagelib.GetImage1(imgRGBA0), nil)
 		l.Image("resized.png", imagelib.GetImage1(imgRGBA), nil)
 		l.Image("rotated.png", imagelib.GetImage1(imgRGBRotated), nil)
 	}

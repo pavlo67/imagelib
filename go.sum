@@ -28,6 +28,8 @@ github.com/pavlo67/common v0.4.11 h1:lOjwG0N0gzFBx1jABYN2ACBDeiftkAcT8vahb4XG6Bo
 github.com/pavlo67/common v0.4.11/go.mod h1:Wk9HdhJZ5Udw5XXySm4gIDFnX06hTcu61SswdXg6Ojw=
 github.com/pavlo67/common v0.5.0 h1:rexMS3xEvoRuBLOCo8zCw3aFOqS56ho94yWsS3U3tsE=
 github.com/pavlo67/common v0.5.0/go.mod h1:NywFv6BS2lbxd2xhQipoLySyHda7x0jm5vbX5ORuNtU=
+github.com/pavlo67/common v0.5.1 h1:NWsb4BclVqv/0+42L08M12vTSOSRd+RAF4T6BAf92V0=
+github.com/pavlo67/common v0.5.1/go.mod h1:NywFv6BS2lbxd2xhQipoLySyHda7x0jm5vbX5ORuNtU=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
