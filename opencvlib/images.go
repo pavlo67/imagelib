@@ -15,16 +15,20 @@ import (
 
 const onResize = "on Resize()"
 
-func Resize(imgRGB *image.RGBA, ratio float64) (*image.RGBA, float64, error) {
-	if imgRGB == nil {
-		return nil, 0, errors.New("imgRGB == nil / " + onResize)
-	} else if ratio == 1 || ratio == 0 {
-		return imgRGB, 1, nil
-	} else if ratio < 0 || math.IsNaN(ratio) || math.IsInf(ratio, 0) {
-		return nil, 0, fmt.Errorf("wrong resize ratio (%f) / "+onResize, ratio)
+func Resize(imgRGB image.RGBA, scale float64) (*image.RGBA, float64, error) {
+	if scale == 1 || scale == 0 {
+		return &imgRGB, 1, nil
+	} else if scale < 0 || math.IsNaN(scale) || math.IsInf(scale, 0) {
+		return nil, 0, fmt.Errorf("wrong resize scale (%f) / "+onResize, scale)
 	}
 
-	mat, err := gocv.ImageToMatRGB(imgRGB)
+	if imgRGB.Rect.Dx() != imgRGB.Stride {
+		// TODO!!! do it faster
+		imgRGBCopied := imagelib.ImageToRGBACopied(&imgRGB)
+		imgRGB = *imgRGBCopied
+	}
+
+	mat, err := gocv.ImageToMatRGB(&imgRGB)
 	if err != nil {
 		return nil, 0, errors.Wrap(err, onResize)
 	}
@@ -33,7 +37,11 @@ func Resize(imgRGB *image.RGBA, ratio float64) (*image.RGBA, float64, error) {
 	matForResize := gocv.NewMat()
 	defer matForResize.Close()
 
-	gocv.Resize(mat, &matForResize, image.Point{}, ratio, ratio, gocv.InterpolationDefault)
+	// gocv.Resize(mat, &matForResize, image.Point{}, scale, scale, gocv.InterpolationDefault)
+
+	pt := image.Point{int(math.Round(float64(imgRGB.Rect.Dx()) * scale)), int(math.Round(float64(imgRGB.Rect.Dy()) * scale))}
+
+	gocv.Resize(mat, &matForResize, pt, 0, 0, gocv.InterpolationDefault)
 
 	imgResized, err := matForResize.ToImage()
 	if err != nil {
@@ -45,7 +53,7 @@ func Resize(imgRGB *image.RGBA, ratio float64) (*image.RGBA, float64, error) {
 		return nil, 0, fmt.Errorf("resized image has wrong type: %T / "+onResize, rgbaResized)
 	}
 
-	return rgbaResized, ratio, nil
+	return rgbaResized, scale, nil
 }
 
 const onResizeGray = "on opencvlib.ResizeGray()"
@@ -121,6 +129,115 @@ func Rotate(imgRGB *image.RGBA, angle float64) (*image.RGBA, error) {
 	}
 
 	return imgRGBRotated, nil
+}
+
+const onRotateGray = "on RotateGray()"
+
+func RotateGray(imgGray *image.Gray, angle float64) (*image.Gray, error) {
+
+	if imgGray == nil {
+		return nil, errors.New("imgGray == nil / " + onRotateGray)
+	} else if math.IsNaN(angle) || math.IsInf(angle, 0) {
+		return nil, fmt.Errorf("wrong rotation angle (%f) / "+onRotateGray, angle)
+	}
+
+	dx, dy := imgGray.Rect.Max.X-imgGray.Rect.Min.X, imgGray.Rect.Max.Y-imgGray.Rect.Min.Y
+
+	mat, err := gocv.ImageGrayToMatGray(imgGray)
+	if err != nil {
+		return nil, errors.Wrap(err, onRotateGray)
+	}
+	defer mat.Close()
+	matForRotate := gocv.NewMat()
+	defer matForRotate.Close()
+
+	center := image.Point{dx / 2, dy / 2}
+	angleDegrees := angle * 180 / math.Pi
+
+	m := gocv.GetRotationMatrix2D(center, angleDegrees, 1)
+
+	gocv.WarpAffine(mat, &matForRotate, m, image.Point{dx, dy})
+
+	imgRotated, err := matForRotate.ToImage()
+	if err != nil {
+		return nil, errors.Wrap(err, onRotateGray)
+	}
+
+	imgGrayRotated, _ := imgRotated.(*image.Gray)
+	if imgGrayRotated == nil {
+		return nil, fmt.Errorf("imgGrayRotated == nil (imgRotated: %T) / "+onRotateGray, imgRotated)
+	}
+
+	return imgGrayRotated, nil
+}
+
+const onPositionImage = "on PositionImage()"
+
+func PositionImage(imgRGBA0 image.RGBA, scale float64, rotation plane.XToYAngle, imgSideX, imgSideY int, l logger.Operator) (_ *image.RGBA, leftTop image.Point, _ error) {
+
+	// TODO!!! don't convert gocv.Mat to imgRGBA
+
+	imgRGBA, _, err := Resize(imgRGBA0, scale)
+	if err != nil {
+		return nil, leftTop, errors.Wrap(err, onPositionImage)
+	} else if imgRGBA == nil {
+		return nil, leftTop, errors.New("imgRGBA == nil / " + onPositionImage)
+	}
+
+	//pnglib.Save(imgRGBA, "test.png")
+
+	var imgRGBRotated *image.RGBA
+
+	if rotation == 0 {
+		imgRGBRotated = imgRGBA
+
+	} else {
+
+		// TODO!!! why it doesn't work properly???
+		// imgRGBRotated, err = Rotate(*imgRGBCentered, -rotation)
+
+		imgRGBRotated, err = Rotate(imagelib.ImageToRGBACopied(imgRGBA), float64(-rotation))
+		if err != nil {
+			return nil, leftTop, errors.Wrap(err, onPositionImage)
+		} else if imgRGBRotated == nil {
+			return nil, leftTop, errors.New("imgRGBRotated == nil / " + onPositionImage)
+		}
+
+	}
+
+	//if l != nil {
+	//	l.Image("original.png", imagelib.GetImage1(&imgRGBA0), nil)
+	//	l.Image("resized.png", imagelib.GetImage1(imgRGBA), nil)
+	//	l.Image("rotated.png", imagelib.GetImage1(imgRGBRotated), nil)
+	//}
+
+	imgRect := image.Rectangle{Max: imgRGBRotated.Rect.Canon().Size()}
+	imgRGBRotated.Rect = imgRect
+
+	var imgRGBFinal *image.RGBA
+	sub := false
+
+	imgRectSub := imgRect
+
+	if xDelta := imgRect.Max.X - imgSideX; xDelta > 0 {
+		imgRectSub.Min.X += xDelta / 2
+		imgRectSub.Max.X, sub = imgRectSub.Min.X+imgSideX, true
+	}
+	if yDelta := imgRect.Max.Y - imgSideY; yDelta > 0 {
+		imgRectSub.Min.Y += yDelta / 2
+		imgRectSub.Max.Y, sub = imgRectSub.Min.Y+imgSideY, true
+	}
+
+	if sub {
+		leftTop = imgRectSub.Min
+		imgRGBFinal, _ = imgRGBRotated.SubImage(imgRectSub).(*image.RGBA)
+
+	} else {
+		imgRGBFinal = imgRGBRotated
+
+	}
+
+	return imgRGBFinal, leftTop, nil
 }
 
 const onTranspose = "on Transpose()"
@@ -226,72 +343,72 @@ func Prepare(mat gocv.Mat, colorConversionCode gocv.ColorConversionCode, scale f
 	return img, nil
 }
 
-const onPositionImage = "on PositionImage()"
-
-func PositionImage(imgRGBA0 *image.RGBA, scale0 float64, rotation plane.XToYAngle, imgSideX, imgSideY int, l logger.Operator) (*image.RGBA, error) {
-
-	// TODO!!! don't convert gocv.Mat to imgRGBA
-
-	imgRGBA, _, err := Resize(imgRGBA0, scale0)
-	if err != nil {
-		return nil, errors.Wrap(err, onPositionImage)
-	} else if imgRGBA == nil {
-		return nil, errors.New("imgRGBA == nil / " + onPositionImage)
-	}
-
-	var imgRGBRotated *image.RGBA
-
-	if rotation == 0 {
-		imgRGBRotated = imgRGBA
-
-	} else {
-
-		// TODO!!! why it doesn't work properly???
-		// imgRGBRotated, err = Rotate(*imgRGBCentered, -rotation)
-
-		imgRGBRotated, err = Rotate(imagelib.ImageToRGBACopied(imgRGBA), float64(-rotation))
-		if err != nil {
-			return nil, errors.Wrap(err, onPositionImage)
-		} else if imgRGBRotated == nil {
-			return nil, errors.New("imgRGBRotated == nil / " + onPositionImage)
-		}
-
-	}
-
-	if l != nil {
-		l.Image("original.png", imagelib.GetImage1(imgRGBA0), nil)
-		l.Image("resized.png", imagelib.GetImage1(imgRGBA), nil)
-		l.Image("rotated.png", imagelib.GetImage1(imgRGBRotated), nil)
-	}
-
-	imgRect := image.Rectangle{Max: imgRGBRotated.Rect.Canon().Size()}
-	imgRGBRotated.Rect = imgRect
-
-	var imgRGBFinal *image.RGBA
-	sub := false
-
-	imgRectSub := imgRect
-
-	if xDelta := imgRect.Max.X - imgSideX; xDelta > 0 {
-		imgRectSub.Min.X += xDelta / 2
-		imgRectSub.Max.X, sub = imgRectSub.Min.X+imgSideX, true
-	}
-	if yDelta := imgRect.Max.Y - imgSideY; yDelta > 0 {
-		imgRectSub.Min.Y += yDelta / 2
-		imgRectSub.Max.Y, sub = imgRectSub.Min.Y+imgSideY, true
-	}
-
-	if sub {
-		imgRGBFinal, _ = imgRGBRotated.SubImage(imgRectSub).(*image.RGBA)
-
-	} else {
-		imgRGBFinal = imgRGBRotated
-
-	}
-
-	return imgRGBFinal, nil
-}
-
+//const onPositionImage = "on PositionImage()"
+//
+//func PositionImage(imgRGBA0 *image.RGBA, scale0 float64, rotation plane.XToYAngle, imgSideX, imgSideY int, l logger.Operator) (*image.RGBA, error) {
+//
+//	// TODO!!! don't convert gocv.Mat to imgRGBA
+//
+//	imgRGBA, _, err := Resize(imgRGBA0, scale0)
+//	if err != nil {
+//		return nil, errors.Wrap(err, onPositionImage)
+//	} else if imgRGBA == nil {
+//		return nil, errors.New("imgRGBA == nil / " + onPositionImage)
+//	}
+//
+//	var imgRGBRotated *image.RGBA
+//
+//	if rotation == 0 {
+//		imgRGBRotated = imgRGBA
+//
+//	} else {
+//
+//		// TODO!!! why it doesn't work properly???
+//		// imgRGBRotated, err = Rotate(*imgRGBCentered, -rotation)
+//
+//		imgRGBRotated, err = Rotate(imagelib.ImageToRGBACopied(imgRGBA), float64(-rotation))
+//		if err != nil {
+//			return nil, errors.Wrap(err, onPositionImage)
+//		} else if imgRGBRotated == nil {
+//			return nil, errors.New("imgRGBRotated == nil / " + onPositionImage)
+//		}
+//
+//	}
+//
+//	if l != nil {
+//		l.Image("original.png", imagelib.GetImage1(imgRGBA0), nil)
+//		l.Image("resized.png", imagelib.GetImage1(imgRGBA), nil)
+//		l.Image("rotated.png", imagelib.GetImage1(imgRGBRotated), nil)
+//	}
+//
+//	imgRect := image.Rectangle{Max: imgRGBRotated.Rect.Canon().Size()}
+//	imgRGBRotated.Rect = imgRect
+//
+//	var imgRGBFinal *image.RGBA
+//	sub := false
+//
+//	imgRectSub := imgRect
+//
+//	if xDelta := imgRect.Max.X - imgSideX; xDelta > 0 {
+//		imgRectSub.Min.X += xDelta / 2
+//		imgRectSub.Max.X, sub = imgRectSub.Min.X+imgSideX, true
+//	}
+//	if yDelta := imgRect.Max.Y - imgSideY; yDelta > 0 {
+//		imgRectSub.Min.Y += yDelta / 2
+//		imgRectSub.Max.Y, sub = imgRectSub.Min.Y+imgSideY, true
+//	}
+//
+//	if sub {
+//		imgRGBFinal, _ = imgRGBRotated.SubImage(imgRectSub).(*image.RGBA)
+//
+//	} else {
+//		imgRGBFinal = imgRGBRotated
+//
+//	}
+//
+//	return imgRGBFinal, nil
+//}
+//
 //const onRotateResized = "on RotateResized()"
 //
 //// DEPRECATED!!!
@@ -400,4 +517,39 @@ func PositionImage(imgRGBA0 *image.RGBA, scale0 float64, rotation plane.XToYAngl
 //	}
 //
 //	return imgRGBResized, dpm * resizeRatio, nil
+//}
+
+//const onResize = "on Resize()"
+//
+//func Resize(imgRGB *image.RGBA, ratio float64) (*image.RGBA, float64, error) {
+//	if imgRGB == nil {
+//		return nil, 0, errors.New("imgRGB == nil / " + onResize)
+//	} else if ratio == 1 || ratio == 0 {
+//		return imgRGB, 1, nil
+//	} else if ratio < 0 || math.IsNaN(ratio) || math.IsInf(ratio, 0) {
+//		return nil, 0, fmt.Errorf("wrong resize ratio (%f) / "+onResize, ratio)
+//	}
+//
+//	mat, err := gocv.ImageToMatRGB(imgRGB)
+//	if err != nil {
+//		return nil, 0, errors.Wrap(err, onResize)
+//	}
+//	defer mat.Close()
+//
+//	matForResize := gocv.NewMat()
+//	defer matForResize.Close()
+//
+//	gocv.Resize(mat, &matForResize, image.Point{}, ratio, ratio, gocv.InterpolationDefault)
+//
+//	imgResized, err := matForResize.ToImage()
+//	if err != nil {
+//		return nil, 0, errors.Wrap(err, onResize)
+//	}
+//
+//	rgbaResized, ok := imgResized.(*image.RGBA)
+//	if !ok {
+//		return nil, 0, fmt.Errorf("resized image has wrong type: %T / "+onResize, rgbaResized)
+//	}
+//
+//	return rgbaResized, ratio, nil
 //}
