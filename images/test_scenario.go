@@ -14,7 +14,7 @@ import (
 	"github.com/pavlo67/common/common/db"
 )
 
-const testPath = "0001"
+const testKey = "0001"
 
 func OperatorTestScenario(t *testing.T, imagesOp Operator, imagesCleanerOp db.Cleaner) {
 	require.Equal(t, "test", os.Getenv("ENV"))
@@ -40,18 +40,20 @@ func OperatorTestScenario(t *testing.T, imagesOp Operator, imagesCleanerOp db.Cl
 		DPM:      2,
 	}
 
-	testImageChecked, err := imagesOp.Check(testPath)
+	testImageChecked, err := imagesOp.Check(testKey)
 	require.NoError(t, err)
 	require.False(t, testImageChecked)
 
-	err = imagesOp.Save(testImage, testDescr, testPath)
+	imgPath, err := imagesOp.Save(testImage, testDescr, testKey)
 	require.NoError(t, err)
+	require.NotEmpty(t, imgPath)
+	testDescr.ImagePath = imgPath
 
-	testImageChecked, err = imagesOp.Check(testPath)
+	testImageChecked, err = imagesOp.Check(testKey)
 	require.NoError(t, err)
 	require.True(t, testImageChecked)
 
-	testImageReaded, testDescrReaded, err := imagesOp.Get(testPath)
+	testImageReaded, testDescrReaded, err := imagesOp.Get(testKey)
 	require.NoError(t, err)
 	require.NotNil(t, testImageReaded)
 	require.NotNil(t, testDescrReaded)
@@ -72,5 +74,9 @@ func OperatorTestScenario(t *testing.T, imagesOp Operator, imagesCleanerOp db.Cl
 			require.Equal(t, aExpected, a)
 		}
 	}
+
+	imgPaths, err := imagesOp.ListPaths(testKey)
+	require.NoError(t, err)
+	require.True(t, len(imgPaths) == 1)
 
 }

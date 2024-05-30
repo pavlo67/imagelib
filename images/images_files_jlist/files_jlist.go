@@ -48,37 +48,35 @@ func New(basePath string, colored bool) (images.Operator, db.Cleaner, error) {
 
 const onSave = "on imagesFilesJList.Save()"
 
-func (op *imagesFilesJList) Save(img image.Image, descr sources.Description, relPath string) error {
+func (op *imagesFilesJList) Save(img image.Image, descr sources.Description, key images.Key) (imgPath string, err error) {
 	if op == nil {
-		return errors.New("op == nil / " + onSave)
+		return "", errors.New("op == nil / " + onSave)
 	}
 
-	imgPath, _, err := images.RelPath(op.basePath, relPath, op.colored)
-	if err != nil {
-		return errors.Wrap(err, onSave)
+	keyPath := images.KeyPath(key, op.colored)
+	if keyPath == "" {
+		return "", fmt.Errorf("empty path for key '%s' / "+onSave, key)
 	}
-	imgBase := filepath.Base(imgPath)
-	if len(imgBase) != 8 || imgBase[:4] != fmt.Sprintf("%04d", descr.N) {
-		return fmt.Errorf("wrong path to save image: %s / %+v / "+onSave, relPath, descr)
-	}
+	imgPath = filepath.Join(op.basePath, keyPath)
 
 	if op.colored {
-		if err := pnglib.Save(img, imgPath); err != nil {
-			return fmt.Errorf("%s: %s / "+onSave, imgPath, err)
+		if err = pnglib.Save(img, imgPath); err != nil {
+			return "", fmt.Errorf("%s: %s / "+onSave, imgPath, err)
 		}
 	} else {
 		imgGray, err := imagelib.ImageToGray(img)
 		if err != nil {
-			return fmt.Errorf("%s: %s / "+onSave, imgPath, err)
+			return "", fmt.Errorf("%s: %s / "+onSave, imgPath, err)
 		} else if imgGray == nil {
-			return fmt.Errorf("imgGray == nil: %s / "+onSave, imgPath)
+			return "", fmt.Errorf("imgGray == nil: %s / "+onSave, imgPath)
 		}
 
 		if err = imagelib.SavePGM(imgGray, imgPath); err != nil {
-			return fmt.Errorf("%s: %s / "+onSave, imgPath, err)
+			return "", fmt.Errorf("%s: %s / "+onSave, imgPath, err)
 		}
 	}
 
+	descr.ImagePath = imgPath
 	if len(op.descrs) < 1 {
 		op.descrs = []sources.Description{descr}
 	} else if descr.N < op.descrs[0].N {
@@ -98,21 +96,22 @@ func (op *imagesFilesJList) Save(img image.Image, descr sources.Description, rel
 			op.descrs = append(op.descrs, descr)
 		}
 	}
-
 	if err = serialization.SaveAllPartsJSON(op.descrs, filepath.Join(filepath.Dir(imgPath), sources.FramesAllDescriptionsFilename)); err != nil {
-		return errors.Wrap(err, onSave)
+		return imgPath, errors.Wrap(err, onSave)
 	}
 
-	return nil
+	return imgPath, nil
 }
 
 const onCheck = "on imagesFilesJList.Check()"
 
-func (op imagesFilesJList) Check(relPath string) (bool, error) {
-	imgPath, _, err := images.RelPath(op.basePath, relPath, op.colored)
-	if err != nil {
-		return false, errors.Wrap(err, onCheck)
+func (op imagesFilesJList) Check(key images.Key) (bool, error) {
+
+	keyPath := images.KeyPath(key, op.colored)
+	if keyPath == "" {
+		return false, fmt.Errorf("empty keyPath for key '%s' / "+onCheck, key)
 	}
+	imgPath := filepath.Join(op.basePath, keyPath)
 
 	imgExists, err := filelib.FileExists(imgPath, false)
 	if err != nil {
@@ -132,22 +131,22 @@ func (op imagesFilesJList) Check(relPath string) (bool, error) {
 
 const onGet = "on imagesFilesJList.Get()"
 
-func (op imagesFilesJList) Get(relPath string) (image.Image, *sources.Description, error) {
-	imgPath, _, err := images.RelPath(op.basePath, relPath, op.colored)
-	if err != nil {
-		return nil, nil, errors.Wrap(err, onGet)
+func (op imagesFilesJList) Get(key images.Key) (image.Image, *sources.Description, error) {
+	keyPath := images.KeyPath(key, op.colored)
+	if keyPath == "" {
+		return nil, nil, fmt.Errorf("empty keyPath for key '%s' / "+onGet, key)
 	}
-
-	descrI := op.descrI(imgPath)
-	if descrI < 0 {
-		return nil, nil, fmt.Errorf("%s: descr is absent / "+onGet, imgPath)
-	}
-
+	imgPath := filepath.Join(op.basePath, keyPath)
 	imgExists, err := filelib.FileExists(imgPath, false)
 	if err != nil {
 		return nil, nil, fmt.Errorf("%s: %s / "+onGet, imgPath, err)
 	} else if !imgExists {
 		return nil, nil, nil
+	}
+
+	descrI := op.descrI(imgPath)
+	if descrI < 0 {
+		return nil, nil, fmt.Errorf("%s: descr is absent / "+onGet, imgPath)
 	}
 
 	if op.colored {
@@ -162,7 +161,37 @@ func (op imagesFilesJList) Get(relPath string) (image.Image, *sources.Descriptio
 	if err != nil {
 		return nil, nil, fmt.Errorf("%s: %s / "+onGet, imgPath, err)
 	}
-	return imgGray, &op.descrs[descrI], nil
+
+	descr := op.descrs[descrI]
+	descr.ImagePath = imgPath
+
+	return imgGray, &descr, nil
+}
+
+const onListPaths = "on imagesFiles.ListPaths()"
+
+func (op imagesFilesJList) ListPaths(keyRegexStr string) ([]string, error) {
+	reKeyPath := images.KeyPathRegex(keyRegexStr, op.colored)
+	if reKeyPath == nil {
+		return nil, fmt.Errorf("empty keyPath regex for keyRegexStr '%s' / "+onListPaths, keyRegexStr)
+	}
+
+	imgPaths, err := filelib.List(op.basePath, reKeyPath, false, true)
+	if err != nil {
+		return nil, fmt.Errorf("%s / %s --> %s / "+onListPaths, op.basePath, keyRegexStr, err)
+	}
+
+	var imgPathsOk []string
+	for _, imgPath := range imgPaths {
+		descrI := op.descrI(imgPath)
+		if descrI < 0 {
+			l.Errorf("description doesn't exist for %s / "+onListPaths, imgPath)
+			continue
+		}
+		imgPathsOk = append(imgPathsOk, imgPath)
+	}
+
+	return imgPathsOk, nil
 }
 
 func (op imagesFilesJList) descrI(imgPath string) int {

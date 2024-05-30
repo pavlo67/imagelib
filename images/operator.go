@@ -1,41 +1,46 @@
 package images
 
 import (
-	"fmt"
-	"github.com/pavlo67/imagelib/sources"
 	"image"
 	"path/filepath"
+	"regexp"
 
 	"github.com/pavlo67/common/common/joiner"
+
+	"github.com/pavlo67/imagelib/sources"
 )
 
 const InterfaceKey joiner.InterfaceKey = "images"
 const InterfaceCleanerKey joiner.InterfaceKey = "images_cleaner"
 
+type Key string
+
 type Operator interface {
-	Get(path string) (image.Image, *sources.Description, error)
-	Save(_ image.Image, _ sources.Description, path string) error
-	Check(path string) (bool, error)
+	Get(Key) (image.Image, *sources.Description, error)
+	Save(image.Image, sources.Description, Key) (filepath string, err error)
+	Check(Key) (bool, error)
+	ListPaths(keyRegexStr string) ([]string, error)
 }
 
-func RelPath(basePath, relPath string, colored bool) (string, string, error) {
-	relImgPath := filepath.Clean(relPath)
-	if len(relImgPath) < 1 || relImgPath[0] == '.' {
-		return "", "", fmt.Errorf("wrong relative path: '%s'", relPath)
+func KeyPath(key Key, colored bool) string {
+	path := filepath.Clean(string(key))
+	if path == "" {
+		return ""
 	}
 
-	var ext string
 	if colored {
-		ext = ".png"
-	} else {
-		ext = ".pgm"
+		return path + ".png"
+	}
+	return path + ".pgm"
+}
+
+func KeyPathRegex(keyRegexStr string, colored bool) *regexp.Regexp {
+	if keyRegexStr = filepath.Clean(keyRegexStr); keyRegexStr == "" {
+		return nil
 	}
 
-	if base := filepath.Base(relImgPath); len(base) < 4 || base[len(base)-1:] != ext {
-		relImgPath += ext
+	if colored {
+		return regexp.MustCompile(keyRegexStr + `\.png$`)
 	}
-
-	imgPath := filepath.Join(basePath, relImgPath)
-
-	return imgPath, imgPath + ".json", nil
+	return regexp.MustCompile(keyRegexStr + `\.pgm$`)
 }
