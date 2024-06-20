@@ -1,12 +1,12 @@
 package contours
 
 import (
+	"github.com/pavlo67/common/common/imagelib"
 	"image"
 
 	"gocv.io/x/gocv"
 
 	"github.com/pavlo67/common/common/errors"
-	"github.com/pavlo67/imagelib/imagelib"
 	"github.com/pavlo67/imagelib/layers"
 )
 

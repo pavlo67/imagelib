@@ -1,14 +1,13 @@
 package opencvlib
 
 import (
+	"github.com/pavlo67/common/common/imagelib"
 	"image"
 	"math"
 
 	"gocv.io/x/gocv"
 
 	"github.com/pavlo67/common/common/mathlib/plane"
-
-	"github.com/pavlo67/imagelib/imagelib"
 )
 
 func RectangleMin(points []image.Point) plane.Rectangle {

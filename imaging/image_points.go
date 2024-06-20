@@ -1,7 +1,8 @@
-package imagelib
+package imaging
 
 import (
 	"github.com/pavlo67/common/common"
+	"github.com/pavlo67/common/common/imagelib"
 	"github.com/pavlo67/common/common/mathlib/plane"
 	"golang.org/x/image/colornames"
 	"image"
@@ -9,7 +10,6 @@ import (
 	"math"
 
 	"github.com/pavlo67/common/common/errors"
-	"github.com/pavlo67/common/common/pnglib"
 )
 
 func GrayFromPoints(points []image.Point, rect *image.Rectangle) image.Gray {
@@ -132,5 +132,5 @@ func PointsToGrayscale(points []image.Point, rect image.Rectangle) image.Image {
 
 func PointsToGrayscalePng(points []image.Point, rect image.Rectangle, path string) error {
 	img := PointsToGrayscale(points, rect)
-	return pnglib.Save(img, path)
+	return imagelib.Save(img, path)
 }

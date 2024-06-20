@@ -2,27 +2,27 @@ package convolution
 
 import (
 	"fmt"
+	"github.com/pavlo67/common/common/imagelib"
+	"github.com/pavlo67/imagelib/coloring"
 	frame2 "github.com/pavlo67/imagelib/frame"
 	"github.com/pavlo67/imagelib/layers"
+	"github.com/pavlo67/imagelib/pix"
 	"image"
 
-	"github.com/pavlo67/imagelib/imagelib/pix"
-
 	"github.com/pavlo67/common/common"
-	"github.com/pavlo67/imagelib/imagelib"
 )
 
 var _ Mask = &colorRangeMask{}
 
 type colorRangeMask struct {
 	imgRGB *image.RGBA
-	imagelib.ColorRange
+	coloring.ColorRange
 	// cnt int32
 }
 
 const onColorRange = "on ColorRange()"
 
-func ColorRange(colorRange imagelib.ColorRange) Mask {
+func ColorRange(colorRange coloring.ColorRange) Mask {
 	return &colorRangeMask{ColorRange: colorRange}
 }
 

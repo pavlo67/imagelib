@@ -27,7 +27,7 @@ func (cs *imagesFilesStarter) Name() string {
 	return logger.GetCallInfo().PackageName
 }
 
-func (cs *imagesFilesStarter) Run(envs *config.Envs, options common.Map, joinerOp joiner.Operator, l_ logger.Operator) error {
+func (cs *imagesFilesStarter) Run(envs *config.Envs, options common.Map, joinerOp joiner.Operator, l_ logger.OperatorJ) error {
 	l = l_
 
 	var basePath string

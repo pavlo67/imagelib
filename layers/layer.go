@@ -1,22 +1,22 @@
 package layers
 
 import (
-	"github.com/pavlo67/imagelib/imagelib"
-	"github.com/pavlo67/imagelib/imagelib/pix"
+	"github.com/pavlo67/imagelib/imaging"
+	"github.com/pavlo67/imagelib/pix"
 	"image"
 )
 
-var _ imagelib.Described = &Layer{}
+var _ imaging.Described = &Layer{}
 
 type Layer struct {
 	image.Gray
-	imagelib.Settings
+	imaging.Settings
 	Metrics
 }
 
 type Layers map[string]*Layer
 
-func (lyr Layer) Description() imagelib.Settings {
+func (lyr Layer) Description() imaging.Settings {
 	return lyr.Settings
 }
 

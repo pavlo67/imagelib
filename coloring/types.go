@@ -1,4 +1,4 @@
-package color_model
+package coloring
 
 type Code int8
 

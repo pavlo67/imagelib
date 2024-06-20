@@ -2,12 +2,12 @@ package convolution
 
 import (
 	"fmt"
+	"github.com/pavlo67/imagelib/pix"
 	"image"
 	"strconv"
 
 	"github.com/pavlo67/common/common"
 
-	"github.com/pavlo67/imagelib/imagelib/pix"
 	"github.com/pavlo67/imagelib/layers"
 )
 

@@ -1,11 +1,10 @@
 package convolution
 
 import (
+	"github.com/pavlo67/imagelib/pix"
 	"image"
 	"image/color"
 	"testing"
-
-	"github.com/pavlo67/imagelib/imagelib/pix"
 
 	"github.com/stretchr/testify/require"
 )

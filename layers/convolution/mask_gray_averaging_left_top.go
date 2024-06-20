@@ -3,10 +3,9 @@ package convolution
 import (
 	"fmt"
 	"github.com/pavlo67/imagelib/layers"
+	"github.com/pavlo67/imagelib/pix"
 	"math"
 	"strconv"
-
-	"github.com/pavlo67/imagelib/imagelib/pix"
 
 	"github.com/pavlo67/common/common"
 )

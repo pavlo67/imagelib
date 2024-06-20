@@ -2,14 +2,13 @@ package frame
 
 import (
 	"fmt"
+	"github.com/pavlo67/common/common/imagelib"
 	"image"
 	"math"
 
 	"github.com/pavlo67/common/common/errors"
 	"github.com/pavlo67/common/common/geolib"
 	"github.com/pavlo67/common/common/mathlib/plane"
-
-	"github.com/pavlo67/imagelib/imagelib"
 )
 
 type PointRawGeo struct {

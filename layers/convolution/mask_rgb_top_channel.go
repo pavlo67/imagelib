@@ -2,15 +2,14 @@ package convolution
 
 import (
 	"fmt"
+	"github.com/pavlo67/common/common/imagelib"
 	frame2 "github.com/pavlo67/imagelib/frame"
 	"github.com/pavlo67/imagelib/layers"
+	"github.com/pavlo67/imagelib/pix"
 	"image"
 	"strconv"
 
 	"github.com/pavlo67/common/common"
-	"github.com/pavlo67/imagelib/imagelib"
-
-	"github.com/pavlo67/imagelib/imagelib/pix"
 )
 
 var _ Mask = &topChannelMask{}

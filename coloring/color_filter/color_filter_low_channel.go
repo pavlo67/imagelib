@@ -2,9 +2,8 @@ package color_filter
 
 import (
 	"fmt"
+	"github.com/pavlo67/imagelib/pix"
 	"image/color"
-
-	"github.com/pavlo67/imagelib/imagelib/pix"
 
 	"github.com/pavlo67/common/common"
 )

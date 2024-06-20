@@ -2,6 +2,7 @@ package preparation
 
 import (
 	"fmt"
+	"github.com/pavlo67/common/common/imagelib"
 	"github.com/pavlo67/imagelib/sources"
 	"image"
 	"os"
@@ -11,8 +12,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/pavlo67/common/common/filelib"
-
-	"github.com/pavlo67/imagelib/imagelib"
 )
 
 func TestImages(t *testing.T) {

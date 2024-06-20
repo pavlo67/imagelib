@@ -1,9 +1,11 @@
-package imagelib
+package imaging
 
 import (
 	"fmt"
 	"github.com/pavlo67/common/common"
+	"github.com/pavlo67/common/common/imagelib"
 	"github.com/pavlo67/common/common/logger"
+	"github.com/pavlo67/imagelib/coloring"
 	"image"
 )
 
@@ -55,7 +57,7 @@ func (op *GetImage) Image(opts common.Map) (image.Image, string, error) {
 		return nil, "", fmt.Errorf(onImage + ": op == nil || len(op.Images) == 0")
 	}
 
-	img := ImageToRGBACopied(op.Images[0])
+	img := imagelib.ImageToRGBACopied(op.Images[0])
 	for _, imgToAdd := range op.Images[1:] {
 		rect := imgToAdd.Bounds()
 		for x := rect.Min.X; x < rect.Max.X; x++ {
@@ -70,7 +72,7 @@ func (op *GetImage) Image(opts common.Map) (image.Image, string, error) {
 	for i, maskI := range op.ImageMasks {
 		colorNamed := maskI.Color()
 		if colorNamed == nil || colorNamed.Color == nil {
-			colorNamed = &RoundAbout[i%len(RoundAbout)]
+			colorNamed = &coloring.RoundAbout[i%len(coloring.RoundAbout)]
 		}
 		mask = append(mask, maskI.Mask(colorNamed.Color, opts)...)
 		info += maskI.Info(*colorNamed)

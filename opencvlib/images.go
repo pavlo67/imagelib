@@ -2,9 +2,9 @@ package opencvlib
 
 import (
 	"fmt"
+	"github.com/pavlo67/common/common/imagelib"
 	"github.com/pavlo67/common/common/logger"
 	"github.com/pavlo67/common/common/mathlib/plane"
-	"github.com/pavlo67/imagelib/imagelib"
 	"image"
 	"math"
 
@@ -184,7 +184,7 @@ func PositionImage(imgRGBA0 image.RGBA, scale float64, rotation plane.XToYAngle,
 		return nil, leftTop, errors.New("imgRGBA == nil / " + onPositionImage)
 	}
 
-	//pnglib.Save(imgRGBA, "test.png")
+	//imagelib.Save(imgRGBA, "test.png")
 
 	var imgRGBRotated *image.RGBA
 

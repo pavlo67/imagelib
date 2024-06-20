@@ -1,11 +1,11 @@
 package contours
 
 import (
+	"github.com/pavlo67/common/common/imagelib"
 	"image"
 
 	"github.com/pavlo67/common/common/mathlib/plane"
 
-	"github.com/pavlo67/imagelib/imagelib"
 	"github.com/pavlo67/imagelib/opencvlib"
 )
 

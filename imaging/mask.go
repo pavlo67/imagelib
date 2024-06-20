@@ -1,7 +1,9 @@
-package imagelib
+package imaging
 
 import (
 	"github.com/pavlo67/common/common"
+	"github.com/pavlo67/common/common/imagelib"
+	"github.com/pavlo67/imagelib/coloring"
 	"image"
 	"image/color"
 
@@ -11,15 +13,15 @@ import (
 // GetMask ------------------------------------------------------------------------------
 
 type GetMask interface {
-	Color() *ColorNamed
+	Color() *coloring.ColorNamed
 	Mask(color.Color, common.Map) MasksOneColor
-	Info(colorNamed ColorNamed) string
+	Info(colorNamed coloring.ColorNamed) string
 }
 
 type MaskOneColor struct {
 	Color  color.Color
 	Points []image.Point
-	Marker
+	imagelib.Marker
 }
 
 type MasksOneColor []MaskOneColor
@@ -53,7 +55,7 @@ var _ GetMask = PointsGetMask{}
 
 type PointsGetMask struct {
 	Points []image.Point
-	*ColorNamed
+	*coloring.ColorNamed
 	//PointSize    int
 	//AddInfo      bool
 	//DetailedInfo bool
@@ -61,7 +63,7 @@ type PointsGetMask struct {
 	//Title        string
 }
 
-func (pointsGetMask PointsGetMask) Color() *ColorNamed {
+func (pointsGetMask PointsGetMask) Color() *coloring.ColorNamed {
 	if pointsGetMask.ColorNamed != nil {
 		return pointsGetMask.ColorNamed
 	}
@@ -72,7 +74,7 @@ func (pointsGetMask PointsGetMask) Mask(clr color.Color, opts common.Map) MasksO
 	return MasksOneColor{{Color: clr, Points: pointsGetMask.Points}}
 }
 
-func (pointsGetMask PointsGetMask) Info(colorNamed ColorNamed) string {
+func (pointsGetMask PointsGetMask) Info(colorNamed coloring.ColorNamed) string {
 	return ""
 	//if !pointsGetMask.AddInfo {
 	//	return ""

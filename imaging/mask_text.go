@@ -1,7 +1,9 @@
-package imagelib
+package imaging
 
 import (
 	"github.com/pavlo67/common/common"
+	"github.com/pavlo67/common/common/imagelib"
+	"github.com/pavlo67/imagelib/coloring"
 	"image"
 	"image/color"
 	"log"
@@ -11,8 +13,8 @@ import (
 	"github.com/pavlo67/common/common/mathlib/plane"
 )
 
-var _ Marker = &MarkerText{}
-var _ Marker = MarkerText{}
+var _ imagelib.Marker = &MarkerText{}
+var _ imagelib.Marker = MarkerText{}
 
 type MarkerText struct {
 	DPI      float64
@@ -24,7 +26,7 @@ type MarkerText struct {
 }
 
 func (mt MarkerText) Mark(drawImg draw.Image, clr color.Color) {
-	if _, err := Write(drawImg, mt.Point, mt.DPI, mt.Size, mt.Spacing, mt.FontFile, clr, mt.Text); err != nil {
+	if _, err := imagelib.Write(drawImg, mt.Point, mt.DPI, mt.Size, mt.Spacing, mt.FontFile, clr, mt.Text); err != nil {
 		log.Printf("ERROR: on MarkerText.Mark(): %s", err)
 	}
 }
@@ -33,7 +35,7 @@ var _ GetMask = &SegmentsGetMask{}
 var _ GetMask = SegmentsGetMask{}
 
 type SegmentsGetMask struct {
-	*ColorNamed
+	*coloring.ColorNamed
 	Point     image.Point
 	Segments  []plane.Segment
 	LineWidth int
@@ -43,7 +45,7 @@ type SegmentsGetMask struct {
 	Text      string
 }
 
-func (segmentsGetMask SegmentsGetMask) Color() *ColorNamed {
+func (segmentsGetMask SegmentsGetMask) Color() *coloring.ColorNamed {
 	return segmentsGetMask.ColorNamed
 }
 
@@ -54,7 +56,7 @@ func (segmentsGetMask SegmentsGetMask) Mask(clr color.Color, opts common.Map) Ma
 
 	var points []image.Point
 	for _, segment := range segmentsGetMask.Segments {
-		points = append(points, Line(segment, segmentsGetMask.LineWidth)...)
+		points = append(points, imagelib.Line(segment, segmentsGetMask.LineWidth)...)
 	}
 	xMin, xMax := segmentsGetMask.Point.X-segmentsGetMask.LineWidth-2, segmentsGetMask.Point.X+segmentsGetMask.LineWidth+3
 	yMin, yMax := segmentsGetMask.Point.Y-segmentsGetMask.LineWidth-2, segmentsGetMask.Point.Y+segmentsGetMask.LineWidth+3
@@ -74,7 +76,7 @@ func (segmentsGetMask SegmentsGetMask) Mask(clr color.Color, opts common.Map) Ma
 	}
 }
 
-func (segmentsGetMask SegmentsGetMask) Info(colorNamed ColorNamed) string {
+func (segmentsGetMask SegmentsGetMask) Info(colorNamed coloring.ColorNamed) string {
 
 	var title string
 	if segmentsGetMask.Title != "" {

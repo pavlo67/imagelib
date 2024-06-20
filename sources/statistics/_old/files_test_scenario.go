@@ -10,7 +10,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/pavlo67/common/common/filelib"
-	"github.com/pavlo67/imagelib/imagelib"
 )
 
 func FileSeriesTestScenario(t *testing.T, path, key string, iMin, iMax int) {
@@ -54,7 +53,7 @@ func FileSeriesTestScenario(t *testing.T, path, key string, iMin, iMax int) {
 		if i%50 == 0 {
 			fmt.Println(i-iMin, " / ", iMax)
 		}
-		imgGray, err := imagelib.ReadPGMSpecial(filepath.Join(path, fmt.Sprintf("%04d.pgm", i))) // descr.N
+		imgGray, err := imaging.ReadPGMSpecial(filepath.Join(path, fmt.Sprintf("%04d.pgm", i))) // descr.N
 		require.NoError(t, err)
 		require.NotNil(t, imgGray)
 

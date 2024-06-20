@@ -4,9 +4,9 @@ package main
 import "C"
 
 import (
-	"github.com/pavlo67/imagelib/imagelib"
-	"github.com/pavlo67/imagelib/imagelib/pix"
+	"github.com/pavlo67/imagelib/imaging"
 	"github.com/pavlo67/imagelib/layers"
+	"github.com/pavlo67/imagelib/pix"
 	"image"
 	"log"
 	"unsafe"
@@ -28,7 +28,7 @@ func main() {
 
 	lyr := layers.Layer{
 		Gray:     *imgGray,
-		Settings: imagelib.Settings{DPM: 1},
+		Settings: imaging.Settings{DPM: 1},
 	}
 
 	maskBrClasses, err := convolution.RGBBrightnessClasses(brClassRange)

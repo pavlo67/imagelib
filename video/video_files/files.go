@@ -2,6 +2,7 @@ package video_files
 
 import (
 	"fmt"
+	"github.com/pavlo67/common/common/imagelib"
 	"path/filepath"
 	"sync"
 	"time"
@@ -12,7 +13,6 @@ import (
 	"github.com/pavlo67/common/common/filelib"
 	"github.com/pavlo67/common/common/serialization"
 
-	"github.com/pavlo67/imagelib/imagelib"
 	"github.com/pavlo67/imagelib/opencvlib"
 	"github.com/pavlo67/imagelib/video"
 )

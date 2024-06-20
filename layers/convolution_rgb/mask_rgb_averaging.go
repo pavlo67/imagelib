@@ -2,6 +2,8 @@ package convolution_rgb
 
 import (
 	"fmt"
+	"github.com/pavlo67/common/common/imagelib"
+	"github.com/pavlo67/imagelib/pix"
 	"image"
 	"math"
 	"strconv"
@@ -9,8 +11,6 @@ import (
 	"github.com/pavlo67/common/common"
 
 	"github.com/pavlo67/imagelib/frame"
-	"github.com/pavlo67/imagelib/imagelib"
-	"github.com/pavlo67/imagelib/imagelib/pix"
 )
 
 var _ Mask = &averagingRGBMask{}

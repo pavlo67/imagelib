@@ -1,4 +1,4 @@
-package imagelib
+package imaging
 
 import (
 	"maps"

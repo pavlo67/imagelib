@@ -2,13 +2,13 @@ package convolution
 
 import (
 	"fmt"
+	"github.com/pavlo67/imagelib/imaging"
 	"github.com/pavlo67/imagelib/layers"
+	"github.com/pavlo67/imagelib/pix"
 	"image"
 
 	"github.com/pavlo67/common/common"
 	"github.com/pavlo67/common/common/errors"
-	"github.com/pavlo67/imagelib/imagelib"
-	"github.com/pavlo67/imagelib/imagelib/pix"
 )
 
 type Mask interface {
@@ -20,7 +20,7 @@ type Mask interface {
 
 const onLayer = "on convolution.Layer()"
 
-func Layer(data imagelib.Described, mask Mask, scale int, addRest bool) (*layers.Layer, error) {
+func Layer(data imaging.Described, mask Mask, scale int, addRest bool) (*layers.Layer, error) {
 
 	rect := data.Bounds()
 	xWidth0, yHeight0 := rect.Max.X-rect.Min.X, rect.Max.Y-rect.Min.Y
@@ -95,7 +95,7 @@ func Layer(data imagelib.Described, mask Mask, scale int, addRest bool) (*layers
 	return &lyrConvolved, nil
 }
 
-func Metrics(data imagelib.Described, mask Mask, scale int, addRest bool) (*layers.Metrics, error) {
+func Metrics(data imaging.Described, mask Mask, scale int, addRest bool) (*layers.Metrics, error) {
 	rect := data.Bounds()
 	xWidth0, yHeight0 := rect.Max.X-rect.Min.X, rect.Max.Y-rect.Min.Y
 

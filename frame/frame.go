@@ -1,8 +1,9 @@
 package frame
 
 import (
-	"github.com/pavlo67/imagelib/imagelib"
-	"github.com/pavlo67/imagelib/imagelib/pix"
+	"github.com/pavlo67/common/common/imagelib"
+	"github.com/pavlo67/imagelib/imaging"
+	"github.com/pavlo67/imagelib/pix"
 	"image"
 	"math"
 
@@ -12,14 +13,14 @@ import (
 
 type ValueRGBA [imagelib.NumColorsRGBA]pix.Value
 
-var _ imagelib.Described = &LayerRGBA{}
+var _ imaging.Described = &LayerRGBA{}
 
 type LayerRGBA struct {
 	image.RGBA
-	imagelib.Settings
+	imaging.Settings
 }
 
-func (lyrRGB LayerRGBA) Description() imagelib.Settings {
+func (lyrRGB LayerRGBA) Description() imaging.Settings {
 	return lyrRGB.Settings
 }
 

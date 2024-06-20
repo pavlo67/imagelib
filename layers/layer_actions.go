@@ -2,12 +2,12 @@ package layers
 
 import (
 	"fmt"
+	"github.com/pavlo67/imagelib/pix"
 	"image"
 	"math"
 
 	"github.com/pavlo67/common/common/errors"
 	"github.com/pavlo67/common/common/mathlib/plane"
-	"github.com/pavlo67/imagelib/imagelib/pix"
 )
 
 func (lyr *Layer) SubLayer(r image.Rectangle) *Layer {

@@ -9,10 +9,9 @@ import (
 	"github.com/pavlo67/common/common/db"
 	"github.com/pavlo67/common/common/errors"
 	"github.com/pavlo67/common/common/filelib"
-	"github.com/pavlo67/common/common/pnglib"
+	"github.com/pavlo67/common/common/imagelib"
 	"github.com/pavlo67/common/common/serialization"
 
-	"github.com/pavlo67/imagelib/imagelib"
 	"github.com/pavlo67/imagelib/images"
 	"github.com/pavlo67/imagelib/sources"
 )
@@ -60,7 +59,7 @@ func (op *imagesFilesJList) Save(img image.Image, descr sources.Description, key
 	imgPath = filepath.Join(op.basePath, keyPath)
 
 	if op.colored {
-		if err = pnglib.Save(img, imgPath); err != nil {
+		if err = imagelib.Save(img, imgPath); err != nil {
 			return "", fmt.Errorf("%s: %s / "+onSave, imgPath, err)
 		}
 	} else {

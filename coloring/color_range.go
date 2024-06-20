@@ -1,13 +1,13 @@
-package imagelib
+package coloring
 
 import (
 	"fmt"
+	"github.com/pavlo67/common/common/imagelib"
+	"github.com/pavlo67/imagelib/pix"
 	"image"
 	"image/color"
 
 	"github.com/pavlo67/common/common/mathlib/sets"
-
-	"github.com/pavlo67/imagelib/imagelib/pix"
 )
 
 type ColorRange struct {
@@ -35,7 +35,7 @@ func GetColorRange(imgRGB *image.RGBA, halfRange pix.Value, points ...image.Poin
 		if p.X < imgRGB.Rect.Min.X || p.X >= imgRGB.Rect.Max.X || p.Y < imgRGB.Rect.Min.Y || p.Y >= imgRGB.Rect.Max.Y {
 			continue
 		}
-		offset := (p.Y-imgRGB.Rect.Min.Y)*imgRGB.Stride + (p.X-imgRGB.Rect.Min.X)*NumColorsRGBA
+		offset := (p.Y-imgRGB.Rect.Min.Y)*imgRGB.Stride + (p.X-imgRGB.Rect.Min.X)*imagelib.NumColorsRGBA
 		clr := imgRGB.Pix[offset : offset+3]
 
 		rSum += pix.ValueSum(clr[0])
@@ -67,7 +67,7 @@ func GetColorRange(imgRGB *image.RGBA, halfRange pix.Value, points ...image.Poin
 		//	}
 		//}
 
-		offset += NumColorsRGBA
+		offset += imagelib.NumColorsRGBA
 	}
 
 	if cnt > 0 {

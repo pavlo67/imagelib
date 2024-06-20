@@ -26,7 +26,7 @@ func (cs *videoFilesStarter) Name() string {
 	return logger.GetCallInfo().PackageName
 }
 
-func (cs *videoFilesStarter) Run(envs *config.Envs, options common.Map, joinerOp joiner.Operator, l_ logger.Operator) error {
+func (cs *videoFilesStarter) Run(envs *config.Envs, options common.Map, joinerOp joiner.Operator, l_ logger.OperatorJ) error {
 	l = l_
 	interfaceKey := joiner.InterfaceKey(options.StringDefault("interface_key", string(video.InterfaceKey)))
 

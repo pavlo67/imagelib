@@ -9,8 +9,8 @@ import (
 	"golang.org/x/image/colornames"
 
 	"github.com/pavlo67/common/common/errors"
+	"github.com/pavlo67/common/common/imagelib"
 	"github.com/pavlo67/common/common/logger"
-	"github.com/pavlo67/common/common/pnglib"
 )
 
 type ContourImage struct {
@@ -62,7 +62,7 @@ func ContourToGrayscalePng(contour gocv.PointVector, rect image.Rectangle, path 
 		return err
 	}
 
-	return pnglib.Save(img, path)
+	return imagelib.Save(img, path)
 }
 
 func ContourAreaPix(contour gocv.PointVector) (float64, float64) {

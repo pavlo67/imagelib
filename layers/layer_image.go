@@ -3,19 +3,18 @@ package layers
 import (
 	"fmt"
 	"github.com/pavlo67/common/common"
+	"github.com/pavlo67/imagelib/imaging"
+	"github.com/pavlo67/imagelib/pix"
 	"image"
 	"math"
 
 	"github.com/pavlo67/common/common/errors"
+	"github.com/pavlo67/common/common/imagelib"
 	"github.com/pavlo67/common/common/logger"
-	"github.com/pavlo67/common/common/pnglib"
-
-	"github.com/pavlo67/imagelib/imagelib"
-	"github.com/pavlo67/imagelib/imagelib/pix"
 )
 
 var _ logger.GetImage = &Layer{}
-var _ imagelib.Bounded = &Layer{}
+var _ imaging.Bounded = &Layer{}
 
 func (lyr *Layer) Image(opts common.Map) (image.Image, string, error) {
 	gray, err := lyr.GrayWide()
@@ -79,7 +78,7 @@ func (lyr Layer) SavePNG(filename string) error {
 		return fmt.Errorf("gray == nil / " + onSavePNG)
 	}
 
-	if err = pnglib.Save(gray, filename); err != nil {
+	if err = imagelib.Save(gray, filename); err != nil {
 		return errors.Wrap(err, onSavePNG)
 	}
 

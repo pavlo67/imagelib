@@ -2,13 +2,14 @@ package convolution_rgb
 
 import (
 	"fmt"
+	"github.com/pavlo67/common/common/imagelib"
 	"github.com/pavlo67/imagelib/frame"
+	"github.com/pavlo67/imagelib/imaging"
+	"github.com/pavlo67/imagelib/pix"
 	"image"
 
 	"github.com/pavlo67/common/common"
 	"github.com/pavlo67/common/common/errors"
-	"github.com/pavlo67/imagelib/imagelib"
-	"github.com/pavlo67/imagelib/imagelib/pix"
 )
 
 type Mask interface {
@@ -19,7 +20,7 @@ type Mask interface {
 
 const onLayer = "on convolution_rgb.Layer()"
 
-func Layer(data imagelib.Bounded, dpm float64, mask Mask, step int, addRest bool) (*frame.LayerRGBA, error) {
+func Layer(data imaging.Bounded, dpm float64, mask Mask, step int, addRest bool) (*frame.LayerRGBA, error) {
 
 	if step < 0 {
 		return nil, fmt.Errorf("incorrect step (%d) / "+onLayer, step)
@@ -54,7 +55,7 @@ func Layer(data imagelib.Bounded, dpm float64, mask Mask, step int, addRest bool
 			// TODO! be careful: .Rect.Max looks oddly if rect.Min != {0,0} and step > 1
 			Rect: image.Rectangle{rect.Min, image.Point{rect.Min.X + xWidth, rect.Min.Y + yHeight}},
 		},
-		Settings: imagelib.Settings{
+		Settings: imaging.Settings{
 			DPM: dpm / float64(step),
 		},
 	}

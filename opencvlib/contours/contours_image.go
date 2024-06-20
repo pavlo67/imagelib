@@ -3,19 +3,20 @@ package contours
 import (
 	"fmt"
 	"github.com/pavlo67/common/common"
+	"github.com/pavlo67/common/common/imagelib"
+	"github.com/pavlo67/imagelib/coloring"
+	"github.com/pavlo67/imagelib/imaging"
 	"image/color"
 	"strconv"
-
-	"github.com/pavlo67/imagelib/imagelib"
 )
 
-func (cntrs Contours) GetMasks(lineWidth int, addInfo bool, fontFile, titleKey string) []imagelib.GetMask {
-	getMasks := make([]imagelib.GetMask, len(cntrs))
+func (cntrs Contours) GetMasks(lineWidth int, addInfo bool, fontFile, titleKey string) []imaging.GetMask {
+	getMasks := make([]imaging.GetMask, len(cntrs))
 	for i, contour := range cntrs {
 		getMasks[i] = ContourGetMask{
 			Contour:    contour,
 			LineWidth:  lineWidth,
-			ColorNamed: &imagelib.RoundAbout[i%len(imagelib.RoundAbout)],
+			ColorNamed: &coloring.RoundAbout[i%len(coloring.RoundAbout)],
 			AddInfo:    addInfo,
 			FontFile:   fontFile,
 			TitleKey:   titleKey,
@@ -26,29 +27,29 @@ func (cntrs Contours) GetMasks(lineWidth int, addInfo bool, fontFile, titleKey s
 	return getMasks
 }
 
-var _ imagelib.GetMask = &ContourGetMask{}
-var _ imagelib.GetMask = ContourGetMask{}
+var _ imaging.GetMask = &ContourGetMask{}
+var _ imaging.GetMask = ContourGetMask{}
 
 type ContourGetMask struct {
 	Contour
 	LineWidth  int
-	ColorNamed *imagelib.ColorNamed
+	ColorNamed *coloring.ColorNamed
 	AddInfo    bool
 	FontFile   string
 	TitleKey   string
 }
 
-func (contourGetMask ContourGetMask) Color() *imagelib.ColorNamed {
+func (contourGetMask ContourGetMask) Color() *coloring.ColorNamed {
 	return contourGetMask.ColorNamed
 }
 
-func (contourGetMask ContourGetMask) Mask(clr color.Color, opts common.Map) imagelib.MasksOneColor {
+func (contourGetMask ContourGetMask) Mask(clr color.Color, opts common.Map) imaging.MasksOneColor {
 	pCh := contourGetMask.Contour.Points
 	if len(pCh) <= 0 {
 		return nil
 	}
 
-	maskOneColor := imagelib.MaskOneColor{Color: clr}
+	maskOneColor := imaging.MaskOneColor{Color: clr}
 
 	for i := 0; i < len(pCh); i++ {
 		line := imagelib.Line(imagelib.Segment(pCh[i], pCh[(i+1)%len(pCh)]), contourGetMask.LineWidth)
@@ -56,17 +57,17 @@ func (contourGetMask ContourGetMask) Mask(clr color.Color, opts common.Map) imag
 	}
 
 	if contourGetMask.FontFile != "" {
-		maskOneColor.Marker = &imagelib.MarkerText{
+		maskOneColor.Marker = &imaging.MarkerText{
 			FontFile: contourGetMask.FontFile,
 			Text:     []string{strconv.Itoa(contourGetMask.Contour.N)},
 			Point:    pCh[0],
 		}
 	}
 
-	return imagelib.MasksOneColor{maskOneColor}
+	return imaging.MasksOneColor{maskOneColor}
 }
 
-func (contourGetMask ContourGetMask) Info(colorNamed imagelib.ColorNamed) string {
+func (contourGetMask ContourGetMask) Info(colorNamed coloring.ColorNamed) string {
 	if !contourGetMask.AddInfo {
 		return ""
 	}
