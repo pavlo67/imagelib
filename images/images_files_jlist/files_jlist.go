@@ -59,7 +59,7 @@ func (op *imagesFilesJList) Save(img image.Image, descr sources.Description, key
 	imgPath = filepath.Join(op.basePath, keyPath)
 
 	if op.colored {
-		if err = imagelib.Save(img, imgPath); err != nil {
+		if err = imagelib.SavePNG(img, imgPath); err != nil {
 			return "", fmt.Errorf("%s: %s / "+onSave, imgPath, err)
 		}
 	} else {

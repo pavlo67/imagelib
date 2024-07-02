@@ -5,7 +5,7 @@ package convolution
 //	"image"
 //
 //	"github.com/pavlo67/common/common"
-//	"github.com/pavlo67/imagelib/imagelib"
+//	"github.com/pavlo67/common/common/imagelib"
 //	"github.com/pavlo67/maps/mapping/imager/layer"
 //)
 //
@@ -73,7 +73,7 @@ package convolution
 //}
 //
 //func (mask classesMask) Calculate(x, y int) layer.Value {
-//	offset := (y-mask.imgRGB.Rect.Min.Y)*mask.imgRGB.Stride + (x-mask.imgRGB.Rect.Min.X)*imagelib.NumColorsRGBA
+//	offset := (y-mask.imgRGB.Rect.Min.Y)*mask.imgRGB.Stride + (x-mask.imgRGB.Rect.Min.X)*coloring.NumColorsRGBA
 //	clr := mask.imgRGB.Pix[offset : offset+3]
 //
 //	r, g, b := clr[0], clr[1], clr[2]

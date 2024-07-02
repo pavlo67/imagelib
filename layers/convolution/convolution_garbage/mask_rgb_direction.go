@@ -6,7 +6,7 @@ package convolution
 //	"sort"
 //
 //	"github.com/pavlo67/common/common"
-//	"github.com/pavlo67/imagelib/imagelib"
+//	"github.com/pavlo67/common/common/imagelib"
 //	"github.com/pavlo67/maps/mapping/imager/layer"
 //)
 //
@@ -106,7 +106,7 @@ package convolution
 //
 //	imgRGB, rect := mask.imgRGB, mask.imgRGB.Rect
 //
-//	offsetCenter := (y-imgRGB.Rect.Min.Y)*imgRGB.Stride + (x-imgRGB.Rect.Min.X)*imagelib.NumColorsRGBA
+//	offsetCenter := (y-imgRGB.Rect.Min.Y)*imgRGB.Stride + (x-imgRGB.Rect.Min.X)*coloring.NumColorsRGBA
 //	clr := imgRGB.Pix[offsetCenter : offsetCenter+3]
 //
 //	for _, r := range mask.side {
@@ -150,7 +150,7 @@ package convolution
 //		groupFrom, groupTo := -1, -1
 //
 //		for i, p := range points {
-//			offset := (p.Y-rect.Min.Y)*imgRGB.Stride + (p.X-rect.Min.X)*imagelib.NumColorsRGBA
+//			offset := (p.Y-rect.Min.Y)*imgRGB.Stride + (p.X-rect.Min.X)*coloring.NumColorsRGBA
 //			clr1 := imgRGB.Pix[offset : offset+3]
 //
 //			var delta pix.ValueDelta

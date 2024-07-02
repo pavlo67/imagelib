@@ -61,7 +61,7 @@ func SaveDebug(op Operator, l logger.Operator, path string) {
 		l.Error(err, " / ", onSaveDebug)
 	}
 
-	l.File(filepath.Join(path, LogOptionsPrefix+fmt.Sprintf("%s.log", l.Key())), infoBytes)
+	l.File(filepath.Join(path, LogOptionsPrefix+fmt.Sprintf("%s.log", l.Key())), false, infoBytes)
 }
 
 //const onGetRGBA = "on mappingLandmarks.ToRGBA()"

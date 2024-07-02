@@ -4,7 +4,7 @@ package convolution
 //	"fmt"
 //	"image"
 //
-//	"github.com/pavlo67/imagelib/imagelib"
+//	"github.com/pavlo67/common/common/imagelib"
 //
 //	"github.com/pavlo67/common/common"
 //
@@ -72,16 +72,16 @@ package convolution
 //
 //	imgRGB := mask.imgRGB
 //
-//	offsetCenter := (y-imgRGB.Rect.Min.Y)*imgRGB.Stride + (x-imgRGB.Rect.Min.X)*imagelib.NumColorsRGBA
+//	offsetCenter := (y-imgRGB.Rect.Min.Y)*imgRGB.Stride + (x-imgRGB.Rect.Min.X)*coloring.NumColorsRGBA
 //	clr := imgRGB.Pix[offsetCenter : offsetCenter+3]
 //
 //	offsets, cnt := make([]int, 0, 4), 0
 //
 //	if x > imgRGB.Rect.Min.X {
-//		offsets = append(offsets, offsetCenter-imagelib.NumColorsRGBA)
+//		offsets = append(offsets, offsetCenter-coloring.NumColorsRGBA)
 //	}
 //	if x < imgRGB.Rect.Max.X-1 {
-//		offsets = append(offsets, offsetCenter+imagelib.NumColorsRGBA)
+//		offsets = append(offsets, offsetCenter+coloring.NumColorsRGBA)
 //	}
 //	if y > imgRGB.Rect.Min.Y {
 //		offsets = append(offsets, offsetCenter-imgRGB.Stride)

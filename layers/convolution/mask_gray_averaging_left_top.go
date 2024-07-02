@@ -2,8 +2,8 @@ package convolution
 
 import (
 	"fmt"
+	"github.com/pavlo67/common/common/imagelib/pix"
 	"github.com/pavlo67/imagelib/layers"
-	"github.com/pavlo67/imagelib/pix"
 	"math"
 	"strconv"
 
@@ -46,13 +46,13 @@ func (mask *averagingLeftTopMask) Prepare(onData interface{}) error {
 	return nil
 }
 
-func (mask averagingLeftTopMask) Classes() layers.Classes {
+func (mask averagingLeftTopMask) Classes() layers.ClassesCustom {
 	return nil
 }
 
 func (mask averagingLeftTopMask) Info() common.Map {
 	return common.Map{
-		"name": "avg_" + strconv.Itoa(mask.side),
+		"name": "avg_left_top_" + strconv.Itoa(mask.side),
 		"side": mask.side,
 	}
 }

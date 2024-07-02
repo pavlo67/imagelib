@@ -2,8 +2,8 @@ package convolution_rgb
 
 import (
 	"fmt"
-	"github.com/pavlo67/common/common/imagelib"
-	"github.com/pavlo67/imagelib/pix"
+	"github.com/pavlo67/common/common/imagelib/coloring"
+	"github.com/pavlo67/common/common/imagelib/pix"
 	"image"
 	"math"
 	"strconv"
@@ -84,7 +84,7 @@ func (mask averagingRGBMask) Calculate(x, y int) frame.ValueRGBA {
 		yMax = imgRGB.Rect.Max.Y
 	}
 
-	offset, sumR, sumG, sumB, cnt := (yMin-imgRGB.Rect.Min.Y)*imgRGB.Stride+(xMin-imgRGB.Rect.Min.X)*imagelib.NumColorsRGBA, pix.ValueSum(0), pix.ValueSum(0), pix.ValueSum(0), 0
+	offset, sumR, sumG, sumB, cnt := (yMin-imgRGB.Rect.Min.Y)*imgRGB.Stride+(xMin-imgRGB.Rect.Min.X)*coloring.NumColorsRGBA, pix.ValueSum(0), pix.ValueSum(0), pix.ValueSum(0), 0
 	for yi := yMin; yi < yMax; yi++ {
 		offsetX := offset
 
@@ -94,7 +94,7 @@ func (mask averagingRGBMask) Calculate(x, y int) frame.ValueRGBA {
 			sumB += pix.ValueSum(imgRGB.Pix[offsetX+2])
 			cnt++
 
-			offsetX += imagelib.NumColorsRGBA
+			offsetX += coloring.NumColorsRGBA
 		}
 		offset += imgRGB.Stride
 	}

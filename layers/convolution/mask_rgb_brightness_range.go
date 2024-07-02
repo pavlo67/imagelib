@@ -2,9 +2,9 @@ package convolution
 
 import (
 	"fmt"
-	"github.com/pavlo67/common/common/imagelib"
+	"github.com/pavlo67/common/common/imagelib/coloring"
+	"github.com/pavlo67/common/common/imagelib/pix"
 	"github.com/pavlo67/imagelib/layers"
-	"github.com/pavlo67/imagelib/pix"
 	"image"
 	"strconv"
 
@@ -79,13 +79,13 @@ func (mask brightnessRangeMask) Info() common.Map {
 	}
 }
 
-func (mask brightnessRangeMask) Classes() layers.Classes {
+func (mask brightnessRangeMask) Classes() layers.ClassesCustom {
 
 	return nil
 }
 
 func (mask *brightnessRangeMask) Calculate(x, y int) pix.Value {
-	offset := (y-mask.imgRGB.Rect.Min.Y)*mask.imgRGB.Stride + (x-mask.imgRGB.Rect.Min.X)*imagelib.NumColorsRGBA
+	offset := (y-mask.imgRGB.Rect.Min.Y)*mask.imgRGB.Stride + (x-mask.imgRGB.Rect.Min.X)*coloring.NumColorsRGBA
 	clr := mask.imgRGB.Pix[offset : offset+3]
 
 	brightnessRange := int(clr[0]) + int(clr[1]) + int(clr[2])

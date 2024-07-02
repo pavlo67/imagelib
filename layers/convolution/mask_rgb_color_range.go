@@ -2,14 +2,14 @@ package convolution
 
 import (
 	"fmt"
-	"github.com/pavlo67/common/common/imagelib"
-	"github.com/pavlo67/imagelib/coloring"
-	frame2 "github.com/pavlo67/imagelib/frame"
-	"github.com/pavlo67/imagelib/layers"
-	"github.com/pavlo67/imagelib/pix"
 	"image"
 
 	"github.com/pavlo67/common/common"
+	"github.com/pavlo67/common/common/imagelib/coloring"
+	"github.com/pavlo67/common/common/imagelib/pix"
+
+	"github.com/pavlo67/imagelib/frame"
+	"github.com/pavlo67/imagelib/layers"
 )
 
 var _ Mask = &colorRangeMask{}
@@ -38,13 +38,13 @@ func (mask *colorRangeMask) Prepare(onData interface{}) error {
 		mask.imgRGB = &v
 	case *image.RGBA:
 		mask.imgRGB = v
-	case frame2.LayerRGBA:
+	case frame.LayerRGBA:
 		mask.imgRGB = &v.RGBA
-	case *frame2.LayerRGBA:
+	case *frame.LayerRGBA:
 		mask.imgRGB = &v.RGBA
-	case frame2.Frame:
+	case frame.Frame:
 		mask.imgRGB = &v.RGBA
-	case *frame2.Frame:
+	case *frame.Frame:
 		mask.imgRGB = &v.RGBA
 	}
 	if mask.imgRGB == nil {
@@ -66,13 +66,13 @@ func (mask colorRangeMask) Info() common.Map {
 	}
 }
 
-func (mask colorRangeMask) Classes() layers.Classes {
+func (mask colorRangeMask) Classes() layers.ClassesCustom {
 	return nil
 }
 
 func (mask *colorRangeMask) Calculate(x, y int) pix.Value {
 	imgRGB := mask.imgRGB
-	offset := (y-imgRGB.Rect.Min.Y)*imgRGB.Stride + (x-imgRGB.Rect.Min.X)*imagelib.NumColorsRGBA
+	offset := (y-imgRGB.Rect.Min.Y)*imgRGB.Stride + (x-imgRGB.Rect.Min.X)*coloring.NumColorsRGBA
 	r, g, b := imgRGB.Pix[offset], imgRGB.Pix[offset+1], imgRGB.Pix[offset+2]
 
 	if r >= mask.ColorRange.ColorMin.R && r <= mask.ColorRange.ColorMax.R &&

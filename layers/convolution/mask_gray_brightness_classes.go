@@ -2,7 +2,7 @@ package convolution
 
 import (
 	"fmt"
-	"github.com/pavlo67/imagelib/pix"
+	"github.com/pavlo67/common/common/imagelib/pix"
 	"image"
 	"strconv"
 
@@ -16,7 +16,7 @@ var _ Mask = &GrayBrightnessClassesMask{}
 type GrayBrightnessClassesMask struct {
 	imgGray    *image.Gray
 	classRange pix.Value
-	classes    layers.Classes
+	classes    layers.ClassesCustom
 }
 
 const onGrayBrightnessClasses = "on GrayBrightnessClasses()"
@@ -72,7 +72,7 @@ func (mask GrayBrightnessClassesMask) Info() common.Map {
 	}
 }
 
-func (mask GrayBrightnessClassesMask) Classes() layers.Classes {
+func (mask GrayBrightnessClassesMask) Classes() layers.ClassesCustom {
 	return mask.classes
 }
 

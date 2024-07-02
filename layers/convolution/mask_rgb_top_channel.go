@@ -2,10 +2,10 @@ package convolution
 
 import (
 	"fmt"
-	"github.com/pavlo67/common/common/imagelib"
+	"github.com/pavlo67/common/common/imagelib/coloring"
+	"github.com/pavlo67/common/common/imagelib/pix"
 	frame2 "github.com/pavlo67/imagelib/frame"
 	"github.com/pavlo67/imagelib/layers"
-	"github.com/pavlo67/imagelib/pix"
 	"image"
 	"strconv"
 
@@ -70,19 +70,19 @@ func (mask topChannelMask) Info() common.Map {
 	}
 }
 
-func (mask topChannelMask) Classes() layers.Classes {
+func (mask topChannelMask) Classes() layers.ClassesCustom {
 	return nil
 }
 
 func (mask topChannelMask) Calculate(x, y int) pix.Value {
 	imgRGB := mask.imgRGB
 
-	offset := (y-imgRGB.Rect.Min.Y)*imgRGB.Stride + (x-imgRGB.Rect.Min.X)*imagelib.NumColorsRGBA
-	if offset < 0 || offset >= len(imgRGB.Pix)-imagelib.NumColorsRGB {
+	offset := (y-imgRGB.Rect.Min.Y)*imgRGB.Stride + (x-imgRGB.Rect.Min.X)*coloring.NumColorsRGBA
+	if offset < 0 || offset >= len(imgRGB.Pix)-coloring.NumColorsRGB {
 		return 0
 	}
 
-	rgb := imgRGB.Pix[offset : offset+imagelib.NumColorsRGB]
+	rgb := imgRGB.Pix[offset : offset+coloring.NumColorsRGB]
 
 	var clrOtherMax uint8
 	if rgb[mask.ch1] > rgb[mask.ch2] {

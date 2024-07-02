@@ -62,7 +62,7 @@ func ContourToGrayscalePng(contour gocv.PointVector, rect image.Rectangle, path 
 		return err
 	}
 
-	return imagelib.Save(img, path)
+	return imagelib.SavePNG(img, path)
 }
 
 func ContourAreaPix(contour gocv.PointVector) (float64, float64) {

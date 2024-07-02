@@ -2,8 +2,8 @@ package convolution
 
 import (
 	"fmt"
+	"github.com/pavlo67/common/common/imagelib/pix"
 	"github.com/pavlo67/imagelib/layers"
-	"github.com/pavlo67/imagelib/pix"
 	"math"
 	"strconv"
 
@@ -49,7 +49,7 @@ func (mask *averagingCenterMask) Prepare(onData interface{}) error {
 	return nil
 }
 
-func (mask averagingCenterMask) Classes() layers.Classes {
+func (mask averagingCenterMask) Classes() layers.ClassesCustom {
 	return nil
 }
 

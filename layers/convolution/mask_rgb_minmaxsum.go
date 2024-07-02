@@ -2,10 +2,10 @@ package convolution
 
 import (
 	"fmt"
-	"github.com/pavlo67/common/common/imagelib"
+	"github.com/pavlo67/common/common/imagelib/coloring"
+	"github.com/pavlo67/common/common/imagelib/pix"
 	frame "github.com/pavlo67/imagelib/frame"
 	"github.com/pavlo67/imagelib/layers"
-	"github.com/pavlo67/imagelib/pix"
 	"image"
 	"strconv"
 
@@ -62,7 +62,7 @@ func (mask minMaxMask) Info() common.Map {
 	}
 }
 
-func (mask minMaxMask) Classes() layers.Classes {
+func (mask minMaxMask) Classes() layers.ClassesCustom {
 	return nil
 }
 
@@ -74,7 +74,7 @@ func (mask *minMaxMask) Calculate(x, y int) pix.Value {
 	xMin, xMax := max(x-mask.radius, 0), min(x+mask.radius+1, xWidth)
 	yMin, yMax := max(y-mask.radius, 0), min(y+mask.radius+1, yHeight)
 
-	offset := (yMin-imgRGB.Rect.Min.Y)*imgRGB.Stride + (xMin-imgRGB.Rect.Min.X)*imagelib.NumColorsRGBA
+	offset := (yMin-imgRGB.Rect.Min.Y)*imgRGB.Stride + (xMin-imgRGB.Rect.Min.X)*coloring.NumColorsRGBA
 	minR, minG, minB := imgRGB.Pix[offset], imgRGB.Pix[offset+1], imgRGB.Pix[offset+2]
 	maxR, maxG, maxB := minR, minG, minB
 
@@ -97,7 +97,7 @@ func (mask *minMaxMask) Calculate(x, y int) pix.Value {
 				maxB = imgRGB.Pix[offsetX+2]
 			}
 
-			offsetX += imagelib.NumColorsRGBA
+			offsetX += coloring.NumColorsRGBA
 		}
 		offset += imgRGB.Stride
 	}

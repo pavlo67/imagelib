@@ -3,9 +3,9 @@ package convolution_rgb
 import (
 	"fmt"
 	"github.com/pavlo67/common/common/imagelib"
+	"github.com/pavlo67/common/common/imagelib/coloring"
+	"github.com/pavlo67/common/common/imagelib/pix"
 	"github.com/pavlo67/imagelib/frame"
-	"github.com/pavlo67/imagelib/imaging"
-	"github.com/pavlo67/imagelib/pix"
 	"image"
 
 	"github.com/pavlo67/common/common"
@@ -20,7 +20,7 @@ type Mask interface {
 
 const onLayer = "on convolution_rgb.Layer()"
 
-func Layer(data imaging.Bounded, dpm float64, mask Mask, step int, addRest bool) (*frame.LayerRGBA, error) {
+func Layer(data imagelib.Bounded, dpm float64, mask Mask, step int, addRest bool) (*frame.LayerRGBA, error) {
 
 	if step < 0 {
 		return nil, fmt.Errorf("incorrect step (%d) / "+onLayer, step)
@@ -50,12 +50,12 @@ func Layer(data imaging.Bounded, dpm float64, mask Mask, step int, addRest bool)
 
 	lyrConvolved := frame.LayerRGBA{
 		RGBA: image.RGBA{
-			Pix:    make([]pix.Value, xWidth*yHeight*imagelib.NumColorsRGBA),
-			Stride: xWidth * imagelib.NumColorsRGBA,
+			Pix:    make([]pix.Value, xWidth*yHeight*coloring.NumColorsRGBA),
+			Stride: xWidth * coloring.NumColorsRGBA,
 			// TODO! be careful: .Rect.Max looks oddly if rect.Min != {0,0} and step > 1
 			Rect: image.Rectangle{rect.Min, image.Point{rect.Min.X + xWidth, rect.Min.Y + yHeight}},
 		},
-		Settings: imaging.Settings{
+		Settings: imagelib.Settings{
 			DPM: dpm / float64(step),
 		},
 	}
@@ -73,7 +73,7 @@ func Layer(data imaging.Bounded, dpm float64, mask Mask, step int, addRest bool)
 			lyrConvolved.Pix[offsetX+1] = v[1]
 			lyrConvolved.Pix[offsetX+2] = v[2]
 			lyrConvolved.Pix[offsetX+3] = v[3]
-			offsetX += imagelib.NumColorsRGBA
+			offsetX += coloring.NumColorsRGBA
 		}
 		offset += lyrConvolved.Stride
 	}

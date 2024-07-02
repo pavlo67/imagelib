@@ -1,12 +1,13 @@
 package frame
 
 import (
-	"github.com/pavlo67/imagelib/imaging"
-	"github.com/stretchr/testify/require"
 	"image"
 	"math"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
+	"github.com/pavlo67/common/common/imagelib"
 	"github.com/pavlo67/common/common/mathlib"
 	"github.com/pavlo67/common/common/mathlib/plane"
 )
@@ -66,7 +67,7 @@ func TestFrame_PolyChainToOuter(t *testing.T) {
 			fr := Frame{
 				LayerRGBA: LayerRGBA{
 					RGBA:     image.RGBA{Rect: tt.RectInner},
-					Settings: imaging.Settings{DPM: tt.DPM},
+					Settings: imagelib.Settings{DPM: tt.DPM},
 				},
 				Position: tt.Position,
 			}
@@ -101,7 +102,7 @@ func TestFrame_MovingToOuter(t *testing.T) {
 			name: "1",
 			layerRGBA: LayerRGBA{
 				RGBA:     image.RGBA{Rect: image.Rectangle{Max: image.Point{100, 100}}},
-				Settings: imaging.Settings{DPM: 2},
+				Settings: imagelib.Settings{DPM: 2},
 			},
 			movingInner:         plane.Point2{2, 2},
 			movingOuterExpected: plane.Point2{1, -1},
@@ -112,7 +113,7 @@ func TestFrame_MovingToOuter(t *testing.T) {
 				RGBA: image.RGBA{
 					Rect: image.Rectangle{Max: image.Point{100, 100}},
 				},
-				Settings: imaging.Settings{DPM: 2},
+				Settings: imagelib.Settings{DPM: 2},
 			},
 			position:            plane.Position{Point2: plane.Point2{1, 1}, XToYAngle: math.Pi / 2},
 			movingInner:         plane.Point2{2, 2},
@@ -124,7 +125,7 @@ func TestFrame_MovingToOuter(t *testing.T) {
 				RGBA: image.RGBA{
 					Rect: image.Rectangle{Max: image.Point{100, 100}},
 				},
-				Settings: imaging.Settings{DPM: 2},
+				Settings: imagelib.Settings{DPM: 2},
 			},
 			position:            plane.Position{Point2: plane.Point2{10, 1}, XToYAngle: math.Pi},
 			movingInner:         plane.Point2{2, 2},
@@ -136,7 +137,7 @@ func TestFrame_MovingToOuter(t *testing.T) {
 				RGBA: image.RGBA{
 					Rect: image.Rectangle{Max: image.Point{100, 100}},
 				},
-				Settings: imaging.Settings{DPM: 2},
+				Settings: imagelib.Settings{DPM: 2},
 			},
 			position:            plane.Position{Point2: plane.Point2{10, -10}, XToYAngle: math.Pi * 3 / 2},
 			movingInner:         plane.Point2{2, 2},
@@ -148,7 +149,7 @@ func TestFrame_MovingToOuter(t *testing.T) {
 				RGBA: image.RGBA{
 					Rect: image.Rectangle{Max: image.Point{100, 100}},
 				},
-				Settings: imaging.Settings{DPM: 2},
+				Settings: imagelib.Settings{DPM: 2},
 			},
 			position:            plane.Position{Point2: plane.Point2{10, -10}, XToYAngle: math.Pi * 3 / 2},
 			movingInner:         plane.Point2{0, 0},
@@ -180,7 +181,7 @@ func TestFrame_MovingToOuter(t *testing.T) {
 
 func TestFrame_ZeroMoving(t *testing.T) {
 	frame := Frame{
-		LayerRGBA: LayerRGBA{Settings: imaging.Settings{DPM: 4.815940238327553}},
+		LayerRGBA: LayerRGBA{Settings: imagelib.Settings{DPM: 4.815940238327553}},
 		Position:  plane.Position{XToYAngle: 2.8448274196093593},
 	}
 

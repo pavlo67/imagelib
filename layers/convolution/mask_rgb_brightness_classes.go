@@ -2,8 +2,8 @@ package convolution
 
 import (
 	"fmt"
-	"github.com/pavlo67/common/common/imagelib"
-	"github.com/pavlo67/imagelib/pix"
+	"github.com/pavlo67/common/common/imagelib/coloring"
+	"github.com/pavlo67/common/common/imagelib/pix"
 	"image"
 	"strconv"
 
@@ -17,7 +17,7 @@ var _ Mask = &RGBBrightnessClassesMask{}
 type RGBBrightnessClassesMask struct {
 	imgRGB     *image.RGBA
 	classRange pix.Value
-	classes    layers.Classes
+	classes    layers.ClassesCustom
 }
 
 const onRGBBrightnessClasses = "on RGBBrightnessClasses()"
@@ -79,12 +79,12 @@ func (mask RGBBrightnessClassesMask) Info() common.Map {
 	}
 }
 
-func (mask RGBBrightnessClassesMask) Classes() layers.Classes {
+func (mask RGBBrightnessClassesMask) Classes() layers.ClassesCustom {
 	return mask.classes
 }
 
 func (mask *RGBBrightnessClassesMask) Calculate(x, y int) pix.Value {
-	offset := (y-mask.imgRGB.Rect.Min.Y)*mask.imgRGB.Stride + (x-mask.imgRGB.Rect.Min.X)*imagelib.NumColorsRGBA
+	offset := (y-mask.imgRGB.Rect.Min.Y)*mask.imgRGB.Stride + (x-mask.imgRGB.Rect.Min.X)*coloring.NumColorsRGBA
 
 	brightness := pix.ValueSum(mask.imgRGB.Pix[offset]) + pix.ValueSum(mask.imgRGB.Pix[offset+1]) + pix.ValueSum(mask.imgRGB.Pix[offset+2])
 

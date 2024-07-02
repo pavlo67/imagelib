@@ -1,7 +1,7 @@
 package convolution
 
 import (
-	"github.com/pavlo67/imagelib/pix"
+	"github.com/pavlo67/common/common/imagelib/pix"
 	"image"
 	"image/color"
 	"testing"

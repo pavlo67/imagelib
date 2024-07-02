@@ -2,10 +2,11 @@ package convolution
 
 import (
 	"fmt"
-	"github.com/pavlo67/imagelib/imaging"
-	"github.com/pavlo67/imagelib/layers"
-	"github.com/pavlo67/imagelib/pix"
 	"image"
+
+	"github.com/pavlo67/common/common/imagelib"
+	"github.com/pavlo67/common/common/imagelib/pix"
+	"github.com/pavlo67/imagelib/layers"
 
 	"github.com/pavlo67/common/common"
 	"github.com/pavlo67/common/common/errors"
@@ -15,12 +16,12 @@ type Mask interface {
 	Prepare(onData interface{}) error
 	Calculate(x, y int) pix.Value // (x, y) corresponds to the left-top (not center!) of calculation area
 	Info() common.Map
-	Classes() layers.Classes
+	Classes() layers.ClassesCustom
 }
 
 const onLayer = "on convolution.Layer()"
 
-func Layer(data imaging.Described, mask Mask, scale int, addRest bool) (*layers.Layer, error) {
+func Layer(data imagelib.Described, mask Mask, scale int, addRest bool) (*layers.Layer, error) {
 
 	rect := data.Bounds()
 	xWidth0, yHeight0 := rect.Max.X-rect.Min.X, rect.Max.Y-rect.Min.Y
@@ -87,15 +88,15 @@ func Layer(data imaging.Described, mask Mask, scale int, addRest bool) (*layers.
 	}
 
 	lyrConvolved.Min, lyrConvolved.Max = minValue, maxValue
-	if cnt := xWidth * yHeight; cnt > 0 {
-		lyrConvolved.WhRat, lyrConvolved.BlRat = float64(whiteCnt)/float64(cnt), float64(blackCnt)/float64(cnt)
-	}
-	lyrConvolved.Classes = mask.Classes()
+	//if cnt := xWidth * yHeight; cnt > 0 {
+	//	lyrConvolved.WhRat, lyrConvolved.BlRat = float64(whiteCnt)/float64(cnt), float64(blackCnt)/float64(cnt)
+	//}
+	lyrConvolved.ClassesCustom = mask.Classes()
 
 	return &lyrConvolved, nil
 }
 
-func Metrics(data imaging.Described, mask Mask, scale int, addRest bool) (*layers.Metrics, error) {
+func Metrics(data imagelib.Described, mask Mask, scale int, addRest bool) (*layers.Metrics, error) {
 	rect := data.Bounds()
 	xWidth0, yHeight0 := rect.Max.X-rect.Min.X, rect.Max.Y-rect.Min.Y
 
@@ -144,7 +145,7 @@ func Metrics(data imaging.Described, mask Mask, scale int, addRest bool) (*layer
 	metrics := layers.Metrics{}
 	metrics.Min, metrics.Max = minValue, maxValue
 	if cnt := xWidth * yHeight; cnt > 0 {
-		metrics.WhRat, metrics.BlRat = float64(whiteCnt)/float64(cnt), float64(blackCnt)/float64(cnt)
+		//metrics.WhRat, metrics.BlRat = float64(whiteCnt)/float64(cnt), float64(blackCnt)/float64(cnt)
 	}
 
 	return &metrics, nil

@@ -2,8 +2,8 @@ package convolution
 
 import (
 	"fmt"
+	"github.com/pavlo67/common/common/imagelib/pix"
 	"github.com/pavlo67/imagelib/layers"
-	"github.com/pavlo67/imagelib/pix"
 
 	"github.com/pavlo67/common/common"
 )
@@ -43,7 +43,7 @@ func (mask *bitwiceAndShiftedMask) Prepare(onData interface{}) error {
 	return nil
 }
 
-func (mask bitwiceAndShiftedMask) Classes() layers.Classes {
+func (mask bitwiceAndShiftedMask) Classes() layers.ClassesCustom {
 	return nil
 }
 

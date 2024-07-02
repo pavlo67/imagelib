@@ -2,10 +2,10 @@ package convolution
 
 import (
 	"fmt"
-	"github.com/pavlo67/common/common/imagelib"
+	"github.com/pavlo67/common/common/imagelib/coloring"
+	"github.com/pavlo67/common/common/imagelib/pix"
 	frame2 "github.com/pavlo67/imagelib/frame"
 	"github.com/pavlo67/imagelib/layers"
-	"github.com/pavlo67/imagelib/pix"
 	"image"
 	"math"
 	"strconv"
@@ -58,7 +58,7 @@ func (mask variationMask) Info() common.Map {
 	}
 }
 
-func (mask variationMask) Classes() layers.Classes {
+func (mask variationMask) Classes() layers.ClassesCustom {
 	return nil
 }
 
@@ -81,10 +81,10 @@ func (mask *variationMask) Calculate(x, y int) pix.Value {
 		yMax = yHeight
 	}
 
-	offsetCenter := (y-imgRGB.Rect.Min.Y)*imgRGB.Stride + (x-imgRGB.Rect.Min.X)*imagelib.NumColorsRGBA
+	offsetCenter := (y-imgRGB.Rect.Min.Y)*imgRGB.Stride + (x-imgRGB.Rect.Min.X)*coloring.NumColorsRGBA
 	clr := imgRGB.Pix[offsetCenter : offsetCenter+3]
 
-	offset := (yMin-imgRGB.Rect.Min.Y)*imgRGB.Stride + (xMin-imgRGB.Rect.Min.X)*imagelib.NumColorsRGBA
+	offset := (yMin-imgRGB.Rect.Min.Y)*imgRGB.Stride + (xMin-imgRGB.Rect.Min.X)*coloring.NumColorsRGBA
 
 	sum, cnt := pix.ValueSum(0), float64((xMax-xMin)*(yMax-yMin))
 
@@ -95,7 +95,7 @@ func (mask *variationMask) Calculate(x, y int) pix.Value {
 				(pix.ValueSum(imgRGB.Pix[offsetX+1])-pix.ValueSum(clr[1]))*(pix.ValueSum(imgRGB.Pix[offsetX+1])-pix.ValueSum(clr[1])) +
 				(pix.ValueSum(imgRGB.Pix[offsetX+2])-pix.ValueSum(clr[2]))*(pix.ValueSum(imgRGB.Pix[offsetX+2])-pix.ValueSum(clr[2]))
 
-			offsetX += imagelib.NumColorsRGBA
+			offsetX += coloring.NumColorsRGBA
 		}
 		offset += imgRGB.Stride
 	}

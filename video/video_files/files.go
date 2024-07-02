@@ -35,11 +35,11 @@ const onNew = "on videoFiles.New()"
 
 func New(path string, colorConversionCode gocv.ColorConversionCode) (video.Operator, error) {
 
-	nFiles, err := filelib.NumberedFilesSequence(path, video.ReFramesFilesStr, false)
+	nFiles, err := filelib.NumberedFilesSequence(path, video.RePNGFilesStr, false)
 	if err != nil {
 		return nil, errors.Wrap(err, onNew)
 	} else if len(nFiles) < 1 {
-		return nil, fmt.Errorf(`%s / "%s": len(nFiles) == 0 / `+onNew, path, video.ReFramesFilesStr)
+		return nil, fmt.Errorf(`%s / "%s": len(nFiles) == 0 / `+onNew, path, video.RePNGFilesStr)
 	}
 
 	var info video.Info

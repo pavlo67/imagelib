@@ -2,41 +2,42 @@ package layers
 
 import (
 	"fmt"
-	"github.com/pavlo67/common/common"
-	"github.com/pavlo67/imagelib/imaging"
-	"github.com/pavlo67/imagelib/pix"
 	"image"
 	"math"
 
+	"github.com/pavlo67/common/common"
 	"github.com/pavlo67/common/common/errors"
 	"github.com/pavlo67/common/common/imagelib"
+	"github.com/pavlo67/common/common/imagelib/pix"
 	"github.com/pavlo67/common/common/logger"
 )
 
 var _ logger.GetImage = &Layer{}
-var _ imaging.Bounded = &Layer{}
+var _ imagelib.Bounded = &Layer{}
 
 func (lyr *Layer) Image(opts common.Map) (image.Image, string, error) {
 	gray, err := lyr.GrayWide()
 	return gray, "", err
 }
 
-const onGray = "on layer.GetImage()"
+const onGrayWide = "on layers.Layer.GrayWide()"
 
 func (lyr *Layer) GrayWide() (*image.Gray, error) {
 	if lyr == nil {
-		return nil, errors.New("lyr == nil / " + onGray)
+		return nil, errors.New("lyr == nil / " + onGrayWide)
 	}
 
 	xWidth, yHeight := lyr.Rect.Max.X-lyr.Rect.Min.X, lyr.Rect.Max.Y-lyr.Rect.Min.Y
 
 	if xWidth <= 0 || yHeight <= 0 {
-		return nil, fmt.Errorf("incorrect lyr.Rect (%#v) / "+onGray, lyr.Rect)
+		return nil, fmt.Errorf("incorrect lyr.Rect (%#v) / "+onGrayWide, lyr.Rect)
 	} else if lyr.Stride < xWidth {
-		return nil, fmt.Errorf("lyr.Stride (%d) < lyr.xWidth (%#v) / "+onGray, lyr.Stride, lyr.Rect)
+		return nil, fmt.Errorf("lyr.Stride (%d) < lyr.xWidth (%#v) / "+onGrayWide, lyr.Stride, lyr.Rect)
 	} else if len(lyr.Pix) < lyr.Stride*(yHeight-1)+xWidth {
-		return nil, fmt.Errorf("len(lyr.values) == %d, lyr.Stride = %d, lyr.Rect == %#v / "+onGray, len(lyr.Pix), lyr.Stride, lyr.Rect)
+		return nil, fmt.Errorf("len(lyr.values) == %d, lyr.Stride = %d, lyr.Rect == %#v / "+onGrayWide, len(lyr.Pix), lyr.Stride, lyr.Rect)
 	}
+
+	lyr.MinMax()
 
 	vMin, vMax := lyr.Min, lyr.Max
 
@@ -68,7 +69,7 @@ func (lyr *Layer) GrayWide() (*image.Gray, error) {
 
 }
 
-const onSavePNG = "on lyr.SavePNG()"
+const onSavePNG = "on layers.Layer.SavePNG()"
 
 func (lyr Layer) SavePNG(filename string) error {
 	gray, err := lyr.GrayWide()
@@ -78,7 +79,7 @@ func (lyr Layer) SavePNG(filename string) error {
 		return fmt.Errorf("gray == nil / " + onSavePNG)
 	}
 
-	if err = imagelib.Save(gray, filename); err != nil {
+	if err = imagelib.SavePNG(gray, filename); err != nil {
 		return errors.Wrap(err, onSavePNG)
 	}
 

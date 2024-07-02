@@ -2,11 +2,11 @@ package layers
 
 import (
 	"fmt"
-	"github.com/pavlo67/imagelib/pix"
 	"image"
 	"math"
 
 	"github.com/pavlo67/common/common/errors"
+	"github.com/pavlo67/common/common/imagelib/pix"
 	"github.com/pavlo67/common/common/mathlib/plane"
 )
 
@@ -39,7 +39,6 @@ func (lyr *Layer) ThresholdValue(threshold float64) pix.Value {
 	}
 
 	return lyr.Min + pix.Value(math.Round(float64(lyr.Max-lyr.Min)*threshold))
-
 }
 
 const onThresholded = "on layer.Thresholded()"
@@ -111,8 +110,8 @@ func (lyr *Layer) Thresholded(thr pix.Value, inverse bool) (*Layer, error) {
 		lyrThresholded.Min, lyrThresholded.Max = 0, pix.ValueMax
 	}
 
-	lyrThresholded.WhRat = float64(whiteCount) / float64(lenValues)
-	lyrThresholded.BlRat = 1 - lyrThresholded.Metrics.WhRat
+	//lyrThresholded.WhRat = float64(whiteCount) / float64(lenValues)
+	//lyrThresholded.BlRat = 1 - lyrThresholded.Metrics.WhRat
 
 	return &lyrThresholded, nil
 }
@@ -230,7 +229,7 @@ func (lyr *Layer) Inversed() (*Layer, error) {
 	for i, v := range lyr.Pix {
 		lyrInversed.Pix[i] = pix.ValueMax - v
 	}
-	lyrInversed.WhRat, lyrInversed.BlRat = lyr.Metrics.BlRat, lyr.Metrics.WhRat
+	//lyrInversed.WhRat, lyrInversed.BlRat = lyr.Metrics.BlRat, lyr.Metrics.WhRat
 	lyrInversed.Min, lyrInversed.Max = pix.ValueMax-lyrInversed.Max, pix.ValueMax-lyrInversed.Min
 
 	return &lyrInversed, nil

@@ -1,22 +1,22 @@
 package layers
 
 import (
-	"github.com/pavlo67/imagelib/imaging"
-	"github.com/pavlo67/imagelib/pix"
+	"github.com/pavlo67/common/common/imagelib"
+	"github.com/pavlo67/common/common/imagelib/pix"
 	"image"
 )
 
-var _ imaging.Described = &Layer{}
+var _ imagelib.Described = &Layer{}
 
 type Layer struct {
 	image.Gray
-	imaging.Settings
+	imagelib.Settings
 	Metrics
 }
 
 type Layers map[string]*Layer
 
-func (lyr Layer) Description() imaging.Settings {
+func (lyr Layer) Description() imagelib.Settings {
 	return lyr.Settings
 }
 
@@ -29,22 +29,24 @@ func (lyr Layer) Length() int64 {
 }
 
 type Metrics struct {
-	Min, Max, Avg pix.Value
-	BlRat, WhRat  float64
+	Min, Max      pix.Value
+	ClassesCustom ClassesCustom
+	Classes256    Classes256
 	Criterion     float64 // TODO!!! keep it for shifting
-	Classes       Classes
 }
 
-type Classes []int32
+type Classes256 [256]int32
 
-func (classes Classes) Range() pix.Value {
-	if len(classes) <= 0 {
+type ClassesCustom []int32
+
+func (classesCustom ClassesCustom) Range() pix.Value {
+	if len(classesCustom) <= 0 {
 		return 0
 
 	}
 
-	r := pix.Value(256 / len(classes))
-	if pix.Value(256%len(classes)) >= r {
+	r := pix.Value(256 / len(classesCustom))
+	if pix.Value(256%len(classesCustom)) >= r {
 		return 0
 	}
 

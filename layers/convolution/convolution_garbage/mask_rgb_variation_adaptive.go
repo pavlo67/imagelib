@@ -10,7 +10,7 @@ package convolution
 
 // 	"github.com/pavlo67/imagelib/imagelib/pix"
 
-// 	"github.com/pavlo67/imagelib/imagelib"
+// 	"github.com/pavlo67/common/common/imagelib"
 
 // 	"github.com/pavlo67/common/common"
 // )
@@ -172,10 +172,10 @@ package convolution
 // 		yMax = yHeight
 // 	}
 
-// 	offsetCenter := (y-imgRGB.Rect.Min.Y)*imgRGB.Stride + (x-imgRGB.Rect.Min.X)*imagelib.NumColorsRGBA
+// 	offsetCenter := (y-imgRGB.Rect.Min.Y)*imgRGB.Stride + (x-imgRGB.Rect.Min.X)*coloring.NumColorsRGBA
 // 	clr := imgRGB.Pix[offsetCenter : offsetCenter+3]
 
-// 	offset := (yMin-imgRGB.Rect.Min.Y)*imgRGB.Stride + (xMin-imgRGB.Rect.Min.X)*imagelib.NumColorsRGBA
+// 	offset := (yMin-imgRGB.Rect.Min.Y)*imgRGB.Stride + (xMin-imgRGB.Rect.Min.X)*coloring.NumColorsRGBA
 
 // 	sum, cnt := pix.ValueSum(0), float64((xMax-xMin)*(yMax-yMin))
 
@@ -185,7 +185,7 @@ package convolution
 // 			sum += (pix.ValueSum(imgRGB.Pix[offsetX])-pix.ValueSum(clr[0]))*(pix.ValueSum(imgRGB.Pix[offsetX])-pix.ValueSum(clr[0])) +
 // 				(pix.ValueSum(imgRGB.Pix[offsetX+1])-pix.ValueSum(clr[1]))*(pix.ValueSum(imgRGB.Pix[offsetX+1])-pix.ValueSum(clr[1])) +
 // 				(pix.ValueSum(imgRGB.Pix[offsetX+2])-pix.ValueSum(clr[2]))*(pix.ValueSum(imgRGB.Pix[offsetX+2])-pix.ValueSum(clr[2]))
-// 			offsetX += imagelib.NumColorsRGBA
+// 			offsetX += coloring.NumColorsRGBA
 // 		}
 // 		offset += imgRGB.Stride
 // 	}
