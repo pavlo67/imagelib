@@ -16,9 +16,8 @@ const InterfaceKey joiner.InterfaceKey = "video"
 const LogOptionsPrefix = "video_options_"
 
 type FrameInfo struct {
-	N             int
-	TimeFromStart time.Time `json:",omitempty"`
-	Time          time.Time `json:",omitempty"`
+	N    int
+	Time time.Time `json:",omitempty"`
 }
 
 type Processing struct {
