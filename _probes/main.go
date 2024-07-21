@@ -18,9 +18,10 @@ func main() {
 	//	" close-socket=false auto-multicast=true ! application/x-rtp, payload=96 ! rtph264depay ! decodebin3 "+
 	//	" ! fpsdisplaysink sync=false ! appsink drop=1", gocv.VideoCaptureGstreamer)
 
-	webcam, err := gocv.OpenVideoCaptureWithAPI("gst-launch-1.0 -vc udpsrc port=5600 ! application/x-rtp,payload=96,encoding-name=H264 ! rtpjitterbuffer mode=1 ! rtph264depay ! h264parse ! decodebin ! videoconvert ! appsink", gocv.VideoCaptureGstreamer)
+	webcam, err := gocv.OpenVideoCaptureWithAPI("gst-launch-1.0 libcamerasrc ! queue ! appsink", gocv.VideoCaptureGstreamer)
 
-	// webcam, err := gocv.OpenVideoCapture("udp://127.0.0.1:5600")
+	// "gst-launch-1.0 -vc udpsrc port=5600 ! application/x-rtp,payload=96,encoding-name=H264 ! rtpjitterbuffer mode=1 ! rtph264depay ! h264parse ! decodebin ! videoconvert ! appsink", gocv.VideoCaptureGstreamer)
+	// webcam, err := gocv.OpenVideoCapture(0)
 	// webcam, err := gocv.VideoCaptureFile("_in/_landmarks/anat_tiahur/trim10.mp4")
 
 	if err != nil {
