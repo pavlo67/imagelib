@@ -31,36 +31,23 @@ Manual: https://docs.opencv.org/4.x/d7/d9f/tutorial_linux_install.html
     $ sudo make install
     # sudo make uninstall 
 
-# GStreamer support
+## GStreamer support
 
 Check gstreamer support (python code)
 
     import cv2
     print(cv2.getBuildInformation())
 
-manuals
+Manuals
 
     https://galaktyk.medium.com/how-to-build-opencv-with-gstreamer-b11668fa09c
     https://medium.com/@arfanmahmud47/build-opencv-4-from-source-with-gstreamer-ubuntu-zorin-peppermint-c2cff5393ef
 
-# OpenCV from apt repos:
+## OpenCV from apt repos:
 
 !!! Але в цій версії OpenCV приходить застаріле 
 
     sudo apt install libopencv-dev
     sudo apt install python3-opencv
     sudo apt install python3-opencv-contrib # ??? python3-contrib-opencv
-
-
-## OpenCV for Python only from pip repos:
-
-!!! Але в цій версії OpenCV приходить без підтримки GStreamer
-
-    pip3 install opencv-contrib-python
-
-
-## opencv-python / cv2 docs
-
-На жаль, адекватної документації в природі не існує. Ось дискусія щодо цього: https://github.com/opencv/opencv-python/issues/522
-
 

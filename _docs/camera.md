@@ -22,8 +22,7 @@
 
 ## Драйвери 
 
-За потреби, вони вписуються в /boot/firmware/config.txt. Наприклад, для камери з сенсором imx519 (якщо вона не детектується автоматично)
-потрібно наступне: 
+За потреби, вони вписуються в /boot/firmware/config.txt. Наприклад, для камери з сенсором imx519 (якщо вона не детектується автоматично) потрібно наступне: 
 
     [all]
     dtoverlay=imx519
@@ -79,6 +78,4 @@ https://github.com/raspberrypi/libcamera/issues/115
 Камера нарешті доступна через GStreamer:
 
     $ gst-launch-1.0 libcamerasrc ! queue ! glimagesink
-
-
 
