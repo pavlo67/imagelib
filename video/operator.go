@@ -15,6 +15,23 @@ const InterfaceKey joiner.InterfaceKey = "video"
 
 const LogOptionsPrefix = "video_options_"
 
+type Info struct {
+	FPS        float64
+	Rectangle  image.Rectangle
+	Monochrome bool `json:",omitempty"`
+	Realtime   bool
+
+	Source  string `json:",omitempty"`
+	SrcNMin int    `json:",omitempty"`
+	SrcNMax int    `json:",omitempty"`
+
+	Device       interface{} `json:",omitempty"`
+	StartedAt    *time.Time  `json:",omitempty"`
+	NFrom        int         `json:",omitempty"`
+	FPSDivider   *int        `json:",omitempty"`
+	DPMConverted *float64    `json:",omitempty"`
+}
+
 type FrameInfo struct {
 	N    int
 	Time time.Time `json:",omitempty"`

@@ -113,9 +113,8 @@ func (op *videoFiles) NextFrame(scale float64, delayMax time.Duration) (*video.P
 
 	op.lastFrame = &video.Processing{
 		FrameInfo: video.FrameInfo{
-			N:             N,
-			TimeFromStart: op.Info.StartedAt.Add(time.Duration(op.nFilesI) * time.Second / time.Duration(op.Info.FPS)),
-			Time:          time.Now(),
+			N:    N,
+			Time: op.Info.StartedAt.Add(time.Duration(op.nFilesI) * time.Second / time.Duration(op.Info.FPS)),
 		},
 		Image: img,
 	}

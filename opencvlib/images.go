@@ -13,6 +13,46 @@ import (
 	"github.com/pavlo67/common/common/errors"
 )
 
+const onImageToMat = "on opencvlib.onImageToMat()"
+
+func ImageToMat(img image.Image) (_ *gocv.Mat, isColor bool, _ error) {
+	if img == nil {
+		return nil, false, fmt.Errorf(onImageToMat + ": nil img")
+	} else if imgGray, ok := img.(*image.Gray); imgGray != nil {
+		mat, err := gocv.ImageGrayToMatGray(imgGray)
+		if err != nil {
+			return nil, false, errors.Wrap(err, onImageToMat)
+		}
+		return &mat, false, nil
+	} else if ok {
+		return nil, false, fmt.Errorf(onImageToMat + ": nil img.(*Gray)")
+
+	}
+	mat, err := gocv.ImageToMatRGBA(img)
+	if err != nil {
+		return nil, false, errors.Wrap(err, onImageToMat)
+	}
+	return &mat, true, nil
+}
+
+func ImgSize(mat *gocv.Mat) image.Point {
+	var size image.Point
+
+	if mat == nil {
+		return size
+	}
+
+	matSize := mat.Size()
+	if len(matSize) > 0 {
+		size.Y = matSize[0]
+		if len(matSize) > 1 {
+			size.X = matSize[1]
+		}
+	}
+
+	return size
+}
+
 const onResize = "on Resize()"
 
 func Resize(imgRGB image.RGBA, scale float64) (*image.RGBA, float64, error) {

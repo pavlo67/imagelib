@@ -3,6 +3,7 @@ package opencvlib
 import (
 	"fmt"
 	"regexp"
+	"slices"
 
 	"gocv.io/x/gocv"
 
@@ -12,7 +13,7 @@ import (
 
 const onWriteMP4 = "on opencvlib.WriteMP4()"
 
-func WriteMP4(resultFilename, sourcePath string, sourceRegexp regexp.Regexp, fps float64, xWidth, yHeight int, isColor bool) error {
+func WriteMP4(resultFilename, sourcePath string, sourceRegexp regexp.Regexp, reversed bool, fps float64, xWidth, yHeight int, isColor bool) error {
 	fourcc, err := gocv.VideoWriterFile(resultFilename, "mp4v", fps, xWidth, yHeight, isColor)
 	if err != nil {
 		return errors.Wrap(err, onWriteMP4)
@@ -30,9 +31,15 @@ func WriteMP4(resultFilename, sourcePath string, sourceRegexp regexp.Regexp, fps
 		colorFlag = gocv.IMReadAnyColor
 	}
 
+	if reversed {
+		slices.Reverse(filenames)
+	}
+
 	for i, filename := range filenames {
 		img := gocv.IMRead(filename, colorFlag)
-		fmt.Printf("#%d: %s --> %+v\n", i, filename, img.Size())
+		if i%50 == 0 {
+			fmt.Printf("#%d/%d: %s --> [h w]: %v\n", i, len(filenames), filename, img.Size())
+		}
 
 		if !fourcc.IsOpened() {
 			return errors.New("fourcc is not open / " + onWriteMP4)

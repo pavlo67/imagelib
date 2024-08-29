@@ -84,7 +84,6 @@ func (op *videoOpenCV) NextFrame(scale float64, delayMax time.Duration) (*video.
 	waitingTo := time.Now().Add(delayMax)
 
 	var N int
-	var moment time.Time
 
 	mat := gocv.NewMat()
 	defer mat.Close()
@@ -92,7 +91,6 @@ func (op *videoOpenCV) NextFrame(scale float64, delayMax time.Duration) (*video.
 	for {
 		ok := op.capture.Read(&mat)
 		if ok {
-			moment = time.Now()
 			break
 		} else if delayMax >= 0 && !waitingTo.After(time.Now()) {
 			op.isFinished = true
@@ -114,9 +112,8 @@ func (op *videoOpenCV) NextFrame(scale float64, delayMax time.Duration) (*video.
 
 	op.lastFrame = &video.Processing{
 		FrameInfo: video.FrameInfo{
-			N:             N,
-			TimeFromStart: op.Info.StartedAt.Add(time.Duration(N) * time.Second / time.Duration(op.Info.FPS)),
-			Time:          moment,
+			N:    N,
+			Time: op.Info.StartedAt.Add(time.Duration(N) * time.Second / time.Duration(op.Info.FPS)),
 		},
 		Image: img,
 	}

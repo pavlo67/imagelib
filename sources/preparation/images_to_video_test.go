@@ -53,7 +53,7 @@ func TestImagesToVideo(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, re)
 
-	err = opencvlib.WriteMP4(filepath.Join(dataPath, filepath.Base(dataPath)+".mp4"), dataPath, *re, info.FPS/divider, info.Rectangle.Max.X, info.Rectangle.Max.Y, isColor)
+	err = opencvlib.WriteMP4(filepath.Join(dataPath, filepath.Base(dataPath)+".mp4"), dataPath, *re, false, info.FPS/divider, info.Rectangle.Max.X, info.Rectangle.Max.Y, isColor)
 	require.NoError(t, err)
 
 }
