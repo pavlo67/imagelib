@@ -17,7 +17,7 @@ func TestImagesFiles(t *testing.T) {
 
 	os.Setenv("ENV", "test")
 
-	envs, l := config.PrepareApp("../../_env/", "")
+	envs, l := config.PrepareApp("../../_env/", "", "")
 	require.NotNil(t, envs)
 	require.NotNil(t, l)
 

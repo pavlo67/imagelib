@@ -75,13 +75,13 @@ func TestFrame_PolyChainToOuter(t *testing.T) {
 
 			for i, pOuter := range pChOuter {
 				distance := pOuter.DistanceTo(tt.pChOuterExpected[i])
-				if math.IsNaN(distance) || distance > mathlib.Eps {
+				if math.IsNaN(distance) || distance > mathlib.EPS {
 					t.Errorf("PointsToOuter() = %v, pChOuterExpected %v", pChOuter, tt.pChOuterExpected)
 				}
 
 				pInner := fr.PointToInner(pOuter)
 				distanceFinal := pInner.DistanceTo(tt.pChInner[i])
-				if distanceFinal > mathlib.Eps {
+				if distanceFinal > mathlib.EPS {
 					t.Errorf("pInner = %v, pOuter = %v, pOuterInner = %v", tt.pChInner[i], pOuter, pInner)
 				}
 
@@ -164,13 +164,13 @@ func TestFrame_MovingToOuter(t *testing.T) {
 			}
 
 			movingOuter := frame.MovingToOuter(tt.movingInner)
-			if movingOuter.DistanceTo(tt.movingOuterExpected) > mathlib.Eps {
+			if movingOuter.DistanceTo(tt.movingOuterExpected) > mathlib.EPS {
 				t.Errorf("MovingToOuter() = %v, movingOuterExpected = %v, distance = %f",
 					movingOuter, tt.movingOuterExpected, movingOuter.DistanceTo(tt.movingOuterExpected))
 			}
 
 			movingInner := frame.MovingToInner(movingOuter)
-			if movingInner.DistanceTo(tt.movingInner) > mathlib.Eps {
+			if movingInner.DistanceTo(tt.movingInner) > mathlib.EPS {
 				t.Errorf("MovingToInner() = %v, movingInner = %v, distance = %f",
 					movingOuter, tt.movingOuterExpected, movingInner.DistanceTo(tt.movingInner))
 			}
@@ -187,10 +187,10 @@ func TestFrame_ZeroMoving(t *testing.T) {
 
 	movingOuter := plane.Point2{}
 	movingInner := frame.MovingToInner(movingOuter)
-	require.Truef(t, movingInner.Radius() < mathlib.Eps, "movingInner: %+v", movingInner)
+	require.Truef(t, movingInner.Radius() < mathlib.EPS, "movingInner: %+v", movingInner)
 
 	movingInner = plane.Point2{}
 	movingOuter = frame.MovingToOuter(movingInner)
-	require.Truef(t, movingOuter.Radius() < mathlib.Eps, "movingOuter: %+v", movingOuter)
+	require.Truef(t, movingOuter.Radius() < mathlib.EPS, "movingOuter: %+v", movingOuter)
 
 }

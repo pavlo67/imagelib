@@ -57,7 +57,7 @@ func (fr Frame) PointsToOuter(pChInner ...plane.Point2) plane.PolyChain {
 	} else {
 		for i, p := range pChInner {
 			radiusOuter := math.Sqrt((p.X-center.X)*(p.X-center.X)+(p.Y-center.Y)*(p.Y-center.Y)) / fr.DPM
-			if radiusOuter <= mathlib.Eps {
+			if radiusOuter <= mathlib.EPS {
 				pChOuter[i] = fr.Point2
 
 			} else {
@@ -74,7 +74,7 @@ func (fr Frame) PointsToOuter(pChInner ...plane.Point2) plane.PolyChain {
 func (fr Frame) PointToInner(p2Outer plane.Point2) plane.Point2 {
 	radiusInner := math.Sqrt((p2Outer.X-fr.X)*(p2Outer.X-fr.X)+(p2Outer.Y-fr.Y)*(p2Outer.Y-fr.Y)) * fr.DPM
 	var angleOuter plane.XToYAngle
-	if radiusInner > mathlib.Eps {
+	if radiusInner > mathlib.EPS {
 		angleOuter = plane.Point2{p2Outer.X - fr.X, p2Outer.Y - fr.Y}.XToYAngleFromOx()
 	}
 	angleInner := fr.XToYAngle - angleOuter
@@ -93,7 +93,7 @@ func (fr Frame) MovingToInner(movingOuter plane.Point2) plane.Point2 {
 	movingRadiusInner := math.Sqrt(movingOuter.X*movingOuter.X+movingOuter.Y*movingOuter.Y) * fr.DPM
 	movingAngleInner := fr.XToYAngle
 
-	if movingRadiusInner > mathlib.Eps {
+	if movingRadiusInner > mathlib.EPS {
 		movingAngleInner -= movingOuter.XToYAngleFromOx()
 	}
 
@@ -108,7 +108,7 @@ func (fr Frame) MovingToOuter(movingInner plane.Point2) plane.Point2 {
 
 	movingRadiusOuter := math.Sqrt(movingInner.X*movingInner.X+movingInner.Y*movingInner.Y) / fr.DPM
 	movingAngleOuter := fr.XToYAngle
-	if movingRadiusOuter > mathlib.Eps {
+	if movingRadiusOuter > mathlib.EPS {
 		movingAngleOuter -= movingInner.XToYAngleFromOx()
 	}
 

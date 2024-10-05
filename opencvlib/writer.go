@@ -14,6 +14,8 @@ import (
 const onWriteMP4 = "on opencvlib.WriteMP4()"
 
 func WriteMP4(resultFilename, sourcePath string, sourceRegexp regexp.Regexp, reversed bool, fps float64, xWidth, yHeight int, isColor bool) error {
+	fmt.Printf("writing mp4: %s --> %s [reversed: %t, fps: %f, xWidth: %d, yHeight: %d, isColor: %t]\n", sourcePath, resultFilename, reversed, fps, xWidth, yHeight, isColor)
+
 	fourcc, err := gocv.VideoWriterFile(resultFilename, "mp4v", fps, xWidth, yHeight, isColor)
 	if err != nil {
 		return errors.Wrap(err, onWriteMP4)

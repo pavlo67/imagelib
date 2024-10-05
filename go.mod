@@ -3,10 +3,10 @@ module github.com/pavlo67/imagelib
 go 1.22.1
 
 require (
-	github.com/pavlo67/common v0.5.6
+	github.com/pavlo67/common v0.6.3
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.8.4
-	gocv.io/x/gocv v0.36.1
+	gocv.io/x/gocv v0.37.0
 	golang.org/x/image v0.15.0
 )
 
@@ -22,5 +22,6 @@ require (
 	github.com/ziutek/mymysql v1.5.4 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
+	golang.org/x/sys v0.5.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
